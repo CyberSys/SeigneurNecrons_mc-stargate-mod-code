@@ -927,6 +927,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			
 			// On téléporte l'entité.
 			if(entity instanceof EntityPlayerMP) {
+				// FIXME - l'angle de la caméra des joueurs n'est pas positionné correctement... en mode survie !
 				((EntityPlayerMP) entity).serverForThisPlayer.setPlayerLocation(xTP, yTP, zTP, rotationYaw, rotationPitch);
 			}
 			else {

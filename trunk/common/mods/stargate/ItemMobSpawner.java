@@ -7,6 +7,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.CreativeTabs;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ItemStack;
+import net.minecraft.src.TileEntity;
 import net.minecraft.src.TileEntityMobSpawner;
 import net.minecraft.src.World;
 
@@ -46,11 +47,11 @@ public class ItemMobSpawner extends ItemStargatePlaceable {
 	@Override
 	public boolean tryPlaceIntoWorld(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float par8, float par9, float par10) {
 		super.tryPlaceIntoWorld(itemStack, entityPlayer, world, x, y, z, side, par8, par9, par10);
-		System.out.println("pwet");
 		if(this.succes) {
-			System.out.println("bubu");
-			TileEntityMobSpawner tileEntity = (TileEntityMobSpawner) world.getBlockTileEntity(x, y, z);
-			tileEntity.setMobID(this.mobName); // FIXME - NullPointerException ici !
+			TileEntity tileEntity = world.getBlockTileEntity(this.xPlaced, this.yPlaced, this.zPlaced);
+			if(tileEntity != null && tileEntity instanceof TileEntityMobSpawner) {
+				((TileEntityMobSpawner) tileEntity).setMobID(this.mobName);
+			}
 			return true;
 		}
 		return false;
