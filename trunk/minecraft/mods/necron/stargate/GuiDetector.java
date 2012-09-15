@@ -9,9 +9,9 @@ import org.lwjgl.input.Keyboard;
 public class GuiDetector extends GuiScreen {
 	
 	/** The title string that is displayed in the top-center of the screen. */
-	protected String screenTitle = "Parametres du détecteur:";
+	protected String screenTitle = "Parametres du detecteur:";
 	
-	/** La tile entity du détecteur. */
+	/** La tile entity du detecteur. */
 	private TileEntityDetector entityDetector;
 	
 	/** Counts the number of screen updates. */
@@ -64,7 +64,7 @@ public class GuiDetector extends GuiScreen {
 	}
 	
 	/**
-	 * Cette fonction est appelée quand on clic sur le bonton "Valider" ou le bouton "Inverser".
+	 * Cette fonction est appelee quand on clic sur le bonton "Valider" ou le bouton "Inverser".
 	 */
 	@Override
 	protected void actionPerformed(GuiButton guiButton) {
@@ -79,7 +79,7 @@ public class GuiDetector extends GuiScreen {
 	}
 	
 	/**
-	 * Ferme la fenetre de configuration du téléporteur.
+	 * Ferme la fenetre de configuration du teleporteur.
 	 */
 	private void valider() {
 		this.entityDetector.onInventoryChanged();
@@ -106,8 +106,8 @@ public class GuiDetector extends GuiScreen {
 	public void drawScreen(int par1, int par2, float par3) {
 		this.drawDefaultBackground();
 		this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 40, 16777215);
-		this.drawString(this.fontRenderer, "portée :", this.width / 2 - 40, 65, 10526880);
-		this.drawString(this.fontRenderer, this.entityDetector.isInverted() ? "sortie inversée." : "sortie normale.", this.width / 2 - 40, 85, this.entityDetector.isInverted() ? 0xdd8844 : 0x44dd44);
+		this.drawString(this.fontRenderer, "portee :", this.width / 2 - 40, 65, 10526880);
+		this.drawString(this.fontRenderer, this.entityDetector.isInverted() ? "sortie inversee." : "sortie normale.", this.width / 2 - 40, 85, this.entityDetector.isInverted() ? 0xdd8844 : 0x44dd44);
 		this.rangeField.drawTextBox();
 		super.drawScreen(par1, par2, par3);
 	}

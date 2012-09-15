@@ -7,57 +7,57 @@ import net.minecraft.src.NBTTagCompound;
 public class TileEntityDetector extends TileEntityGui {
 	
 	/**
-	 * Portée minimale de détection.
+	 * Portee minimale de detection.
 	 */
 	private static final int minRange = 1;
 	
 	/**
-	 * Portée maximale de détection.
+	 * Portee maximale de detection.
 	 */
 	private static final int maxRange = 10;
 	
 	/**
-	 * La portée à laquelle ce détecteur peut déctecter une entité.
+	 * La portee a laquelle ce detecteur peut dectecter une entite.
 	 */
 	private int range = 2;
 	
 	/**
-	 * Indique si ce détecteur envoie un signal quand il détecte une entité ou quand il ne détecte pas d'entité.
+	 * Indique si ce detecteur envoie un signal quand il detecte une entite ou quand il ne detecte pas d'entite.
 	 */
 	private boolean inverted = false;
 	
 	/**
-	 * Indique si ce détecteur fourni du courant.
+	 * Indique si ce detecteur fourni du courant.
 	 */
 	private boolean providingPower = false;
 	
 	/**
-	 * Retourne la portée à laquelle ce détecteur peut déctecter une entité.
-	 * @return la portée à laquelle ce détecteur peut déctecter une entité.
+	 * Retourne la portee a laquelle ce detecteur peut dectecter une entite.
+	 * @return la portee a laquelle ce detecteur peut dectecter une entite.
 	 */
 	public int getRange() {
 		return range;
 	}
 	
 	/**
-	 * Indique si ce détecteur envoie un signal quand il détecte une entité ou quand il ne détecte pas d'entité.
-	 * @return true si ce détecteur envoie un signal quand il détecte une entité, false s'il envoie un signal quand il ne détecte pas d'entité.
+	 * Indique si ce detecteur envoie un signal quand il detecte une entite ou quand il ne detecte pas d'entite.
+	 * @return true si ce detecteur envoie un signal quand il detecte une entite, false s'il envoie un signal quand il ne detecte pas d'entite.
 	 */
 	public boolean isInverted() {
 		return inverted;
 	}
 	
 	/**
-	 * Indique si ce détecteur fourni du courant.
-	 * @return true si ce détecteur fourni du courant, false sinon.
+	 * Indique si ce detecteur fourni du courant.
+	 * @return true si ce detecteur fourni du courant, false sinon.
 	 */
 	public boolean isProvidingPower() {
 		return this.providingPower;
 	}
 	
 	/**
-	 * Positionne la portée de détection de ce détecteur.
-	 * @param range - la nouvelle portée de détection de ce détecteur.
+	 * Positionne la portee de detection de ce detecteur.
+	 * @param range - la nouvelle portee de detection de ce detecteur.
 	 */
 	public void setRange(int range) {
 		if(range < minRange) {
@@ -72,16 +72,16 @@ public class TileEntityDetector extends TileEntityGui {
 	}
 	
 	/**
-	 * Indique à ce détecteur si sa sortie doit être inversée.
-	 * @param inverted - true si la sortie doit être inversée, false sinon.
+	 * Indique a ce detecteur si sa sortie doit etre inversee.
+	 * @param inverted - true si la sortie doit etre inversee, false sinon.
 	 */
 	public void setInverted(boolean inverted) {
 		this.inverted = inverted;
 	}
 	
 	/**
-	 * Indique à ce détecteur s'il doit fournir du courant.
-	 * @param providingPower - true si ce détecteur doit fournir du courant, false sinon.
+	 * Indique a ce detecteur s'il doit fournir du courant.
+	 * @param providingPower - true si ce detecteur doit fournir du courant, false sinon.
 	 */
 	private void setProvidingPower(boolean providingPower) {
 		if(this.providingPower != providingPower) {
@@ -92,15 +92,15 @@ public class TileEntityDetector extends TileEntityGui {
 	}
 	
 	/**
-	 * Verifie s'il y a un joueur à portée de détection.
-	 * @return true s'il y a un un joueur à portée de détection, false sinon.
+	 * Verifie s'il y a un joueur a portee de detection.
+	 * @return true s'il y a un un joueur a portee de detection, false sinon.
 	 */
 	public boolean anyPlayerInRange() {
 		return (this.worldObj.getClosestPlayer(this.xCoord + 0.5, this.yCoord + 0.5, this.zCoord + 0.5, this.range) != null);
 	}
 	
 	/**
-	 * Met à jour les blocks situés sur les côtés.
+	 * Met a jour les blocks situes sur les cotes.
 	 */
 	private void updateNeighborBlocks() {
 		this.worldObj.notifyBlocksOfNeighborChange(this.xCoord, this.yCoord, this.zCoord, StargateMod.detector.blockID);
@@ -111,11 +111,11 @@ public class TileEntityDetector extends TileEntityGui {
 	}
 	
 	/**
-	 * Cette methode est appelée à chaque tick, elle sert à scanner la zone à la recherche d'entités.
+	 * Cette methode est appelee a chaque tick, elle sert a scanner la zone a la recherche d'entites.
 	 */
 	@Override
 	public void updateEntity() {
-		// Si on est côté server.
+		// Si on est cote server.
 		if(!this.worldObj.isRemote) {
 			this.setProvidingPower(this.inverted != this.anyPlayerInRange());
 		}
@@ -145,8 +145,8 @@ public class TileEntityDetector extends TileEntityGui {
 	}
 	
 	/**
-	 * Enregistre les données de la tileEntity dans une List de Byte, dans le but de créer un packet.
-	 * @return les données de la tileEntity sous la forme d'une List de Byte.
+	 * Enregistre les donnees de la tileEntity dans une List de Byte, dans le but de creer un packet.
+	 * @return les donnees de la tileEntity sous la forme d'une List de Byte.
 	 */
 	@Override
 	protected LinkedList<Byte> getEntityData() {
@@ -160,8 +160,8 @@ public class TileEntityDetector extends TileEntityGui {
 	}
 	
 	/**
-	 * Charge les données de la tileEntity depuis une LinkedList de Byte.
-	 * @param list - la LinkedList de Byte contenant les données à charger.
+	 * Charge les donnees de la tileEntity depuis une LinkedList de Byte.
+	 * @param list - la LinkedList de Byte contenant les donnees a charger.
 	 * @return true si le chargement est un succes, false sinon.
 	 */
 	@Override
@@ -177,8 +177,8 @@ public class TileEntityDetector extends TileEntityGui {
 	}
 	
 	/**
-	 * Verifie que l'id fournie est une id correcte pour un packet destiné à cette tile entity.
-	 * @param id - l'id à tester.
+	 * Verifie que l'id fournie est une id correcte pour un packet destine a cette tile entity.
+	 * @param id - l'id a tester.
 	 * @return true si l'id est correcte, false sinon.
 	 */
 	@Override
@@ -187,7 +187,7 @@ public class TileEntityDetector extends TileEntityGui {
 	}
 	
 	/**
-	 * Retourne une représentation textuelle de cette tile entity.
+	 * Retourne une representation textuelle de cette tile entity.
 	 */
 	@Override
 	public String toString() {

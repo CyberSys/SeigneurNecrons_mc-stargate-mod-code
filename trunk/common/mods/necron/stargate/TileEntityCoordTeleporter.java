@@ -7,30 +7,30 @@ import net.minecraft.src.EntityPlayer;
 public class TileEntityCoordTeleporter extends TileEntityCoord {
 	
 	/**
-	 * Verifie que les coordonnées enregistrées sont valides.
+	 * Verifie que les coordonnees enregistrees sont valides.
 	 */
 	public boolean destinationValide() {
-		// On verifie que la destination n'est pas trop éloignée du point de départ
+		// On verifie que la destination n'est pas trop eloignee du point de depart
 		if(Math.abs(this.xDest - this.xCoord) > 256 || Math.abs(this.yDest - this.yCoord) > 256 || Math.abs(this.zDest - this.zCoord) > 256) {
 			return false;
 		}
-		// On verifie qu'il y a assez d'espace au point d'arrivée
+		// On verifie qu'il y a assez d'espace au point d'arrivee
 		if(this.worldObj.getBlockId(xDest, yDest, zDest) != 0 || this.worldObj.getBlockId(xDest, yDest + 1, zDest) != 0) {
 			return false;
 		}
-		// On verifie qu'il y a un téléporteur à côté du point d'arrivée
+		// On verifie qu'il y a un teleporteur a cote du point d'arrivee
 		return (this.teleporteurValide(this.xDest + 1, this.yDest, this.zDest) || this.teleporteurValide(this.xDest - 1, this.yDest, this.zDest) || this.teleporteurValide(this.xDest, this.yDest, this.zDest + 1) || this.teleporteurValide(this.xDest, this.yDest, this.zDest - 1));
 	}
 	
 	/**
-	 * Verifie qu'il y a un teleporter à la position spécifiée.
+	 * Verifie qu'il y a un teleporter a la position specifiee.
 	 */
 	private boolean teleporteurValide(int x, int y, int z) {
 		return (this.worldObj.getBlockId(x, y, z) == StargateMod.teleporterCoord.blockID && this.worldObj.getBlockId(x, y + 1, z) == StargateMod.teleporter.blockID);
 	}
 	
 	/**
-	 * Teleporte le joueur aux coordonnées enregistrées, si elles sont valides.
+	 * Teleporte le joueur aux coordonnees enregistrees, si elles sont valides.
 	 */
 	public void teleportPlayer(EntityPlayer player) {
 		if(this.destinationValide()) {
@@ -39,8 +39,8 @@ public class TileEntityCoordTeleporter extends TileEntityCoord {
 	}
 	
 	/**
-	 * Charge les données de la tileEntity depuis une LinkedList de Byte.
-	 * @param list - la LinkedList de Byte contenant les données à charger.
+	 * Charge les donnees de la tileEntity depuis une LinkedList de Byte.
+	 * @param list - la LinkedList de Byte contenant les donnees a charger.
 	 * @return true si le chargement est un succes, false sinon.
 	 */
 	@Override
@@ -53,7 +53,7 @@ public class TileEntityCoordTeleporter extends TileEntityCoord {
 	}
 	
 	/**
-	 * Signal au renderer que le block situé au dessus du block lié à cette tile entity a besoin d'être mit à jour.
+	 * Signal au renderer que le block situe au dessus du block lie a cette tile entity a besoin d'etre mit a jour.
 	 */
 	protected void updateBlockTexture() {
 		if(this.worldObj.isRemote) {
@@ -62,8 +62,8 @@ public class TileEntityCoordTeleporter extends TileEntityCoord {
 	}
 	
 	/**
-	 * Verifie que l'id fournie est une id correcte pour un packet destiné à cette tile entity.
-	 * @param id - l'id à tester.
+	 * Verifie que l'id fournie est une id correcte pour un packet destine a cette tile entity.
+	 * @param id - l'id a tester.
 	 * @return true si l'id est correcte, false sinon.
 	 */
 	@Override
@@ -72,7 +72,7 @@ public class TileEntityCoordTeleporter extends TileEntityCoord {
 	}
 	
 	/**
-	 * Retourne une représentation textuelle de cette tile entity.
+	 * Retourne une representation textuelle de cette tile entity.
 	 */
 	@Override
 	public String toString() {

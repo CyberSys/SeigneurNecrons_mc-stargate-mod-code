@@ -3,7 +3,7 @@ package mods.necron.stargate;
 public class TileEntityNaquadaAlliage extends TileEntityStargatePart {
 	
 	/**
-	 * Retourne une représentation textuelle de cette tile entity.
+	 * Retourne une representation textuelle de cette tile entity.
 	 */
 	@Override
 	public String toString() {

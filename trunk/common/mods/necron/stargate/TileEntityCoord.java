@@ -7,63 +7,63 @@ import net.minecraft.src.NBTTagCompound;
 public abstract class TileEntityCoord extends TileEntityGui {
 	
 	/**
-	 * La coordonnée en X de la destination.
+	 * La coordonnee en X de la destination.
 	 */
 	protected int xDest = 0;
 	
 	/**
-	 * La coordonnée en Y de la destination.
+	 * La coordonnee en Y de la destination.
 	 */
 	protected int yDest = 0;
 	
 	/**
-	 * La coordonnée en Z de la destination.
+	 * La coordonnee en Z de la destination.
 	 */
 	protected int zDest = 0;
 	
 	/**
-	 * Retourne la coordonnée en X de la destination.
-	 * @return la coordonnée en X de la destination.
+	 * Retourne la coordonnee en X de la destination.
+	 * @return la coordonnee en X de la destination.
 	 */
 	public int getXDest() {
 		return xDest;
 	}
 	
 	/**
-	 * Retourne la coordonnée en Y de la destination.
-	 * @return la coordonnée en Y de la destination.
+	 * Retourne la coordonnee en Y de la destination.
+	 * @return la coordonnee en Y de la destination.
 	 */
 	public int getYDest() {
 		return yDest;
 	}
 	
 	/**
-	 * Retourne la coordonnée en Z de la destination.
-	 * @return la coordonnée en Z de la destination.
+	 * Retourne la coordonnee en Z de la destination.
+	 * @return la coordonnee en Z de la destination.
 	 */
 	public int getZDest() {
 		return zDest;
 	}
 	
 	/**
-	 * Positionne la coordonnée en X de la destination.
-	 * @param xDest - la nouvelle coordonnée en X de la destination.
+	 * Positionne la coordonnee en X de la destination.
+	 * @param xDest - la nouvelle coordonnee en X de la destination.
 	 */
 	public void setXDest(int xDest) {
 		this.xDest = xDest;
 	}
 	
 	/**
-	 * Positionne la coordonnée en Y de la destination.
-	 * @param yDest - la nouvelle coordonnée en Y de la destination.
+	 * Positionne la coordonnee en Y de la destination.
+	 * @param yDest - la nouvelle coordonnee en Y de la destination.
 	 */
 	public void setYDest(int yDest) {
 		this.yDest = yDest;
 	}
 	
 	/**
-	 * Positionne la coordonnée en Z de la destination.
-	 * @param zDest - la nouvelle coordonnée en Z de la destination.
+	 * Positionne la coordonnee en Z de la destination.
+	 * @param zDest - la nouvelle coordonnee en Z de la destination.
 	 */
 	public void setZDest(int zDest) {
 		this.zDest = zDest;
@@ -92,8 +92,8 @@ public abstract class TileEntityCoord extends TileEntityGui {
 	}
 	
 	/**
-	 * Enregistre les données de la tileEntity dans une List de Byte, dans le but de créer un packet.
-	 * @return les données de la tileEntity sous la forme d'une List de Byte.
+	 * Enregistre les donnees de la tileEntity dans une List de Byte, dans le but de creer un packet.
+	 * @return les donnees de la tileEntity sous la forme d'une List de Byte.
 	 */
 	@Override
 	protected LinkedList<Byte> getEntityData() {
@@ -107,8 +107,8 @@ public abstract class TileEntityCoord extends TileEntityGui {
 	}
 	
 	/**
-	 * Charge les données de la tileEntity depuis une LinkedList de Byte.
-	 * @param list - la LinkedList de Byte contenant les données à charger.
+	 * Charge les donnees de la tileEntity depuis une LinkedList de Byte.
+	 * @param list - la LinkedList de Byte contenant les donnees a charger.
 	 * @return true si le chargement est un succes, false sinon.
 	 */
 	@Override

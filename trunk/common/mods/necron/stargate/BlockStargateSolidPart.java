@@ -15,7 +15,7 @@ public abstract class BlockStargateSolidPart extends BlockStargatePart {
 	}
 	
 	/**
-	 * Previent la porte qu'un block la consituant a été détruit.
+	 * Previent la porte qu'un block la consituant a ete detruit.
 	 */
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6) {

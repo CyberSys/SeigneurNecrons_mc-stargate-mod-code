@@ -9,9 +9,9 @@ import org.lwjgl.input.Keyboard;
 public class GuiDhd extends GuiScreen {
 	
 	/** The title string that is displayed in the top-center of the screen. */
-	protected String screenTitle = "Coordonnées de destination:";
+	protected String screenTitle = "Coordonnees de destination:";
 	
-	/** La tile entity du téléporteur. */
+	/** La tile entity du teleporteur. */
 	private TileEntityCoordDhd entityDhd;
 	
 	/** Counts the number of screen updates. */
@@ -82,7 +82,7 @@ public class GuiDhd extends GuiScreen {
 	}
 	
 	/**
-	 * Cette fonction est appelée quand on clic sur le bonton "Valider".
+	 * Cette fonction est appelee quand on clic sur le bonton "Valider".
 	 */
 	@Override
 	protected void actionPerformed(GuiButton guiButton) {
