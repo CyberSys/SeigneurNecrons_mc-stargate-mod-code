@@ -1,7 +1,5 @@
 package mods.necron.stargate;
 
-import mods.necron.stargate.TileEntityCoordDhd;
-import mods.necron.stargate.TileEntityStargate;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
 import net.minecraft.src.ModLoader;
