@@ -19,8 +19,8 @@ public class StargateServerPacketHandler extends StargatePacketHandler {
 			int id = TileEntityStargate.readInt(list);
 			
 			if(id == TileEntityStargate.packetId_CloseGuiTeleporter || id == TileEntityStargate.packetId_CloseGuiDhd || id == TileEntityStargate.packetId_CloseGuiDetector) {
-				// Cas où le packet proviens de la fermeture d'une interface :
-				/*DEBUG*///StargateMod.debug("Server: packet reçu - fermeture d'une interface", true);
+				// Cas ou le packet proviens de la fermeture d'une interface :
+				/*DEBUG*///StargateMod.debug("Server: packet recu - fermeture d'une interface", true);
 				int dim = TileEntityStargate.readInt(list);
 				int x = TileEntityStargate.readInt(list);
 				int y = TileEntityStargate.readInt(list);

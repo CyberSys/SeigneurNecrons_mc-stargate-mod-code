@@ -117,7 +117,7 @@ public abstract class TileEntityStargate extends TileEntity {
 	
 	/**
 	 * Ecrit l'entier fourni sous la forme de 4 Byte, a la fin de la List de Byte fournie.
-	 * @param list - la List de Byte où ecrire l'entier.
+	 * @param list - la List de Byte ou ecrire l'entier.
 	 * @param value - l'entier a ecrire.
 	 */
 	protected static void writeInt(LinkedList<Byte> list, int value) {
@@ -130,7 +130,7 @@ public abstract class TileEntityStargate extends TileEntity {
 	/**
 	 * Lit un entier dans les 4 premiers elements d'une List de Byte.<br />
 	 * (Les elements lus sont supprimes de la List)
-	 * @param list - la List de Byte où lire l'entier.
+	 * @param list - la List de Byte ou lire l'entier.
 	 * @return l'entier lu.
 	 */
 	protected static int readInt(LinkedList<Byte> list) {
@@ -143,7 +143,7 @@ public abstract class TileEntityStargate extends TileEntity {
 	
 	/**
 	 * Ecrit le booleen fourni sous la forme d'un Byte, au debut de la List de Byte fournie.
-	 * @param list - la List de Byte où ecrire le booleen.
+	 * @param list - la List de Byte ou ecrire le booleen.
 	 * @param value - le booleen a ecrire.
 	 */
 	protected static void writeBoolean(LinkedList<Byte> list, boolean value) {
@@ -154,7 +154,7 @@ public abstract class TileEntityStargate extends TileEntity {
 	/**
 	 * Lit un booleen dans le premier element d'une List de Byte.<br />
 	 * (L'element lu est supprime de la List)
-	 * @param list - la List de Byte où lire le booleen.
+	 * @param list - la List de Byte ou lire le booleen.
 	 * @return le booleen lu.
 	 */
 	protected static boolean readBoolean(LinkedList<Byte> list) {
@@ -165,7 +165,7 @@ public abstract class TileEntityStargate extends TileEntity {
 	/**
 	 * Ecrit l'entier fourni sur les 4 premiers Byte de la List fournie.<br />
 	 * Le but etant de changer l'id du packet.
-	 * @param list - la List de Byte où ecrire l'entier.
+	 * @param list - la List de Byte ou ecrire l'entier.
 	 * @param id - l'id a attribuer au packet.
 	 */
 	protected static void changeId(LinkedList<Byte> list, int id) {
@@ -199,7 +199,7 @@ public abstract class TileEntityStargate extends TileEntity {
 	
 	/**
 	 * Charge les donnees de la tileEntity depuis le packet.
-	 * @param networkManager - le NetworkManager d'où provient le packet.
+	 * @param networkManager - le NetworkManager d'ou provient le packet.
 	 * @param packet - le packet contenant les donnees a charger.
 	 */
 	public void onDataPacket(NetworkManager networkManager, Packet250CustomPayload packet) {
