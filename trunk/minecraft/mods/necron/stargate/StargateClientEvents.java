@@ -19,7 +19,7 @@ public class StargateClientEvents {
 				"stargate/eventHorizon.wav"};
 		
 		for(String file : soundFiles) {
-			manager.soundPoolSounds.addSound(file, this.getClass().getResource("/mods/" + file));
+			manager.soundPoolSounds.addSound(file, this.getClass().getResource("/mods/necron/" + file));
 		}
 	}
 	

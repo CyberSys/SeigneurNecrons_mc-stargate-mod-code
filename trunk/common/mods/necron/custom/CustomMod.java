@@ -38,18 +38,18 @@ public class CustomMod {
 	private static boolean debug = true;
 	private static StringBuffer buffer = new StringBuffer();
 	
-	@Instance
+	@Instance("CustomMod")
 	public static CustomMod instance;
 	
-	@SidedProxy(clientSide = "mods.custom.CustomClientProxy", serverSide = "mods.custom.CustomCommonProxy")
+	@SidedProxy(clientSide = "mods.necron.custom.CustomClientProxy", serverSide = "mods.necron.custom.CustomCommonProxy")
 	public static CustomCommonProxy proxy;
 	
 	// Custom chanel name :
 	public static final String chanel = "Necron_Custom";
 	
 	// Custom texture files :
-	public static final String blockTextureFile = "/mods/custom/terrain.png";
-	public static final String itemTextureFile = "/mods/custom/items.png";
+	public static final String blockTextureFile = "/mods/necron/custom/terrain.png";
+	public static final String itemTextureFile = "/mods/necron/custom/items.png";
 	
 	// Quelques constantes :
 	public static final float resitantBlockHardness = 10.0F;
