@@ -1,10 +1,5 @@
 package mods.necron.stargate;
 
-import mods.necron.stargate.StargateCommonProxy;
-import mods.necron.stargate.StargateMod;
-import mods.necron.stargate.TileEntityCoordDhd;
-import mods.necron.stargate.TileEntityCoordTeleporter;
-import mods.necron.stargate.TileEntityDetector;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
@@ -41,7 +36,7 @@ public class StargateClientProxy extends StargateCommonProxy {
 	
 	@Override
 	public void registerTileEntitySpecialRenderer(/*PLACEHOLDER*/) {
-		
+		// vide pour l'instant...
 	}
 	
 	public void registerSounds() {

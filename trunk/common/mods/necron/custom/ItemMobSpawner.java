@@ -1,4 +1,4 @@
-package mods.necron.stargate;
+package mods.necron.custom;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -11,7 +11,7 @@ import net.minecraft.src.TileEntity;
 import net.minecraft.src.TileEntityMobSpawner;
 import net.minecraft.src.World;
 
-public class ItemMobSpawner extends ItemStargatePlaceable {
+public class ItemMobSpawner extends ItemCustomPlaceable {
 	
 	/**
 	 * Une map permettant d'obtenir l'id de l'ItemMobSpawner à partir du nom du mob.
@@ -23,8 +23,8 @@ public class ItemMobSpawner extends ItemStargatePlaceable {
 	 */
 	private String mobName;
 	
-	protected ItemMobSpawner(int id, String mobName) {
-		super(id, StargateMod.itemMobSpawnerTextureIndex, "itemSpawner" + mobName, CreativeTabs.tabDeco, Block.mobSpawner);
+	public ItemMobSpawner(int id, String mobName) {
+		super(id, CustomMod.itemMobSpawnerTextureIndex, "itemSpawner" + mobName, CreativeTabs.tabDeco, Block.mobSpawner);
 		this.mobName = mobName;
 		this.addMapping(this.mobName, this.shiftedIndex);
 	}
@@ -44,6 +44,9 @@ public class ItemMobSpawner extends ItemStargatePlaceable {
 		stringToIdMapping.put(mob, id);
 	}
 	
+	/**
+	 * Tente de placer un mobSpawner du mob correspondant à cet item.
+	 */
 	@Override
 	public boolean tryPlaceIntoWorld(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float par8, float par9, float par10) {
 		super.tryPlaceIntoWorld(itemStack, entityPlayer, world, x, y, z, side, par8, par9, par10);

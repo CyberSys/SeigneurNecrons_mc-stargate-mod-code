@@ -2,8 +2,6 @@ package mods.necron.stargate;
 
 import java.util.LinkedList;
 
-import mods.necron.stargate.StargatePacketHandler;
-import mods.necron.stargate.TileEntityStargate;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.NetworkManager;
 import net.minecraft.src.Packet250CustomPayload;

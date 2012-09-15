@@ -1,12 +1,10 @@
 package mods.necron.stargate;
 
-import org.lwjgl.input.Keyboard;
-
-import mods.necron.stargate.TileEntityDetector;
-import mods.necron.stargate.TileEntityStargate;
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
 import net.minecraft.src.ModLoader;
+
+import org.lwjgl.input.Keyboard;
 
 public class GuiDetector extends GuiScreen {
 	
