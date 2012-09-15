@@ -22,13 +22,13 @@ public class NaquadaGenerator implements IWorldGenerator {
 	}
 	
 	public void generateSurface(World world, Random random, int blockX, int blockZ) {
-		// On fait 2 tentatives de génération (même nombre de tentatives que pour l'or).
+		// On fait 2 tentatives de generation (meme nombre de tentatives que pour l'or).
 		for(int i = 0; i < 2; i++) {
 			int x = blockX + random.nextInt(16);
 			int z = blockZ + random.nextInt(16);
-			// Entre la couche 0 et la couche 15 (même profondeur que le diamant).
+			// Entre la couche 0 et la couche 15 (meme profondeur que le diamant).
 			int y = random.nextInt(16);
-			// On demande à générer 16 blocks (même taille que les gisements de charbon).
+			// On demande a generer 16 blocks (meme taille que les gisements de charbon).
 			(new WorldGenMinable(StargateMod.naquadaOre.blockID, 16)).generate(world, random, x, y, z);
 		}
 	}

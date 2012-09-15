@@ -20,7 +20,7 @@ public class BlockVortex extends BlockStargatePart {
 	}
 	
 	/**
-	 * Prévient la porte qu'un des block constituant le vortex a été detruit.
+	 * Previent la porte qu'un des block constituant le vortex a ete detruit.
 	 */
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6) {

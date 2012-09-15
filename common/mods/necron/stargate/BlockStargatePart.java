@@ -10,7 +10,7 @@ public abstract class BlockStargatePart extends BlockStargate {
 	}
 	
 	/**
-	 * Retourne la TileEntityMasterChevron de la porte à laquelle apartient le block, si elle existe.
+	 * Retourne la TileEntityMasterChevron de la porte a laquelle apartient le block, si elle existe.
 	 */
 	protected TileEntityMasterChevron getMasterChevron(World world, int x, int y, int z) {
 		return ((TileEntityStargatePart) world.getBlockTileEntity(x, y, z)).getMasterChevron();

@@ -19,7 +19,7 @@ public class StargateClientPacketHandler extends StargatePacketHandler {
 			int id = TileEntityStargate.readInt(list);
 			
 			if(TileEntityStargate.isMapped(id)) {
-				// Cas où le packet est un packet de mise à jours de tile entity :
+				// Cas où le packet est un packet de mise a jours de tile entity :
 				/*DEBUG*///StargateMod.debug("Client: packet reçu - maj tile entity (id = " + id + ")", true);
 				int dim = TileEntityStargate.readInt(list);
 				int x = TileEntityStargate.readInt(list);

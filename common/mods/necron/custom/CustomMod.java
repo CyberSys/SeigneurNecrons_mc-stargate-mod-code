@@ -20,13 +20,13 @@ import cpw.mods.fml.relauncher.FMLRelaunchLog;
 
 /**
  * Cette classe est la classe principale du mode Necron_CustomMod.<br /><br />
- * Autres classes ajoutées (common - 6) :<br />
+ * Autres classes ajoutees (common - 6) :<br />
  * CustomCommonProxy, CustomPacketHandler, CustomServerPacketHandler, ItemCustom, ItemCustomPlaceable, ItemMobSpawner.<br /><br />
- * Autres classes ajoutées (client - 2) :<br />
+ * Autres classes ajoutees (client - 2) :<br />
  * CustomClientPacketHandler, CustomClientProxy.<br /><br />
- * Classes du jeu de base modifiées (common - 16) :<br />
+ * Classes du jeu de base modifiees (common - 16) :<br />
  * BlockFlowing, BlockGlass, BlockMobSpawner, BlockPane, ChunkProviderGenerate, EntityCreeper, EntityEnderman, EntityLiving, EntityPlayer, EntityPlayerMP, EnumArmorMaterial, EnumToolMaterial, Explosion, World.<br /><br />
- * Classes du jeu de base modifiées (client - 1) :<br />
+ * Classes du jeu de base modifiees (client - 1) :<br />
  * TileEntitySignRenderer.<br />
  * @author Seigneur Necron
  */
@@ -100,40 +100,40 @@ public class CustomMod {
 		// Mod 1 - Les outils/armures en diaments (et quelques autres outils) sont indestructibles.
 		this.initIndestructibleTools();
 		
-		// Mod 2 - Change les propriétés des matériaux.
-		// Classes modifiées dans le jeu de base : EnumArmorMaterial, EnumToolMaterial.
+		// Mod 2 - Change les proprietes des materiaux.
+		// Classes modifiees dans le jeu de base : EnumArmorMaterial, EnumToolMaterial.
 		
-		// Mod 3 - Les creepers ne détruisent plus le décor.
-		// Classes modifiées dans le jeu de base : EntityCreeper, Explosion, World.
+		// Mod 3 - Les creepers ne detruisent plus le decor.
+		// Classes modifiees dans le jeu de base : EntityCreeper, Explosion, World.
 		
 		// Mod 4 - Les enderman ne ramassent plus les blocs.
-		// Classes modifiées dans le jeu de base : EntityEnderman.
+		// Classes modifiees dans le jeu de base : EntityEnderman.
 		
 		// Mod 5 - Les joueurs conservent leur inventaire quand ils meurent.
-		// Classes modifiées dans le jeu de base : EntityPlayer, EntityPlayerMP.
+		// Classes modifiees dans le jeu de base : EntityPlayer, EntityPlayerMP.
 		
 		// Mod 6 - Le verre et les vitres dropent.
-		// Classes modifiées dans le jeu de base : BlockGlass, BlockPane.
+		// Classes modifiees dans le jeu de base : BlockGlass, BlockPane.
 		
-		// Mod 7 - La bedrock est générée uniquement sur la première couche (Y = 0).
-		// Classes modifiées dans le jeu de base : ChunkProviderGenerate.
+		// Mod 7 - La bedrock est generee uniquement sur la premiere couche (Y = 0).
+		// Classes modifiees dans le jeu de base : ChunkProviderGenerate.
 		
 		// Mod 8 - Tout les liquides se dupliquent.
-		// Classes modifiées dans le jeu de base : BlockFlowing.
+		// Classes modifiees dans le jeu de base : BlockFlowing.
 		
-		// Mod 9 - Les monstres dropent de l'xp meme quand ils se sont suicidé.
-		// Classes modifiées dans le jeu de base : EntityLiving.
+		// Mod 9 - Les monstres dropent de l'xp meme quand ils se sont suicide.
+		// Classes modifiees dans le jeu de base : EntityLiving.
 		
-		// Mod 10 - L'obsidian est moins long à miner.
+		// Mod 10 - L'obsidian est moins long a miner.
 		this.initObsidianResistance();
 		
 		// Mod 11 - Les mobSpawners dropent un item permettant de replacer le meme type de mobSpawner.
-		// Classes modifiées dans le jeu de base : BlockMobSpawner.
+		// Classes modifiees dans le jeu de base : BlockMobSpawner.
 		this.initMobSpawner();
 		
 		// Mod 12 - Caution this is Sparta.
-		// Classes modifiées dans le jeu de base : TileEntitySignRenderer.
-		// Classes ajoutées : SignRendererHelper.
+		// Classes modifiees dans le jeu de base : TileEntitySignRenderer.
+		// Classes ajoutees : SignRendererHelper.
 	}
 	
 	private void initIndestructibleTools() {
@@ -160,31 +160,31 @@ public class CustomMod {
 	
 	private void initMobSpawner() {
 		// Give fr names to MobSpawner items :
-		ModLoader.addName(itemSpawnerCreeper, "fr_FR", "Générateur de creepers");
-		ModLoader.addName(itemSpawnerSkeleton, "fr_FR", "Générateur de squelettes");
-		ModLoader.addName(itemSpawnerSpider, "fr_FR", "Générateur d'araignées");
-		ModLoader.addName(itemSpawnerGiant, "fr_FR", "Générateur de géants");
-		ModLoader.addName(itemSpawnerZombie, "fr_FR", "Générateur de zombies");
-		ModLoader.addName(itemSpawnerSlime, "fr_FR", "Générateur de blobs");
-		ModLoader.addName(itemSpawnerGhast, "fr_FR", "Générateur de poulpes-chat-volants");
-		ModLoader.addName(itemSpawnerPigZombie, "fr_FR", "Générateur de cochons-zombies");
-		ModLoader.addName(itemSpawnerEnderman, "fr_FR", "Générateur d'endermen");
-		ModLoader.addName(itemSpawnerCaveSpider, "fr_FR", "Générateur d'araignées-venimeuses");
-		ModLoader.addName(itemSpawnerSilverfish, "fr_FR", "Générateur de poissons d'argent");
-		ModLoader.addName(itemSpawnerBlaze, "fr_FR", "Générateur de piromans");
-		ModLoader.addName(itemSpawnerLavaSlime, "fr_FR", "Générateur de blobs de lave");
-		ModLoader.addName(itemSpawnerEnderDragon, "fr_FR", "Générateur d'EnderDragon");
-		ModLoader.addName(itemSpawnerPig, "fr_FR", "Générateur de cochons");
-		ModLoader.addName(itemSpawnerSheep, "fr_FR", "Générateur de moutons");
-		ModLoader.addName(itemSpawnerCow, "fr_FR", "Générateur de vaches-ninja");
-		ModLoader.addName(itemSpawnerChicken, "fr_FR", "Générateur de poulets");
-		ModLoader.addName(itemSpawnerSquid, "fr_FR", "Générateur de poulpes");
-		ModLoader.addName(itemSpawnerWolf, "fr_FR", "Générateur de loups");
-		ModLoader.addName(itemSpawnerMushroomCow, "fr_FR", "Générateur de champimeuh");
-		ModLoader.addName(itemSpawnerSnowMan, "fr_FR", "Générateur de bonhommes de neige");
-		ModLoader.addName(itemSpawnerOzelot, "fr_FR", "Générateur de nyaaa");
-		ModLoader.addName(itemSpawnerVillagerGolem, "fr_FR", "Générateur de golems");
-		ModLoader.addName(itemSpawnerVillager, "fr_FR", "Générateur de péons");
+		ModLoader.addName(itemSpawnerCreeper, "fr_FR", "Generateur de creepers");
+		ModLoader.addName(itemSpawnerSkeleton, "fr_FR", "Generateur de squelettes");
+		ModLoader.addName(itemSpawnerSpider, "fr_FR", "Generateur d'araignees");
+		ModLoader.addName(itemSpawnerGiant, "fr_FR", "Generateur de geants");
+		ModLoader.addName(itemSpawnerZombie, "fr_FR", "Generateur de zombies");
+		ModLoader.addName(itemSpawnerSlime, "fr_FR", "Generateur de blobs");
+		ModLoader.addName(itemSpawnerGhast, "fr_FR", "Generateur de poulpes-chat-volants");
+		ModLoader.addName(itemSpawnerPigZombie, "fr_FR", "Generateur de cochons-zombies");
+		ModLoader.addName(itemSpawnerEnderman, "fr_FR", "Generateur d'endermen");
+		ModLoader.addName(itemSpawnerCaveSpider, "fr_FR", "Generateur d'araignees-venimeuses");
+		ModLoader.addName(itemSpawnerSilverfish, "fr_FR", "Generateur de poissons d'argent");
+		ModLoader.addName(itemSpawnerBlaze, "fr_FR", "Generateur de piromans");
+		ModLoader.addName(itemSpawnerLavaSlime, "fr_FR", "Generateur de blobs de lave");
+		ModLoader.addName(itemSpawnerEnderDragon, "fr_FR", "Generateur d'EnderDragon");
+		ModLoader.addName(itemSpawnerPig, "fr_FR", "Generateur de cochons");
+		ModLoader.addName(itemSpawnerSheep, "fr_FR", "Generateur de moutons");
+		ModLoader.addName(itemSpawnerCow, "fr_FR", "Generateur de vaches-ninja");
+		ModLoader.addName(itemSpawnerChicken, "fr_FR", "Generateur de poulets");
+		ModLoader.addName(itemSpawnerSquid, "fr_FR", "Generateur de poulpes");
+		ModLoader.addName(itemSpawnerWolf, "fr_FR", "Generateur de loups");
+		ModLoader.addName(itemSpawnerMushroomCow, "fr_FR", "Generateur de champimeuh");
+		ModLoader.addName(itemSpawnerSnowMan, "fr_FR", "Generateur de bonhommes de neige");
+		ModLoader.addName(itemSpawnerOzelot, "fr_FR", "Generateur de nyaaa");
+		ModLoader.addName(itemSpawnerVillagerGolem, "fr_FR", "Generateur de golems");
+		ModLoader.addName(itemSpawnerVillager, "fr_FR", "Generateur de peons");
 		
 		// Register MobSpawner crafting recipes :
 		ModLoader.addRecipe(new ItemStack(itemSpawnerCreeper, 1), new Object[] {"MDM", "DXD", "MDM", 'M', Block.cobblestoneMossy, 'D', Item.diamond, 'X', Item.gunpowder});
@@ -220,9 +220,9 @@ public class CustomMod {
 	}
 	
 	/**
-	 * Log une chaine de caractère, seulement si le mode debug est activé.
-	 * @param text - la chaine de caractère à écrire.
-	 * @param logNow - indique si la chaine doit être loguée tout de suite, ou stockée en attendant le reste de la ligne.
+	 * Log une chaine de caracteres, seulement si le mode debug est active.
+	 * @param text - la chaine de caracteres a ecrire.
+	 * @param logNow - indique si la chaine doit etre loguee tout de suite, ou stockee en attendant le reste de la ligne.
 	 */
 	public static void debug(String text, boolean logNow) {
 		if(debug) {
@@ -235,10 +235,10 @@ public class CustomMod {
 	}
 	
 	/**
-	 * Log n fois une chaine de caractère, seulement si le mode debug est activé.
-	 * @param text - la chaine de caractère à écrire.
-	 * @param logNow - indique si la chaine doit être loguée tout de suite, ou stockée en attendant le reste de la ligne.
-	 * @param nb - le nombre de fois qu'il faut écrire la chaine de caractère.
+	 * Log n fois une chaine de caracteres, seulement si le mode debug est active.
+	 * @param text - la chaine de caracteres a ecrire.
+	 * @param logNow - indique si la chaine doit etre loguee tout de suite, ou stockee en attendant le reste de la ligne.
+	 * @param nb - le nombre de fois qu'il faut ecrire la chaine de caractere.
 	 */
 	public static void debug(String text, boolean logNow, int n) {
 		if(debug && n > 0) {

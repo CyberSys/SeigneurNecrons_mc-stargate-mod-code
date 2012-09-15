@@ -8,65 +8,65 @@ import net.minecraft.src.TileEntity;
 public class TileEntityCoordDhd extends TileEntityCoord {
 	
 	/**
-	 * Portée maximale de connection avec une porte.
+	 * Portee maximale de connection avec une porte.
 	 */
 	private static final int maxRange = 20;
 	
 	/**
-	 * Indique si ce DHD est connecté à une porte.
+	 * Indique si ce DHD est connecte a une porte.
 	 */
 	private boolean linkedToGate = false;
 	
 	/**
-	 * La coordonnée en X de la porte à laquelle est lié ce DHD.
+	 * La coordonnee en X de la porte a laquelle est lie ce DHD.
 	 */
 	private int xGate = 0;
 	
 	/**
-	 * La coordonnée en Y de la porte à laquelle est lié ce DHD.
+	 * La coordonnee en Y de la porte a laquelle est lie ce DHD.
 	 */
 	private int yGate = 0;
 	
 	/**
-	 * La coordonnée en Z de la porte à laquelle est lié ce DHD.
+	 * La coordonnee en Z de la porte a laquelle est lie ce DHD.
 	 */
 	private int zGate = 0;
 	
 	/**
-	 * Indique si ce DHD est connecté à une porte.
-	 * @return true si ce DHD est connecté à une porte, false sinon.
+	 * Indique si ce DHD est connecte a une porte.
+	 * @return true si ce DHD est connecte a une porte, false sinon.
 	 */
 	public boolean isLinkedToGate() {
 		return linkedToGate;
 	}
 	
 	/**
-	 * Retourne la coordonnée en X de la porte à laquelle est lié ce DHD.
-	 * @return la coordonnée en X de la porte à laquelle est lié ce DHD.
+	 * Retourne la coordonnee en X de la porte a laquelle est lie ce DHD.
+	 * @return la coordonnee en X de la porte a laquelle est lie ce DHD.
 	 */
 	public int getXGate() {
 		return xGate;
 	}
 	
 	/**
-	 * Retourne la coordonnée en Y de la porte à laquelle est lié ce DHD.
-	 * @return la coordonnée en Y de la porte à laquelle est lié ce DHD.
+	 * Retourne la coordonnee en Y de la porte a laquelle est lie ce DHD.
+	 * @return la coordonnee en Y de la porte a laquelle est lie ce DHD.
 	 */
 	public int getYGate() {
 		return yGate;
 	}
 	
 	/**
-	 * Retourne la coordonnée en Z de la porte à laquelle est lié ce DHD.
-	 * @return la coordonnée en Z de la porte à laquelle est lié ce DHD.
+	 * Retourne la coordonnee en Z de la porte a laquelle est lie ce DHD.
+	 * @return la coordonnee en Z de la porte a laquelle est lie ce DHD.
 	 */
 	public int getZGate() {
 		return zGate;
 	}
 	
 	/**
-	 * Signal à ce DHD s'il est connecté à une porte et prévient les clients du changement.
-	 * @param linkedToGate true si ce DHD est connecté à une porte, false sinon.
+	 * Signal a ce DHD s'il est connecte a une porte et previent les clients du changement.
+	 * @param linkedToGate true si ce DHD est connecte a une porte, false sinon.
 	 */
 	private void setLinkedToGate(boolean linkedToGate) {
 		this.linkedToGate = linkedToGate;
@@ -74,12 +74,12 @@ public class TileEntityCoordDhd extends TileEntityCoord {
 	}
 	
 	/**
-	 * Cherche une porte des étoiles dans la zone, et enregistre ses coordonnées.
+	 * Cherche une porte des etoiles dans la zone, et enregistre ses coordonnees.
 	 */
 	private void searchGate() {
-		// Pas la peine de chercher une porte si on en a déjà trouvé une.
+		// Pas la peine de chercher une porte si on en a deja trouve une.
 		if(!this.linkedToGate) {
-			// On cherche d'abord dans un rayon de 1 autour du block, puis on augmente le rayon jusqu'à ce qu'on trouve une porte ou qu'on atteigne la portée max.
+			// On cherche d'abord dans un rayon de 1 autour du block, puis on augmente le rayon jusqu'a ce qu'on trouve une porte ou qu'on atteigne la portee max.
 			for(int rayon = 1; rayon <= maxRange; ++rayon) {
 				for(int i = -rayon; i <= rayon; ++i) {
 					for(int j = -rayon; j <= rayon; ++j) {
@@ -96,7 +96,7 @@ public class TileEntityCoordDhd extends TileEntityCoord {
 								return;
 							}
 							
-							// On ne teste pas l'interieur du cube, puisqu'il a déjà été testé dans la boucle précédante (parcours sur rayon).
+							// On ne teste pas l'interieur du cube, puisqu'il a deja ete teste dans la boucle precedante (parcours sur rayon).
 							if(Math.abs(i) != rayon && Math.abs(j) != rayon && k == -rayon) {
 								k = rayon - 1;
 							}
@@ -108,7 +108,7 @@ public class TileEntityCoordDhd extends TileEntityCoord {
 	}
 	
 	/**
-	 * Active la porte des étoile liée à ce dhd, s'il y en a une.
+	 * Active la porte des etoile liee a ce dhd, s'il y en a une.
 	 */
 	public void activateGate() {
 		this.searchGate();
@@ -150,8 +150,8 @@ public class TileEntityCoordDhd extends TileEntityCoord {
 	}
 	
 	/**
-	 * Enregistre les données de la tileEntity dans une List de Byte, dans le but de créer un packet.
-	 * @return les données de la tileEntity sous la forme d'une List de Byte.
+	 * Enregistre les donnees de la tileEntity dans une List de Byte, dans le but de creer un packet.
+	 * @return les donnees de la tileEntity sous la forme d'une List de Byte.
 	 */
 	@Override
 	protected LinkedList<Byte> getEntityData() {
@@ -166,8 +166,8 @@ public class TileEntityCoordDhd extends TileEntityCoord {
 	}
 	
 	/**
-	 * Charge les données de la tileEntity depuis une LinkedList de Byte.
-	 * @param list - la LinkedList de Byte contenant les données à charger.
+	 * Charge les donnees de la tileEntity depuis une LinkedList de Byte.
+	 * @param list - la LinkedList de Byte contenant les donnees a charger.
 	 * @return true si le chargement est un succes, false sinon.
 	 */
 	@Override
@@ -184,8 +184,8 @@ public class TileEntityCoordDhd extends TileEntityCoord {
 	}
 	
 	/**
-	 * Verifie que l'id fournie est une id correcte pour un packet destiné à cette tile entity.
-	 * @param id - l'id à tester.
+	 * Verifie que l'id fournie est une id correcte pour un packet destine a cette tile entity.
+	 * @param id - l'id a tester.
 	 * @return true si l'id est correcte, false sinon.
 	 */
 	@Override
@@ -194,7 +194,7 @@ public class TileEntityCoordDhd extends TileEntityCoord {
 	}
 	
 	/**
-	 * Retourne une représentation textuelle de cette tile entity.
+	 * Retourne une representation textuelle de cette tile entity.
 	 */
 	@Override
 	public String toString() {

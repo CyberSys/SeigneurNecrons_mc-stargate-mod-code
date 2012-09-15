@@ -22,13 +22,13 @@ import cpw.mods.fml.relauncher.FMLRelaunchLog;
 
 /**
  * Cette classe est la classe principale du mode Necron_StagateMod.<br /><br />
- * Autres classes ajoutées (common - 39) :<br />
+ * Autres classes ajoutees (common - 39) :<br />
  * BlockChevron, BlockCoord, BlockCoordDhd, BlockCoordTeleporter, BlockDetector, BlockGui, BlockMasterChevron, BlockNaquadaAlliage, BlockNaquadaMade, BlockNaquadaOre, BlockPanel, BlockPanelDhd, BlockPanelTeleporter, BlockStargate, BlockStargatePart, BlockStargateSolidPart, BlockVortex,
  * ContainerGui, GateActivationState, GateActivationType, GateState, ItemStargate, ItemStargatePlaceable, NaquadaGenerator, StargateCommonProxy, StargatePacketHandler, StargateServerPacketHandler,
  * TileEntityChevron, TileEntityCoord, TileEntityCoordDhd, TileEntityCoordTeleporter, TileEntityDetector, TileEntityGui, TileEntityMasterChevron, TileEntityNaquadaAlliage, TileEntityStargate, TileEntityStargatePart, TileEntityVortex.<br /><br />
- * Autres classes ajoutées (client - 7) :<br />
+ * Autres classes ajoutees (client - 7) :<br />
  * GuiDetector, GuiDhd, GuiIntegerField, GuiTeleporter, StargateClientEvents, StargateClientPacketHandler, StargateClientProxy.<br /><br />
- * Aucune classe du jeu de base n'est modifiée !
+ * Aucune classe du jeu de base n'est modifiee !
  * @author Seigneur Necron
  */
 @Mod(modid = "SeigneurNecron_StargateMod", name = "Necron_StargateMod", version = "[1.3.2] v1.0.0")
@@ -131,10 +131,10 @@ public class StargateMod {
 		ModLoader.addName(itemNaquadaIngot, "fr_FR", "Lingot de naquada");
 		ModLoader.addName(itemChevronCompound, "fr_FR", "Composant de chevron");
 		ModLoader.addName(itemCrystal, "fr_FR", "Cristal");
-		ModLoader.addName(itemCrystalDhd, "fr_FR", "Cristal de contrôle de DHD");
-		ModLoader.addName(itemCrystalTeleporter, "fr_FR", "Cristal de téléporteur");
+		ModLoader.addName(itemCrystalDhd, "fr_FR", "Cristal de controle de DHD");
+		ModLoader.addName(itemCrystalTeleporter, "fr_FR", "Cristal de teleporteur");
 		ModLoader.addName(itemCrystalScanner, "fr_FR", "Cristal de scanner");
-		ModLoader.addName(itemDhdPanel, "fr_FR", "Panneau de contrôle");
+		ModLoader.addName(itemDhdPanel, "fr_FR", "Panneau de contrele");
 		ModLoader.addName(itemTouchScreen, "fr_FR", "Ecran tactile");
 		
 		// Register Stargate crafting recipes :
@@ -187,9 +187,9 @@ public class StargateMod {
 	}
 	
 	/**
-	 * Log une chaine de caractère, seulement si le mode debug est activé.
-	 * @param text - la chaine de caractère à écrire.
-	 * @param logNow - indique si la chaine doit être loguée tout de suite, ou stockée en attendant le reste de la ligne.
+	 * Log une chaine de caracteres, seulement si le mode debug est active.
+	 * @param text - la chaine de caracteres a ecrire.
+	 * @param logNow - indique si la chaine doit etre loguee tout de suite, ou stockee en attendant le reste de la ligne.
 	 */
 	public static void debug(String text, boolean logNow) {
 		if(debug) {
@@ -202,10 +202,10 @@ public class StargateMod {
 	}
 	
 	/**
-	 * Log n fois une chaine de caractère, seulement si le mode debug est activé.
-	 * @param text - la chaine de caractère à écrire.
-	 * @param logNow - indique si la chaine doit être loguée tout de suite, ou stockée en attendant le reste de la ligne.
-	 * @param nb - le nombre de fois qu'il faut écrire la chaine de caractère.
+	 * Log n fois une chaine de caracteres, seulement si le mode debug est active.
+	 * @param text - la chaine de caracteres a ecrire.
+	 * @param logNow - indique si la chaine doit etre loguee tout de suite, ou stockee en attendant le reste de la ligne.
+	 * @param nb - le nombre de fois qu'il faut ecrire la chaine de caractere.
 	 */
 	public static void debug(String text, boolean logNow, int n) {
 		if(debug && n > 0) {

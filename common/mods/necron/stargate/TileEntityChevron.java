@@ -7,21 +7,21 @@ import net.minecraft.src.NBTTagCompound;
 public class TileEntityChevron extends TileEntityStargatePart {
 	
 	/**
-	 * Le numéro du chevron.
+	 * Le numero du chevron.
 	 */
 	private int no = 0;
 	
 	/**
-	 * Retourne le numéro du chevron.
-	 * @return le numéro du chevron.
+	 * Retourne le numero du chevron.
+	 * @return le numero du chevron.
 	 */
 	public int getNo() {
 		return this.no;
 	}
 	
 	/**
-	 * Positionne le numéro du chevron.
-	 * @param no - le nouveau numéro du chevron.
+	 * Positionne le numero du chevron.
+	 * @param no - le nouveau numero du chevron.
 	 */
 	public void setNo(int no) {
 		this.no = no;
@@ -29,8 +29,8 @@ public class TileEntityChevron extends TileEntityStargatePart {
 	}
 	
 	/**
-	 * Indique si ce chevron est activé.
-	 * @return true si ce chevron est activé, false sinon.
+	 * Indique si ce chevron est active.
+	 * @return true si ce chevron est active, false sinon.
 	 */
 	public boolean isChevronActivated() {
 		if(this.partOfGate) {
@@ -59,8 +59,8 @@ public class TileEntityChevron extends TileEntityStargatePart {
 	}
 	
 	/**
-	 * Enregistre les données de la tileEntity dans une List de Byte, dans le but de créer un packet.
-	 * @return les données de la tileEntity sous la forme d'une List de Byte.
+	 * Enregistre les donnees de la tileEntity dans une List de Byte, dans le but de creer un packet.
+	 * @return les donnees de la tileEntity sous la forme d'une List de Byte.
 	 */
 	@Override
 	protected LinkedList<Byte> getEntityData() {
@@ -72,8 +72,8 @@ public class TileEntityChevron extends TileEntityStargatePart {
 	}
 	
 	/**
-	 * Charge les données de la tileEntity depuis une LinkedList de Byte.
-	 * @param list - la LinkedList de Byte contenant les données à charger.
+	 * Charge les donnees de la tileEntity depuis une LinkedList de Byte.
+	 * @param list - la LinkedList de Byte contenant les donnees a charger.
 	 * @return true si le chargement est un succes, false sinon.
 	 */
 	@Override
@@ -87,7 +87,7 @@ public class TileEntityChevron extends TileEntityStargatePart {
 	}
 	
 	/**
-	 * Retourne une représentation textuelle de cette tile entity.
+	 * Retourne une representation textuelle de cette tile entity.
 	 */
 	@Override
 	public String toString() {

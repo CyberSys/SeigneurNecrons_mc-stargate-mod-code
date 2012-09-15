@@ -13,40 +13,40 @@ public abstract class TileEntityStargatePart extends TileEntityStargate {
 	protected boolean partOfGate = false;
 	
 	/**
-	 * Retourne la coordonnée en X de la porte à laquelle est lié ce bloc.
-	 * @return la coordonnée en X de la porte à laquelle est lié ce bloc.
+	 * Retourne la coordonnee en X de la porte a laquelle est lie ce bloc.
+	 * @return la coordonnee en X de la porte a laquelle est lie ce bloc.
 	 */
 	public int getXGate() {
 		return xGate;
 	}
 	
 	/**
-	 * Retourne la coordonnée en Y de la porte à laquelle est lié ce bloc.
-	 * @return la coordonnée en Y de la porte à laquelle est lié ce bloc.
+	 * Retourne la coordonnee en Y de la porte a laquelle est lie ce bloc.
+	 * @return la coordonnee en Y de la porte a laquelle est lie ce bloc.
 	 */
 	public int getYGate() {
 		return yGate;
 	}
 	
 	/**
-	 * Retourne la coordonnée en Z de la porte à laquelle est lié ce bloc.
-	 * @return la coordonnée en Z de la porte à laquelle est lié ce bloc.
+	 * Retourne la coordonnee en Z de la porte a laquelle est lie ce bloc.
+	 * @return la coordonnee en Z de la porte a laquelle est lie ce bloc.
 	 */
 	public int getZGate() {
 		return zGate;
 	}
 	
 	/**
-	 * Indique si le block appartient à une porte.
-	 * @return true si le block appartient à une porte, false sinon.
+	 * Indique si le block appartient a une porte.
+	 * @return true si le block appartient a une porte, false sinon.
 	 */
 	public boolean isPartOfGate() {
 		return this.partOfGate;
 	}
 	
 	/**
-	 * Signal à ce block s'il appartient à une porte et previent les clients du changement.
-	 * @param partOfGate - true si le block appartient à une porte, false sinon.
+	 * Signal a ce block s'il appartient a une porte et previent les clients du changement.
+	 * @param partOfGate - true si le block appartient a une porte, false sinon.
 	 */
 	protected void setPartOfGate(boolean partOfGate) {
 		this.partOfGate = partOfGate;
@@ -55,10 +55,10 @@ public abstract class TileEntityStargatePart extends TileEntityStargate {
 	}
 	
 	/**
-	 * Lie ce bloc à une porte.
-	 * @param x - la coordonnée en X du chevron maitre de la porte.
-	 * @param y - la coordonnée en Y du chevron maitre de la porte.
-	 * @param z - la coordonnée en Z du chevron maitre de la porte.
+	 * Lie ce bloc a une porte.
+	 * @param x - la coordonnee en X du chevron maitre de la porte.
+	 * @param y - la coordonnee en Y du chevron maitre de la porte.
+	 * @param z - la coordonnee en Z du chevron maitre de la porte.
 	 */
 	public void setGate(int x, int y, int z) {
 		this.xGate = x;
@@ -68,7 +68,7 @@ public abstract class TileEntityStargatePart extends TileEntityStargate {
 	}
 	
 	/**
-	 * Signal à ce block qu'il n'appartient plus à une porte.
+	 * Signal a ce block qu'il n'appartient plus a une porte.
 	 */
 	public void breakGate() {
 		this.setPartOfGate(false);
@@ -85,8 +85,8 @@ public abstract class TileEntityStargatePart extends TileEntityStargate {
 	}
 	
 	/**
-	 * Recupère la tile entity du chevron maitre de la porte à laquelle apartient ce block.
-	 * @return la tile entity du chevron maitre de la porte à laquelle apartient ce block.
+	 * Recupere la tile entity du chevron maitre de la porte a laquelle apartient ce block.
+	 * @return la tile entity du chevron maitre de la porte a laquelle apartient ce block.
 	 */
 	public TileEntityMasterChevron getMasterChevron() {
 		if(!this.isPartOfGate()) {
@@ -127,8 +127,8 @@ public abstract class TileEntityStargatePart extends TileEntityStargate {
 	}
 	
 	/**
-	 * Enregistre les données de la tileEntity dans une List de Byte, dans le but de créer un packet.
-	 * @return les données de la tileEntity sous la forme d'une List de Byte.
+	 * Enregistre les donnees de la tileEntity dans une List de Byte, dans le but de creer un packet.
+	 * @return les donnees de la tileEntity sous la forme d'une List de Byte.
 	 */
 	@Override
 	protected LinkedList<Byte> getEntityData() {
@@ -143,8 +143,8 @@ public abstract class TileEntityStargatePart extends TileEntityStargate {
 	}
 	
 	/**
-	 * Charge les données de la tileEntity depuis une LinkedList de Byte.
-	 * @param list - la LinkedList de Byte contenant les données à charger.
+	 * Charge les donnees de la tileEntity depuis une LinkedList de Byte.
+	 * @param list - la LinkedList de Byte contenant les donnees a charger.
 	 * @return true si le chargement est un succes, false sinon.
 	 */
 	@Override
@@ -160,7 +160,7 @@ public abstract class TileEntityStargatePart extends TileEntityStargate {
 	}
 	
 	/**
-	 * Retourne une représentation textuelle de cette tile entity.
+	 * Retourne une representation textuelle de cette tile entity.
 	 */
 	@Override
 	public String toString() {

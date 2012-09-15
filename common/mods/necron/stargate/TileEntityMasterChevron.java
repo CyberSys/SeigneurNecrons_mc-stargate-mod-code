@@ -28,12 +28,12 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	private static final int MAX_ACTIVATED_TIME = 3960;
 	
 	/**
-	 * La durrée pendant laquelle une entité ne peux être téléportée une deuxième fois : 1sec (1sec = 22tick).
+	 * La durree pendant laquelle une entite ne peux etre teleportee une deuxieme fois : 1sec (1sec = 22tick).
 	 */
 	private static final int TELEPORT_LOCK_TIME = 22;
 	
 	/**
-	 * L'index où est stocké le nombre de cases vides dans chaque ligne du patern.
+	 * L'index où est stocke le nombre de cases vides dans chaque ligne du patern.
 	 */
 	private static final int INDEX_NB_CASES_VIDES = 0;
 	
@@ -53,17 +53,17 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	private static final int M = StargateMod.masterChevron.blockID;
 	
 	/**
-	 * Le patern servant à verifier si une porte des étoile est bien construite.
+	 * Le patern servant a verifier si une porte des etoile est bien construite.
 	 */
 	private static final int[][] PATERN = { {0, M, N}, {0, N, N, N, N}, {2, N, N, C}, {4, N, N}, {5, N, N}, {5, N, N}, {6, N, C}, {6, N, N}, {6, N, N}, {5, N, N}, {5, N, C}, {4, N, N}, {2, N, N, N}, {0, N, N, N, C}, {0, N, N}};
 	
 	/**
-	 * Un tableau de valeurs servant à calculer les coordonnées de chaque chevron.
+	 * Un tableau de valeurs servant a calculer les coordonnees de chaque chevron.
 	 */
 	private static final int[][] CHEVRON = { {-2, 4}, {-6, 7}, {-10, 6}, {-10, -6}, {-6, -7}, {-2, -4}, {0, 0}, {-13, 3}, {-13, -3}};
 	
 	/**
-	 * Liste des id des blocks pouvant être remplacés par un vortex.
+	 * Liste des id des blocks pouvant etre remplaces par un vortex.
 	 */
 	private static final LinkedList<Integer> blocksRemplassables = new LinkedList<Integer>();
 	
@@ -80,7 +80,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	// Champs :
 	
 	/**
-	 * L'état de la porte : Broken/Off/Activating/Output/Input.
+	 * L'etat de la porte : Broken/Off/Activating/Output/Input.
 	 */
 	private GateState state = GateState.BROKEN;
 	
@@ -90,40 +90,40 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	private GateActivationType activationType = GateActivationType.FAILED;
 	
 	/**
-	 * L'état d'activation de la porte : E0/E1/E2/E3/E4/E5/E6/E7.
+	 * L'etat d'activation de la porte : E0/E1/E2/E3/E4/E5/E6/E7.
 	 */
 	private GateActivationState activationState = GateActivationState.E0;
 	
 	/**
-	 * Compteur servant à l'activation et la désactivation automatique de la porte.
+	 * Compteur servant a l'activation et la desactivation automatique de la porte.
 	 */
 	private int count = 0;
 	
 	/**
-	 * Coordonnée en X de la destination.
+	 * Coordonnee en X de la destination.
 	 */
 	private int xDest = 0;
 	
 	/**
-	 * Coordonnée en Y de la destination.
+	 * Coordonnee en Y de la destination.
 	 */
 	private int yDest = 0;
 	
 	/**
-	 * Coordonnée en Z de la destination.
+	 * Coordonnee en Z de la destination.
 	 */
 	private int zDest = 0;
 	
 	/**
-	 * Une map contenant la liste des entités récement transportées, ainsi qu'un compteur indiquand il y a combien de temps elle ont été téléportées.
+	 * Une map contenant la liste des entites recement transportees, ainsi qu'un compteur indiquand il y a combien de temps elle ont ete teleportees.
 	 */
 	private HashMap<Integer, Integer> teleportedEntities = new HashMap<Integer, Integer>();
 	
 	// Methodes :
 	
 	/**
-	 * Retourne l'état de la porte : Broken/Off/Activating/Output/Input.
-	 * @return l'état de la porte : Broken/Off/Activating/Output/Input.
+	 * Retourne l'etat de la porte : Broken/Off/Activating/Output/Input.
+	 * @return l'etat de la porte : Broken/Off/Activating/Output/Input.
 	 */
 	public GateState getState() {
 		return this.state;
@@ -138,56 +138,56 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	}
 	
 	/**
-	 * Retourne l'état d'activation de la porte : E0/E1/E2/E3/E4/E5/E6/E7.
-	 * @return l'état d'activation de la porte : E0/E1/E2/E3/E4/E5/E6/E7.
+	 * Retourne l'etat d'activation de la porte : E0/E1/E2/E3/E4/E5/E6/E7.
+	 * @return l'etat d'activation de la porte : E0/E1/E2/E3/E4/E5/E6/E7.
 	 */
 	public GateActivationState getActivationState() {
 		return this.activationState;
 	}
 	
 	/**
-	 * Retourne le compteur servant à l'activation et la désactivation automatique de la porte.
-	 * @return le compteur servant à l'activation et la désactivation automatique de la porte.
+	 * Retourne le compteur servant a l'activation et la desactivation automatique de la porte.
+	 * @return le compteur servant a l'activation et la desactivation automatique de la porte.
 	 */
 	public int getCount() {
 		return this.count;
 	}
 	
 	/**
-	 * Retourne la coordonnée en X de la destination.
-	 * @return la coordonnée en X de la destination.
+	 * Retourne la coordonnee en X de la destination.
+	 * @return la coordonnee en X de la destination.
 	 */
 	public int getXDest() {
 		return this.xDest;
 	}
 	
 	/**
-	 * Retourne la coordonnée en Y de la destination.
-	 * @return la coordonnée en Y de la destination.
+	 * Retourne la coordonnee en Y de la destination.
+	 * @return la coordonnee en Y de la destination.
 	 */
 	public int getYDest() {
 		return this.yDest;
 	}
 	
 	/**
-	 * Retourne la coordonnée en Z de la destination.
-	 * @return la coordonnée en Z de la destination.
+	 * Retourne la coordonnee en Z de la destination.
+	 * @return la coordonnee en Z de la destination.
 	 */
 	public int getZDest() {
 		return this.zDest;
 	}
 	
 	/**
-	 * Indique si le chevron 7 est activé.
-	 * @return true si le chevron 7 est activé, false sinon.
+	 * Indique si le chevron 7 est active.
+	 * @return true si le chevron 7 est active, false sinon.
 	 */
 	public boolean isChevronActivated() {
 		return (this.state == GateState.INPUT || this.state == GateState.OUTPUT || (this.state == GateState.ACTIVATING && this.activationState == GateActivationState.E7));
 	}
 	
 	/**
-	 * Change l'état de la porte et prévient les client du changement.
-	 * @param state - le nouvel état de la porte.
+	 * Change l'etat de la porte et previent les client du changement.
+	 * @param state - le nouvel etat de la porte.
 	 */
 	private void setState(GateState state) {
 		this.state = state;
@@ -196,8 +196,8 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	}
 	
 	/**
-	 * Change l'état d'activation de la porte et prévient les client du changement.
-	 * @param activationState - le nouvel état d'activation de la porte.
+	 * Change l'etat d'activation de la porte et previent les client du changement.
+	 * @param activationState - le nouvel etat d'activation de la porte.
 	 */
 	private void setActivationState(GateActivationState activationState) {
 		this.activationState = activationState;
@@ -209,17 +209,17 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	
 	/**
 	 * Change le type d'activation de la porte.
-	 * @param activationType - le nouvel état d'activation de la porte.
+	 * @param activationType - le nouvel etat d'activation de la porte.
 	 */
 	private void setActivationType(GateActivationType activationType) {
 		this.activationType = activationType;
 	}
 	
 	/**
-	 * Enregistre les coordonnées de la destination.
-	 * @param x - la coordonnée en X de la destination.
-	 * @param y - la coordonnée en Y de la destination.
-	 * @param z - la coordonnée en Z de la destination.
+	 * Enregistre les coordonnees de la destination.
+	 * @param x - la coordonnee en X de la destination.
+	 * @param y - la coordonnee en Y de la destination.
+	 * @param z - la coordonnee en Z de la destination.
 	 */
 	private void setDestination(int x, int y, int z) {
 		this.xDest = x;
@@ -228,18 +228,18 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	}
 	
 	/**
-	 * Verifie que la porte peut être activée.
-	 * @return true si la porte peut être activée, false sinon.
+	 * Verifie que la porte peut etre activee.
+	 * @return true si la porte peut etre activee, false sinon.
 	 */
 	public boolean isActivable() {
-		// Le patern doit être vérifié, la porte ne doit pas être déjà activée et il doit y avoir au moins un block à remplacer par du vortex.
+		// Le patern doit etre verifie, la porte ne doit pas etre deja activee et il doit y avoir au moins un block a remplacer par du vortex.
 		return this.checkPatern() && this.state == GateState.OFF && this.getBlocksARemplacer().size() > 0;
 	}
 	
 	/**
-	 * Verifie que la une porte des étoiles est complete/intacte.<br />
-	 * S'il y avait une porte avant, mais qu'elle a été endomagée, elle est désactivée.
-	 * @return true s'il y a bien une porte à cette position, false sinon.
+	 * Verifie que la une porte des etoiles est complete/intacte.<br />
+	 * S'il y avait une porte avant, mais qu'elle a ete endomagee, elle est desactivee.
+	 * @return true s'il y a bien une porte a cette position, false sinon.
 	 */
 	public boolean checkPatern() {
 		// Intialisation.
@@ -248,10 +248,10 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 		int y = this.yCoord;
 		int z = this.zCoord;
 		
-		// Si la porte est située trop bas sur l'axe Y.
+		// Si la porte est situee trop bas sur l'axe Y.
 		if(y < PATERN.length) {
-			// Le patern ne peut pas être respecté.
-			StargateMod.debug("La porte est située trop bas sur l'axe Y !\n", true);
+			// Le patern ne peut pas etre respecte.
+			StargateMod.debug("La porte est situee trop bas sur l'axe Y !\n", true);
 			return false;
 		}
 		
@@ -289,21 +289,21 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 							this.setBroken();
 							return false;
 						}
-						// Si la porte n'est pas encore crée.
+						// Si la porte n'est pas encore cree.
 						else if(this.state == GateState.BROKEN) {
 							TileEntityStargatePart tileEntity = (TileEntityStargatePart) this.worldObj.getBlockTileEntity(x, y, z);
-							// Si le block appartient déjà à une autre porte.
+							// Si le block appartient deja a une autre porte.
 							if(tileEntity != null && tileEntity.isPartOfGate()) {
-								// Il ne peut pas appartenir à cette porte.
+								// Il ne peut pas appartenir a cette porte.
 								StargateMod.debug("", true);
-								StargateMod.debug("Ce block appartient déjà à une autre porte !\n", true);
+								StargateMod.debug("Ce block appartient deja a une autre porte !\n", true);
 								return false;
 							}
 						}
 					}
 				}
 				else {
-					// Sinon, on zap jusqu'à l'autre côté de la porte.
+					// Sinon, on zap jusqu'a l'autre cote de la porte.
 					StargateMod.debug("    ", false, nbCasesAir * 2 - 1);
 					j = nbCasesAir - 1;
 				}
@@ -311,18 +311,18 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			StargateMod.debug("", true);
 		}
 		
-		// Si on est arrivé jusqu'ici, c'est que le patern est vérifié.
+		// Si on est arrive jusqu'ici, c'est que le patern est verifie.
 		StargateMod.debug("Gate patern OK !\n", true);
 		return true;
 	}
 	
 	/**
-	 * Crée une porte des étoiles, si c'est possible.<br />
-	 * Associe des TileEntity aux blocks de la porte ainsi que des numéro aux chevrons.
-	 * @return true si l'operation a réussi, false sinon.
+	 * Cree une porte des etoiles, si c'est possible.<br />
+	 * Associe des TileEntity aux blocks de la porte ainsi que des numero aux chevrons.
+	 * @return true si l'operation a reussi, false sinon.
 	 */
 	public boolean createGate() {
-		// Si la porte n'est pas déjà crée, et si le patern est respecté.
+		// Si la porte n'est pas deja cree, et si le patern est respecte.
 		if(this.state == GateState.BROKEN && this.checkPatern()) {
 			// Intialisation.
 			StargateMod.debug("Creation de la porte...", true);
@@ -352,13 +352,13 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 						
 						// Si la position n'est pas celle du chevron maitre.
 						if(j != 0 || i != 0) {
-							// On lie le block à la porte.
+							// On lie le block a la porte.
 							StargateMod.debug("OOO ", false);
 							((TileEntityStargatePart) this.worldObj.getBlockTileEntity(x, y, z)).setGate(this.xCoord, this.yCoord, this.zCoord);
 						}
 					}
 					else {
-						// Sinon, on zap jusqu'à l'autre côté de la porte.
+						// Sinon, on zap jusqu'a l'autre cote de la porte.
 						StargateMod.debug("    ", false, nbCasesAir * 2 - 1);
 						j = nbCasesAir - 1;
 					}
@@ -366,7 +366,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 				StargateMod.debug("", true);
 			}
 			
-			// On associe un numéro à chaque chevron.
+			// On associe un numero a chaque chevron.
 			for(int i = 1; i <= 9; ++i) {
 				TileEntityChevron chevron = this.getChevron(i);
 				if(chevron != null) {
@@ -374,23 +374,23 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 				}
 			}
 			
-			// On met à jour l'état de la porte.
-			StargateMod.debug("Creation terminée.\n", true);
+			// On met a jour l'etat de la porte.
+			StargateMod.debug("Creation terminee.\n", true);
 			this.setState(GateState.OFF);
 			return true;
 		}
 		
-		// On signal que la création a échoué.
+		// On signal que la creation a echoue.
 		return false;
 	}
 	
 	/**
-	 * Retourne la liste des blocks qui peuvent être remplacés par le vortex.
-	 * @return la liste des blocks qui peuvent être remplacés par le vortex.
+	 * Retourne la liste des blocks qui peuvent etre remplaces par le vortex.
+	 * @return la liste des blocks qui peuvent etre remplaces par le vortex.
 	 */
 	public LinkedList<ChunkPosition> getBlocksARemplacer() {
 		// Intialisation.
-		StargateMod.debug("Récuperation des block à remplacer par du vortex...", true);
+		StargateMod.debug("Recuperation des block a remplacer par du vortex...", true);
 		LinkedList<ChunkPosition> blocksARemplacer = new LinkedList<ChunkPosition>();
 		int x = this.xCoord;
 		int y = this.yCoord;
@@ -415,55 +415,55 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 				
 				// Si le block est remplassable par le vortex.
 				if(this.blocksRemplassables.contains(blockId)) {
-					// On l'ajoute à la liste des blocks à remplacer.
+					// On l'ajoute a la liste des blocks a remplacer.
 					blocksARemplacer.add(new ChunkPosition(x, y, z));
 				}
 			}
 			StargateMod.debug("", true);
 		}
 		
-		StargateMod.debug("Récuperation terminée.\n", true);
+		StargateMod.debug("Recuperation terminee.\n", true);
 		return blocksARemplacer;
 	}
 	
 	/**
-	 * Crée un passage entre cette porte est la porte située aux coordonnées fournies, si c'est possible.
-	 * @param x - la coordonnée en X de la porte de destination.
-	 * @param y - la coordonnée en Y de la porte de destination.
-	 * @param z - la coordonnée en Z de la porte de destination.
+	 * Cree un passage entre cette porte est la porte situee aux coordonnees fournies, si c'est possible.
+	 * @param x - la coordonnee en X de la porte de destination.
+	 * @param y - la coordonnee en Y de la porte de destination.
+	 * @param z - la coordonnee en Z de la porte de destination.
 	 */
 	public void activate(int x, int y, int z) {
-		// Si cette porte n'est pas encore initialisée, on essaie de l'initialiser; Si ça marche pas, on quitte.
+		// Si cette porte n'est pas encore initialisee, on essaie de l'initialiser; Si ça marche pas, on quitte.
 		if(this.state == GateState.BROKEN && !this.createGate()) {
-			StargateMod.debug("La porte n'a pas pu être initialisée !", true);
+			StargateMod.debug("La porte n'a pas pu etre initialisee !", true);
 			return;
 		}
 		
-		// Si les coordonnées fournies sont celles de la porte de départ, on quitte.
+		// Si les coordonnees fournies sont celles de la porte de depart, on quitte.
 		if(x == this.xCoord && y == this.yCoord && z == this.zCoord) {
-			StargateMod.debug("La porte de départ ne peut pas être la porte d'arrivée ! >.<", true);
+			StargateMod.debug("La porte de depart ne peut pas etre la porte d'arrivee ! >.<", true);
 			return;
 		}
 		
-		// Si la porte de départ ne peut pas être activée, on quitte.
+		// Si la porte de depart ne peut pas etre activee, on quitte.
 		if(!this.isActivable()) {
-			StargateMod.debug("La porte de départ ne peut pas être activée !", true);
+			StargateMod.debug("La porte de depart ne peut pas etre activee !", true);
 			return;
 		}
 		
-		// Si le block aux coordonées indiquées n'est pas un chevron maitre, on lance une fausse procedure d'activation.
+		// Si le block aux coordonees indiquees n'est pas un chevron maitre, on lance une fausse procedure d'activation.
 		if(this.worldObj.getBlockId(x, y, z) != StargateMod.masterChevron.blockID) {
-			StargateMod.debug("Faux numéro ! try again ! XD", true);
+			StargateMod.debug("Faux numero ! try again ! XD", true);
 			this.setActivating(GateActivationType.FAILED);
 			return;
 		}
 		
-		// On recupère la tile entity du chevron maitre de l'autre porte.
+		// On recupere la tile entity du chevron maitre de l'autre porte.
 		TileEntityMasterChevron otherGate = (TileEntityMasterChevron) this.worldObj.getBlockTileEntity(x, y, z);
 		
-		// Si la porte d'arrivée ne peut pas être activée, on lance une fausse procedure d'activation.
+		// Si la porte d'arrivee ne peut pas etre activee, on lance une fausse procedure d'activation.
 		if(!otherGate.isActivable()) {
-			StargateMod.debug("La porte que vous essayez de joindre est actuellement occupée, veuillez réessayer ultérieurement... XD", true);
+			StargateMod.debug("La porte que vous essayez de joindre est actuellement occupee, veuillez reessayer ulterieurement... XD", true);
 			this.setActivating(GateActivationType.FAILED);
 			return;
 		}
@@ -478,7 +478,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	}
 	
 	/**
-	 * Lance la procédure d'activation de la porte.
+	 * Lance la procedure d'activation de la porte.
 	 * @param activationType - le type d'activation (Failed/Output/Input).
 	 */
 	private void setActivating(GateActivationType activationType) {
@@ -486,9 +486,9 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 		this.count = ACTIVATION_TIME;
 		// On choisit le type d'activation.
 		this.setActivationType(activationType);
-		// On réinitialise l'étape d'activation.
+		// On reinitialise l'etape d'activation.
 		this.setActivationState(GateActivationState.E0);
-		// On met à jour l'état de la porte.
+		// On met a jour l'etat de la porte.
 		this.setState(GateState.ACTIVATING);
 	}
 	
@@ -496,24 +496,24 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	 * Ferme la vortex.
 	 */
 	public void close() {
-		// Si la porte était bien active ou en train de s'activer.
+		// Si la porte etait bien active ou en train de s'activer.
 		if(this.state == GateState.INPUT || this.state == GateState.OUTPUT || this.state == GateState.ACTIVATING) {
 			TileEntityMasterChevron otherGate = (TileEntityMasterChevron) this.worldObj.getBlockTileEntity(this.xDest, this.yDest, this.zDest);
-			// On désactive les deux portes.
+			// On desactive les deux portes.
 			this.deletePortal();
 			otherGate.deletePortal();
 		}
 	}
 	
 	/**
-	 * Crée un portail à l'emplacement des blocks libres.
+	 * Cree un portail a l'emplacement des blocks libres.
 	 */
 	private void createPortal() {
-		// Si la procédure d'activation était une fail.
+		// Si la procedure d'activation etait une fail.
 		if(this.activationType == GateActivationType.FAILED) {
-			// On joue le son correspondant à une activation fail.
+			// On joue le son correspondant a une activation fail.
 			this.playSoundEffect("stargate.gateFail");
-			// On met à jour l'état de la porte et on quitte.
+			// On met a jour l'etat de la porte et on quitte.
 			this.setState(GateState.OFF);
 			return;
 		}
@@ -522,19 +522,19 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 		
 		// A chaque emplacement libre dans la porte.
 		for(ChunkPosition position : this.getBlocksARemplacer()) {
-			// On crée un block de vortex.
+			// On cree un block de vortex.
 			this.worldObj.setBlockWithNotify(position.x, position.y, position.z, StargateMod.vortex.blockID);
-			// Et on le lie à la porte.
+			// Et on le lie a la porte.
 			TileEntityVortex tileEntity = (TileEntityVortex) this.worldObj.getBlockTileEntity(position.x, position.y, position.z);
 			tileEntity.setGate(this.xCoord, this.yCoord, this.zCoord);
 		}
 		
 		this.worldObj.editingBlocks = false;
 		
-		// On lance le compteur de désactivation automatique de la porte.
+		// On lance le compteur de desactivation automatique de la porte.
 		this.count = MAX_ACTIVATED_TIME;
 		
-		// On met à jour l'état de la porte.
+		// On met a jour l'etat de la porte.
 		switch(this.activationType) {
 			case INPUT:
 				this.setState(GateState.INPUT);
@@ -546,7 +546,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 				break;
 		}
 		
-		// On joue le son correspondant à une activation réussie.
+		// On joue le son correspondant a une activation reussie.
 		this.playSoundEffect("stargate.gateOpen");
 	}
 	
@@ -554,7 +554,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	 * Supprime les blocks de portail.
 	 */
 	private void deletePortal() {
-		// Si la procédure d'activation n'était pas terminée, il n'y a aucun block à supprimer.
+		// Si la procedure d'activation n'etait pas terminee, il n'y a aucun block a supprimer.
 		if(this.state != GateState.ACTIVATING) {
 			// Intialisation.
 			int x = this.xCoord;
@@ -592,29 +592,29 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			
 			this.worldObj.editingBlocks = false;
 			
-			// On vide la liste des entités récement téléportées.
+			// On vide la liste des entites recement teleportees.
 			this.teleportedEntities.clear();
 			
-			// On joue le son correspondant à la fermeture de la porte.
+			// On joue le son correspondant a la fermeture de la porte.
 			this.playSoundEffect("stargate.gateClose");
 		}
 		else {
-			// On joue le son correspondant à une activation interompue.
+			// On joue le son correspondant a une activation interompue.
 			this.playSoundEffect("stargate.gateFail");
 		}
 		
-		// On met à jour l'état de la porte.
+		// On met a jour l'etat de la porte.
 		this.setState(GateState.OFF);
 	}
 	
 	/**
-	 * Positionne le status de la porte à "Broken" et casse le lien avec les blocks de la porte.
+	 * Positionne le status de la porte a "Broken" et casse le lien avec les blocks de la porte.
 	 */
 	public void setBroken() {
 		// On ferme d'abord le vortex.
 		this.close();
 		
-		// Si la porte est déjà cassée, il n'y a rien à faire.
+		// Si la porte est deja cassee, il n'y a rien a faire.
 		if(this.state != GateState.BROKEN) {
 			// Intialisation.
 			StargateMod.debug("Desactivation de la porte...", true);
@@ -646,7 +646,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 						if(j != 0 || i != 0) {
 							TileEntity tileEntity = this.worldObj.getBlockTileEntity(x, y, z);
 							
-							// Si le block est toujours là.
+							// Si le block est toujours la.
 							if(tileEntity != null && tileEntity instanceof TileEntityStargatePart) {
 								// On casse la lien avec la porte.
 								StargateMod.debug("XXX ", false);
@@ -655,7 +655,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 						}
 					}
 					else {
-						// Sinon, on zap jusqu'à l'autre côté de la porte.
+						// Sinon, on zap jusqu'a l'autre cote de la porte.
 						StargateMod.debug("    ", false, nbCasesAir * 2 - 1);
 						j = nbCasesAir - 1;
 					}
@@ -663,20 +663,20 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 				StargateMod.debug("", true);
 			}
 			
-			// On met à jour l'état de la porte.
-			StargateMod.debug("Désactivation terminée.\n", true);
+			// On met a jour l'etat de la porte.
+			StargateMod.debug("Desactivation terminee.\n", true);
 			this.setState(GateState.BROKEN);
 		}
 	}
 	
 	/**
-	 * Methode appelée quand le dhd est activé. Ferme la porte si est ouverte, essaye de contacter la porte aux coordonnées indiquées sinon.
-	 * @param x - la coordonnée en X de la porte à contacter.
-	 * @param y - la coordonnée en Y de la porte à contacter.
-	 * @param z - la coordonnée en Z de la porte à contacter.
+	 * Methode appelee quand le dhd est active. Ferme la porte si est ouverte, essaye de contacter la porte aux coordonnees indiquees sinon.
+	 * @param x - la coordonnee en X de la porte a contacter.
+	 * @param y - la coordonnee en Y de la porte a contacter.
+	 * @param z - la coordonnee en Z de la porte a contacter.
 	 */
 	public void onDhdActivation(int x, int y, int z) {
-		// Si la porte est activée.
+		// Si la porte est activee.
 		if(this.state == GateState.INPUT || this.state == GateState.OUTPUT) {
 			// On ferme le vortex.
 			this.close();
@@ -688,27 +688,27 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	}
 	
 	/**
-	 * Cette methode est appelée à chaque tick, elle sert à mettre à jour l'état de
+	 * Cette methode est appelee a chaque tick, elle sert a mettre a jour l'etat de
 	 * la porte lors de l'activation ou de la desactivation automatique de la porte.
 	 */
 	@Override
 	public void updateEntity() {
-		// Si on est côté server.
+		// Si on est cote server.
 		if(!this.worldObj.isRemote) {
-			// On met à jour le compteur.
+			// On met a jour le compteur.
 			if(this.count > 0) {
 				--this.count;
 			}
 			
-			// Selon l'état de la porte...
+			// Selon l'etat de la porte...
 			switch(this.state) {
-				// Si la porte est ouverte en entrée.
+				// Si la porte est ouverte en entree.
 				case INPUT:
-					// Si la durée d'activation maximale a été atteinte, on ferme la porte.
+					// Si la duree d'activation maximale a ete atteinte, on ferme la porte.
 					if(this.count <= 0) {
 						this.close();
 					}
-					// Sinon, on met à jour la liste des entités récement téléportées.
+					// Sinon, on met a jour la liste des entites recement teleportees.
 					else {
 						Iterator<Entry<Integer, Integer>> iterator = this.teleportedEntities.entrySet().iterator();
 						Entry<Integer, Integer> entry;
@@ -725,76 +725,76 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 					break;
 				// Si la porte est en train de s'activer.
 				case ACTIVATING:
-					// Selon l'étape d'activation...
+					// Selon l'etape d'activation...
 					switch(this.activationState) {
-						// Si aucun chevron n'est activé.
+						// Si aucun chevron n'est active.
 						case E0:
-							// Si il s'est écoulé environ 1s.
+							// Si il s'est ecoule environ 1s.
 							if(this.count <= 176) {
 								// On active le chevron 1.
 								this.setActivationState(GateActivationState.E1);
 								this.playSoundEffect("stargate.chevron");
 							}
 							break;
-						// Si seul le premier chevron est activé.
+						// Si seul le premier chevron est active.
 						case E1:
-							// Si il s'est écoulé environ 1s.
+							// Si il s'est ecoule environ 1s.
 							if(this.count <= 154) {
 								// On active le chevron 2.
 								this.setActivationState(GateActivationState.E2);
 								this.playSoundEffect("stargate.chevron");
 							}
 							break;
-						// Si les 2 premiers chevrons sont activés.
+						// Si les 2 premiers chevrons sont actives.
 						case E2:
-							// Si il s'est écoulé environ 1s.
+							// Si il s'est ecoule environ 1s.
 							if(this.count <= 132) {
 								// On active le chevron 3.
 								this.setActivationState(GateActivationState.E3);
 								this.playSoundEffect("stargate.chevron");
 							}
 							break;
-						// Si les 3 premiers chevrons sont activés.
+						// Si les 3 premiers chevrons sont actives.
 						case E3:
-							// Si il s'est écoulé environ 1s.
+							// Si il s'est ecoule environ 1s.
 							if(this.count <= 110) {
 								// On active le chevron 4.
 								this.setActivationState(GateActivationState.E4);
 								this.playSoundEffect("stargate.chevron");
 							}
 							break;
-						// Si les 4 premiers chevrons sont activés.
+						// Si les 4 premiers chevrons sont actives.
 						case E4:
-							// Si il s'est écoulé environ 1s.
+							// Si il s'est ecoule environ 1s.
 							if(this.count <= 88) {
 								// On active le chevron 5.
 								this.setActivationState(GateActivationState.E5);
 								this.playSoundEffect("stargate.chevron");
 							}
 							break;
-						// Si les 5 premiers chevrons sont activés.
+						// Si les 5 premiers chevrons sont actives.
 						case E5:
-							// Si il s'est écoulé environ 1s.
+							// Si il s'est ecoule environ 1s.
 							if(this.count <= 66) {
 								// On active le chevron 6.
 								this.setActivationState(GateActivationState.E6);
 								this.playSoundEffect("stargate.chevron");
 							}
 							break;
-						// Si les 6 premiers chevrons sont activés.
+						// Si les 6 premiers chevrons sont actives.
 						case E6:
-							// Si il s'est écoulé environ 1s.
+							// Si il s'est ecoule environ 1s.
 							if(this.count <= 44) {
 								// On active le chevron 7.
 								this.setActivationState(GateActivationState.E7);
 								this.playSoundEffect("stargate.masterChevron");
 							}
 							break;
-						// Si les 7 chevrons sont activés.
+						// Si les 7 chevrons sont actives.
 						case E7:
-							// Si il s'est écoulé environ 2s.
+							// Si il s'est ecoule environ 2s.
 							if(this.count <= 0) {
-								// On réinitialise l'étape d'activation.
+								// On reinitialise l'etape d'activation.
 								this.setActivationState(GateActivationState.E0);
 								// On active la porte.
 								this.createPortal();
@@ -810,9 +810,9 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	}
 	
 	/**
-	 * Retourne la tile entity du chevron correspondant au numéro passé en paramètre.
-	 * @param no - le numéro du chevron à récupérer.
-	 * @return la tile entity du chevron correspondant au numéro.
+	 * Retourne la tile entity du chevron correspondant au numero passe en parametre.
+	 * @param no - le numero du chevron a recuperer.
+	 * @return la tile entity du chevron correspondant au numero.
 	 */
 	private TileEntityChevron getChevron(int no) {
 		if(no < 1 || no == 7 || no > 9) {
@@ -856,38 +856,38 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	}
 	
 	/**
-	 * Teleporte l'entité située aux coordonnées fournies aux coordonnées équivalentes de l'autre porte.<br />
-	 * Oriente également la vue en fonction de l'angle entre les deux porte.
-	 * @param entity - l'entité à téléporter.
-	 * @param x - la coordonnée en X de l'entité.
-	 * @param y - la coordonnée en Y de l'entité.
-	 * @param z - la coordonnée en Z de l'entité.
+	 * Teleporte l'entite situee aux coordonnees fournies aux coordonnees equivalentes de l'autre porte.<br />
+	 * Oriente egalement la vue en fonction de l'angle entre les deux porte.
+	 * @param entity - l'entite a teleporter.
+	 * @param x - la coordonnee en X de l'entite.
+	 * @param y - la coordonnee en Y de l'entite.
+	 * @param z - la coordonnee en Z de l'entite.
 	 */
 	public void teleportEntity(Entity entity) {
-		// On vérifie que l'entité ne viens pas déjà d'être téléportée.
+		// On verifie que l'entite ne viens pas deja d'etre teleportee.
 		if(!this.teleportedEntities.containsKey(entity.entityId)) {
-			// On ajoute l'entité à la liste des entités récement téléportées.
+			// On ajoute l'entite a la liste des entites recement teleportees.
 			this.teleportedEntities.put(entity.entityId, TELEPORT_LOCK_TIME);
 			
-			// On récupère la position de l'entité par rapport aux chevron maitre de la porte de départ.
+			// On recupere la position de l'entite par rapport aux chevron maitre de la porte de depart.
 			double xDiff = entity.posX - this.xCoord;
 			double yDiff = entity.posY - this.yCoord;
 			double zDiff = entity.posZ - this.zCoord;
 			
-			// On récupère la vitesse de l'entité.
+			// On recupere la vitesse de l'entite.
 			double motionX = entity.motionX;
 			double motionY = entity.motionY;
 			double motionZ = entity.motionZ;
 			
-			// On récupère l'angle entre la porte de départ et la porte d'arrivée.
+			// On recupere l'angle entre la porte de depart et la porte d'arrivee.
 			int rotation = this.getRotation();
 			float angleRotation = rotation * 90;
 			
-			// On calcule le nouvel angle de la caméra en fonction de l'angle entre les porte.
+			// On calcule le nouvel angle de la camera en fonction de l'angle entre les porte.
 			float rotationYaw = (entity.rotationYaw - angleRotation) % 360;
 			float rotationPitch = entity.rotationPitch;
 			
-			// On fait une rotation sur les coordonnées relatives au chevron maitre et sur les données de vitesse, en fonction de l'angle entre les portes.
+			// On fait une rotation sur les coordonnees relatives au chevron maitre et sur les donnees de vitesse, en fonction de l'angle entre les portes.
 			double xTP = xDiff;
 			double yTP = yDiff;
 			double zTP = zDiff;
@@ -915,43 +915,43 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 					break;
 			}
 			
-			// On calcule les coordonnées finales de téléportation.
+			// On calcule les coordonnees finales de teleportation.
 			xTP = this.xDest + xTP;
 			yTP = this.yDest + yTP;
 			zTP = this.zDest + zTP;
 			
-			// On produit le son de passage dans le vortex à la position de départ.
+			// On produit le son de passage dans le vortex a la position de depart.
 			this.playSoundEffect(entity, "stargate.enterVortex");
 			
-			// On téléporte l'entité.
+			// On teleporte l'entite.
 			if(entity instanceof EntityPlayerMP) {
-				// FIXME - l'angle de la caméra des joueurs n'est pas positionné correctement... en mode survie !
+				// FIXME - l'angle de la camera des joueurs n'est pas positionne correctement... en mode survie !
 				((EntityPlayerMP) entity).serverForThisPlayer.setPlayerLocation(xTP, yTP, zTP, rotationYaw, rotationPitch);
 			}
 			else {
 				entity.setLocationAndAngles(xTP, yTP, zTP, rotationYaw, rotationPitch);
 			}
 			
-			// On met à jour la vitesse de l'entité.
+			// On met a jour la vitesse de l'entite.
 			entity.setVelocity(xMotion, yMotion, zMotion);
 			
-			// On produit le son de passage dans le vortex à la position d'arrivée.
+			// On produit le son de passage dans le vortex a la position d'arrivee.
 			this.playSoundEffect(entity, "stargate.enterVortex");
 		}
 	}
 	
 	/**
-	 * Produit un son aux coordonnées du centre de la porte.
-	 * @param sound - le nom du son à produire.
+	 * Produit un son aux coordonnees du centre de la porte.
+	 * @param sound - le nom du son a produire.
 	 */
 	private void playSoundEffect(String sound) {
 		this.worldObj.playSoundEffect(this.xCoord - 7, this.yCoord - 7, this.zCoord - 7, sound, 2, 1);
 	}
 	
 	/**
-	 * Produit un son aux coordonnées de l'entité indiquée.
-	 * @param entity - l'entité sur laquelle produire le son.
-	 * @param sound - le nom du son à produire.
+	 * Produit un son aux coordonnees de l'entite indiquee.
+	 * @param entity - l'entite sur laquelle produire le son.
+	 * @param sound - le nom du son a produire.
 	 */
 	private void playSoundEffect(Entity entity, String sound) {
 		this.worldObj.playSoundAtEntity(entity, sound, this.worldObj.rand.nextFloat() * 0.2F + 0.8F, this.worldObj.rand.nextFloat() * 0.2F + 0.8F);
@@ -988,8 +988,8 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	}
 	
 	/**
-	 * Enregistre les données de la tileEntity dans une List de Byte, dans le but de créer un packet.
-	 * @return les données de la tileEntity sous la forme d'une List de Byte.
+	 * Enregistre les donnees de la tileEntity dans une List de Byte, dans le but de creer un packet.
+	 * @return les donnees de la tileEntity sous la forme d'une List de Byte.
 	 */
 	@Override
 	protected LinkedList<Byte> getEntityData() {
@@ -1007,8 +1007,8 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	}
 	
 	/**
-	 * Charge les données de la tileEntity depuis une LinkedList de Byte.
-	 * @param list - la LinkedList de Byte contenant les données à charger.
+	 * Charge les donnees de la tileEntity depuis une LinkedList de Byte.
+	 * @param list - la LinkedList de Byte contenant les donnees a charger.
 	 * @return true si le chargement est un succes, false sinon.
 	 */
 	@Override
@@ -1029,7 +1029,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	}
 	
 	/**
-	 * Signal au renderer que le block lié à cette tile entity a besoin d'être mit à jour.
+	 * Signal au renderer que le block lie a cette tile entity a besoin d'etre mit a jour.
 	 */
 	protected void updateBlockTexture(boolean updateChevrons) {
 		this.updateBlockTexture();
@@ -1052,7 +1052,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	}
 	
 	/**
-	 * Retourne une représentation textuelle de cette tile entity.
+	 * Retourne une representation textuelle de cette tile entity.
 	 */
 	@Override
 	public String toString() {

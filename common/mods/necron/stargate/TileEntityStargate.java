@@ -19,12 +19,12 @@ public abstract class TileEntityStargate extends TileEntity {
 	public static int packetId_CloseGuiDetector = 102;
 	
 	/**
-	 * Une map permettant d'obtenir une classe héritant de TileEntityStargate à partir de son id.
+	 * Une map permettant d'obtenir une classe heritant de TileEntityStargate a partir de son id.
 	 */
 	private static final HashMap<Integer, Class<? extends TileEntityStargate>> idToClassMap = new HashMap<Integer, Class<? extends TileEntityStargate>>();
 	
 	/**
-	 * Une map permettant d'obtenir l'id d'une classe héritant de TileEntityStargate.
+	 * Une map permettant d'obtenir l'id d'une classe heritant de TileEntityStargate.
 	 */
 	private static final HashMap<Class<? extends TileEntityStargate>, Integer> classToIdMap = new HashMap<Class<? extends TileEntityStargate>, Integer>();
 	
@@ -40,8 +40,8 @@ public abstract class TileEntityStargate extends TileEntity {
 	
 	/**
 	 * Ajoute un couple id/classe au mapping.
-	 * @param id - l'id à ajouter.
-	 * @param clazz - la classe à ajouter.
+	 * @param id - l'id a ajouter.
+	 * @param clazz - la classe a ajouter.
 	 */
 	private static void addToMapping(int id, Class<? extends TileEntityStargate> clazz) {
 		if(!idToClassMap.containsKey(id) && !classToIdMap.containsKey(clazz)) {
@@ -51,7 +51,7 @@ public abstract class TileEntityStargate extends TileEntity {
 	}
 	
 	/**
-	 * Permet d'obtenir l'id d'une classe héritant de TileEntityStargate.
+	 * Permet d'obtenir l'id d'une classe heritant de TileEntityStargate.
 	 * @param clazz - la classe dont on cherche l'id.
 	 * @return l'id de la classe.
 	 */
@@ -61,27 +61,27 @@ public abstract class TileEntityStargate extends TileEntity {
 	}
 	
 	/**
-	 * Permet d'obtenir une classe héritant de TileEntityStargate à partir de son id.
-	 * @param id - l'id de la classe recherchée.
-	 * @return la classe recherchée.
+	 * Permet d'obtenir une classe heritant de TileEntityStargate a partir de son id.
+	 * @param id - l'id de la classe recherchee.
+	 * @return la classe recherchee.
 	 */
 	public static Class<? extends TileEntityStargate> getClassFromId(int id) {
 		return idToClassMap.get(id);
 	}
 	
 	/**
-	 * Indique si l'id fourni correspond à une classe enregistrée.
-	 * @param id - l'id de la classe recherchée.
-	 * @return true si l'id correspond à une classe enregistrée, false sinon.
+	 * Indique si l'id fourni correspond a une classe enregistree.
+	 * @param id - l'id de la classe recherchee.
+	 * @return true si l'id correspond a une classe enregistree, false sinon.
 	 */
 	public static boolean isMapped(int id) {
 		return idToClassMap.containsKey(id);
 	}
 	
 	/**
-	 * Indique si la classe fournie correspond à un id enregistré.
+	 * Indique si la classe fournie correspond a un id enregistre.
 	 * @param id - la classe dont on cherche l'id.
-	 * @return true si la classe correspond à un id enregistré, false sinon.
+	 * @return true si la classe correspond a un id enregistre, false sinon.
 	 */
 	public static boolean isMapped(Class<? extends TileEntityStargate> clazz) {
 		return classToIdMap.containsKey(clazz);
@@ -116,9 +116,9 @@ public abstract class TileEntityStargate extends TileEntity {
 	}
 	
 	/**
-	 * Ecrit l'entier fourni sous la forme de 4 Byte, à la fin de la List de Byte fournie.
-	 * @param list - la List de Byte où écrire l'entier.
-	 * @param value - l'entier à écrire.
+	 * Ecrit l'entier fourni sous la forme de 4 Byte, a la fin de la List de Byte fournie.
+	 * @param list - la List de Byte où ecrire l'entier.
+	 * @param value - l'entier a ecrire.
 	 */
 	protected static void writeInt(LinkedList<Byte> list, int value) {
 		byte[] tmp = ByteBuffer.allocate(4).putInt(value).array();
@@ -128,8 +128,8 @@ public abstract class TileEntityStargate extends TileEntity {
 	}
 	
 	/**
-	 * Lit un entier dans les 4 premiers éléments d'une List de Byte.<br />
-	 * (Les éléments lus sont supprimés de la List)
+	 * Lit un entier dans les 4 premiers elements d'une List de Byte.<br />
+	 * (Les elements lus sont supprimes de la List)
 	 * @param list - la List de Byte où lire l'entier.
 	 * @return l'entier lu.
 	 */
@@ -142,9 +142,9 @@ public abstract class TileEntityStargate extends TileEntity {
 	}
 	
 	/**
-	 * Ecrit le booleen fourni sous la forme d'un Byte, au début de la List de Byte fournie.
-	 * @param list - la List de Byte où écrire le booleen.
-	 * @param value - le booleen à écrire.
+	 * Ecrit le booleen fourni sous la forme d'un Byte, au debut de la List de Byte fournie.
+	 * @param list - la List de Byte où ecrire le booleen.
+	 * @param value - le booleen a ecrire.
 	 */
 	protected static void writeBoolean(LinkedList<Byte> list, boolean value) {
 		byte tmp = (byte) (value ? 1 : 0);
@@ -152,8 +152,8 @@ public abstract class TileEntityStargate extends TileEntity {
 	}
 	
 	/**
-	 * Lit un booleen dans le premier élément d'une List de Byte.<br />
-	 * (L'élément lu est supprimé de la List)
+	 * Lit un booleen dans le premier element d'une List de Byte.<br />
+	 * (L'element lu est supprime de la List)
 	 * @param list - la List de Byte où lire le booleen.
 	 * @return le booleen lu.
 	 */
@@ -164,9 +164,9 @@ public abstract class TileEntityStargate extends TileEntity {
 	
 	/**
 	 * Ecrit l'entier fourni sur les 4 premiers Byte de la List fournie.<br />
-	 * Le but étant de changer l'id du packet.
-	 * @param list - la List de Byte où écrire l'entier.
-	 * @param id - l'id à attribuer au packet.
+	 * Le but etant de changer l'id du packet.
+	 * @param list - la List de Byte où ecrire l'entier.
+	 * @param id - l'id a attribuer au packet.
 	 */
 	protected static void changeId(LinkedList<Byte> list, int id) {
 		byte[] tmp = ByteBuffer.allocate(4).putInt(id).array();
@@ -188,7 +188,7 @@ public abstract class TileEntityStargate extends TileEntity {
 	
 	/**
 	 * Retourne un pack contenant les informations de cette tileEntity, avec l'id choisit.
-	 * @param id - l'id à attribuer au packet.
+	 * @param id - l'id a attribuer au packet.
 	 * @return un pack contenant les informations de cette tileEntity, avec l'id choisit.
 	 */
 	public Packet getAuxillaryInfoPacketWhithId(int id) {
@@ -198,9 +198,9 @@ public abstract class TileEntityStargate extends TileEntity {
 	}
 	
 	/**
-	 * Charge les données de la tileEntity depuis le packet.
+	 * Charge les donnees de la tileEntity depuis le packet.
 	 * @param networkManager - le NetworkManager d'où provient le packet.
-	 * @param packet - le packet contenant les données à charger.
+	 * @param packet - le packet contenant les donnees a charger.
 	 */
 	public void onDataPacket(NetworkManager networkManager, Packet250CustomPayload packet) {
 		if(packet != null) {
@@ -208,11 +208,11 @@ public abstract class TileEntityStargate extends TileEntity {
 		}
 	}
 	
-	// Partie lecture/écriture :
+	// Partie lecture/ecriture :
 	
 	/**
-	 * Enregistre les données de la tileEntity dans une List de Byte, dans le but de créer un packet.
-	 * @return les données de la tileEntity sous la forme d'une List de Byte.
+	 * Enregistre les donnees de la tileEntity dans une List de Byte, dans le but de creer un packet.
+	 * @return les donnees de la tileEntity sous la forme d'une List de Byte.
 	 */
 	protected LinkedList<Byte> getEntityData() {
 		LinkedList<Byte> list = new LinkedList<Byte>();
@@ -227,8 +227,8 @@ public abstract class TileEntityStargate extends TileEntity {
 	}
 	
 	/**
-	 * Charge les données de la tileEntity depuis une LinkedList de Byte.
-	 * @param list - la LinkedList de Byte contenant les données à charger.
+	 * Charge les donnees de la tileEntity depuis une LinkedList de Byte.
+	 * @param list - la LinkedList de Byte contenant les donnees a charger.
 	 * @return true si le chargement est un succes, false sinon.
 	 */
 	protected boolean loadEntityData(LinkedList<Byte> list) {
@@ -244,15 +244,15 @@ public abstract class TileEntityStargate extends TileEntity {
 	}
 	
 	/**
-	 * Verifie que l'id fournie est une id correcte pour un packet destiné à cette tile entity.
-	 * @param id - l'id à tester.
+	 * Verifie que l'id fournie est une id correcte pour un packet destine a cette tile entity.
+	 * @param id - l'id a tester.
 	 * @return true si l'id est correcte, false sinon.
 	 */
 	protected boolean isCorrectId(int id) {
 		return id == getIdFromClass(this.getClass());
 	}
 	
-	// Partie mise à jour :
+	// Partie mise a jour :
 	
 	/**
 	 * Transmet les modifications aux clients.
@@ -264,7 +264,7 @@ public abstract class TileEntityStargate extends TileEntity {
 	}
 	
 	/**
-	 * Signal au renderer que le block lié à cette tile entity a besoin d'être mit à jour.
+	 * Signal au renderer que le block lie a cette tile entity a besoin d'etre mit a jour.
 	 */
 	protected void updateBlockTexture() {
 		if(this.worldObj.isRemote) {

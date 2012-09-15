@@ -87,7 +87,7 @@ public class BlockMasterChevron extends BlockContainer {
 		if(side == metadata) {
 			TileEntityMasterChevron tileEntity = (TileEntityMasterChevron) iBlockAccess.getBlockTileEntity(x, y, z);
 			if(tileEntity != null && tileEntity.isChevronActivated()) {
-				return 23; // chevron 7 activé.
+				return 23; // chevron 7 active.
 			}
 			return this.blockIndexInTexture;
 		}

@@ -24,15 +24,15 @@ public class StargateCommonProxy implements IGuiHandler {
 	}
 	
 	public void registerRenderInformation() {
-		// Vide côté server.
+		// Vide cote server.
 	}
 	
 	public void registerTileEntitySpecialRenderer(/*PLACEHOLDER*/) {
-		// Vide côté server
+		// Vide cote server
 	}
 	
 	public void registerSounds() {
-		// Vide côté server.
+		// Vide cote server.
 	}
 	
 	public World getClientWorld() {

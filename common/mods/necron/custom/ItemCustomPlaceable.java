@@ -9,27 +9,27 @@ import net.minecraft.src.World;
 public class ItemCustomPlaceable extends ItemCustom {
 	
 	/**
-	 * L'id du block à placer.
+	 * L'id du block a placer.
 	 */
 	protected int BlockId;
 	
 	/**
-	 * Indique si la ternière tentative de plaçage a réussi.
+	 * Indique si la terniere tentative de plaçage a reussi.
 	 */
 	protected boolean succes;
 	
 	/**
-	 * Indique la position en X où le bloque doit etre placé.
+	 * Indique la position en X où le bloque doit etre place.
 	 */
 	protected int xPlaced;
 	
 	/**
-	 * Indique la position en Y où le bloque doit etre placé.
+	 * Indique la position en Y où le bloque doit etre place.
 	 */
 	protected int yPlaced;
 	
 	/**
-	 * Indique la position en Z où le bloque doit etre placé.
+	 * Indique la position en Z où le bloque doit etre place.
 	 */
 	protected int zPlaced;
 	
@@ -44,10 +44,10 @@ public class ItemCustomPlaceable extends ItemCustom {
 	}
 	
 	/**
-	 * Definie la position où le block doit être placé.
-	 * @param x - la position en X où le bloque doit etre placé.
-	 * @param y - la position en Y où le bloque doit etre placé.
-	 * @param z - la position en Z où le bloque doit etre placé.
+	 * Definie la position où le block doit etre place.
+	 * @param x - la position en X où le bloque doit etre place.
+	 * @param y - la position en Y où le bloque doit etre place.
+	 * @param z - la position en Z où le bloque doit etre place.
 	 */
 	private void setPlacedPosition(int x, int y, int z) {
 		this.xPlaced = x;
@@ -56,7 +56,7 @@ public class ItemCustomPlaceable extends ItemCustom {
 	}
 	
 	/**
-	 * Tente de placer l'objet correspondant à cet item dans le monde.
+	 * Tente de placer l'objet correspondant a cet item dans le monde.
 	 */
 	@Override
 	public boolean tryPlaceIntoWorld(ItemStack itemStack, EntityPlayer entityPlayer, World world, int x, int y, int z, int side, float par8, float par9, float par10) {
