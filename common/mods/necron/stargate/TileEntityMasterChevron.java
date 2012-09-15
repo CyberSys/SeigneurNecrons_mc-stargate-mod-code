@@ -933,7 +933,10 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			}
 			
 			// On met a jour la vitesse de l'entite.
-			entity.setVelocity(xMotion, yMotion, zMotion);
+			//entity.setVelocity(xMotion, yMotion, zMotion); fait buguer le server !
+			entity.motionX = xMotion;
+			entity.motionY = yMotion;
+			entity.motionZ = zMotion;
 			
 			// On produit le son de passage dans le vortex a la position d'arrivee.
 			this.playSoundEffect(entity, "stargate.enterVortex");
