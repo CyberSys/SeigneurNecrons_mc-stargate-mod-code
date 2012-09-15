@@ -38,7 +38,7 @@ public class CustomMod {
 	private static boolean debug = true;
 	private static StringBuffer buffer = new StringBuffer();
 	
-	@Instance("CustomMod")
+	@Instance("SeigneurNecron_CustomMod")
 	public static CustomMod instance;
 	
 	@SidedProxy(clientSide = "mods.necron.custom.CustomClientProxy", serverSide = "mods.necron.custom.CustomCommonProxy")

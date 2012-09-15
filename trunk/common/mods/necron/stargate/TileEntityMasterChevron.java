@@ -33,7 +33,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	private static final int TELEPORT_LOCK_TIME = 22;
 	
 	/**
-	 * L'index où est stocke le nombre de cases vides dans chaque ligne du patern.
+	 * L'index ou est stocke le nombre de cases vides dans chaque ligne du patern.
 	 */
 	private static final int INDEX_NB_CASES_VIDES = 0;
 	
@@ -433,7 +433,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	 * @param z - la coordonnee en Z de la porte de destination.
 	 */
 	public void activate(int x, int y, int z) {
-		// Si cette porte n'est pas encore initialisee, on essaie de l'initialiser; Si ça marche pas, on quitte.
+		// Si cette porte n'est pas encore initialisee, on essaie de l'initialiser; Si ca marche pas, on quitte.
 		if(this.state == GateState.BROKEN && !this.createGate()) {
 			StargateMod.debug("La porte n'a pas pu etre initialisee !", true);
 			return;

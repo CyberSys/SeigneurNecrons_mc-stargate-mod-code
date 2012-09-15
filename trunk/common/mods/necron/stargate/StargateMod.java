@@ -39,7 +39,7 @@ public class StargateMod {
 	private static boolean debug = true;
 	private static StringBuffer buffer = new StringBuffer();
 	
-	@Instance("StargateMod")
+	@Instance("SeigneurNecron_StargateMod")
 	public static StargateMod instance;
 	
 	@SidedProxy(clientSide = "mods.necron.stargate.StargateClientProxy", serverSide = "mods.necron.stargate.StargateCommonProxy")

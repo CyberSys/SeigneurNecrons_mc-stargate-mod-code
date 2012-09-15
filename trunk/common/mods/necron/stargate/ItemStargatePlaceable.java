@@ -14,22 +14,22 @@ public class ItemStargatePlaceable extends ItemStargate {
 	protected int BlockId;
 	
 	/**
-	 * Indique si la terniere tentative de plaçage a reussi.
+	 * Indique si la terniere tentative de placage a reussi.
 	 */
 	protected boolean succes;
 	
 	/**
-	 * Indique la position en X où le bloque doit etre place.
+	 * Indique la position en X ou le bloque doit etre place.
 	 */
 	protected int xPlaced;
 	
 	/**
-	 * Indique la position en Y où le bloque doit etre place.
+	 * Indique la position en Y ou le bloque doit etre place.
 	 */
 	protected int yPlaced;
 	
 	/**
-	 * Indique la position en Z où le bloque doit etre place.
+	 * Indique la position en Z ou le bloque doit etre place.
 	 */
 	protected int zPlaced;
 	
@@ -44,10 +44,10 @@ public class ItemStargatePlaceable extends ItemStargate {
 	}
 	
 	/**
-	 * Definie la position où le block doit etre place.
-	 * @param x - la position en X où le bloque doit etre place.
-	 * @param y - la position en Y où le bloque doit etre place.
-	 * @param z - la position en Z où le bloque doit etre place.
+	 * Definie la position ou le block doit etre place.
+	 * @param x - la position en X ou le bloque doit etre place.
+	 * @param y - la position en Y ou le bloque doit etre place.
+	 * @param z - la position en Z ou le bloque doit etre place.
 	 */
 	private void setPlacedPosition(int x, int y, int z) {
 		this.xPlaced = x;
