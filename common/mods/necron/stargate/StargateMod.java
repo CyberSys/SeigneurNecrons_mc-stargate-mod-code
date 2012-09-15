@@ -39,18 +39,18 @@ public class StargateMod {
 	private static boolean debug = true;
 	private static StringBuffer buffer = new StringBuffer();
 	
-	@Instance
+	@Instance("StargateMod")
 	public static StargateMod instance;
 	
-	@SidedProxy(clientSide = "mods.stargate.StargateClientProxy", serverSide = "mods.stargate.StargateCommonProxy")
+	@SidedProxy(clientSide = "mods.necron.stargate.StargateClientProxy", serverSide = "mods.necron.stargate.StargateCommonProxy")
 	public static StargateCommonProxy proxy;
 	
 	// Stargate chanel name :
 	public static final String chanel = "Necron_Stargate";
 	
 	// Stargate texture files :
-	public static final String blockTextureFile = "/mods/stargate/terrain.png";
-	public static final String itemTextureFile = "/mods/stargate/items.png";
+	public static final String blockTextureFile = "/mods/necron/stargate/terrain.png";
+	public static final String itemTextureFile = "/mods/necron/stargate/items.png";
 	
 	// Quelques constantes :
 	public static final float resitantBlockHardness = 10.0F;
@@ -155,6 +155,7 @@ public class StargateMod {
 		ModLoader.addRecipe(new ItemStack(itemMasterChevron), new Object[] {"C", "N", 'N', naquadaAlliage, 'C', itemChevronCompound});
 		ModLoader.addRecipe(new ItemStack(dhdCoord), new Object[] {"C", "N", 'N', naquadaAlliage, 'C', itemCrystalDhd});
 		ModLoader.addRecipe(new ItemStack(teleporterCoord), new Object[] {"C", "N", 'N', naquadaAlliage, 'C', itemCrystalTeleporter});
+		ModLoader.addRecipe(new ItemStack(detector), new Object[] {"C", "N", 'N', naquadaAlliage, 'C', itemCrystalScanner});
 		ModLoader.addRecipe(new ItemStack(dhd), new Object[] {"P", "N", 'N', naquadaAlliage, 'P', itemDhdPanel});
 		ModLoader.addRecipe(new ItemStack(teleporter), new Object[] {"S", "N", 'N', naquadaAlliage, 'S', itemTouchScreen});
 		
