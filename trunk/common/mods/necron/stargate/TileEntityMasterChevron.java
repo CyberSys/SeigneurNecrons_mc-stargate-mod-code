@@ -841,8 +841,10 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 				return 2;
 			case 4:
 				return 3;
-			default:
+			case 2:
 				return 0;
+			default:
+				return -1;
 		}
 	}
 	
@@ -853,6 +855,11 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	private int getRotation() {
 		int thisAngle = this.getAngle(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
 		int otherAngle = this.getAngle(this.worldObj.getBlockMetadata(this.xDest, this.yDest, this.zDest));
+		
+		if(thisAngle < 0 || thisAngle > 3 || otherAngle < 0 || otherAngle > 3) {
+			return -1;
+		}
+		
 		return (otherAngle - thisAngle + 4) % 4;
 	}
 	
@@ -883,6 +890,12 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			// On recupere l'angle entre la porte de depart et la porte d'arrivee.
 			int rotation = this.getRotation();
 			float angleRotation = rotation * 90;
+			
+			// Si l'angle de rotation est anormal, on quitte.
+			if(rotation == -1) {
+				StargateMod.debug("Une TileEntityMasterChevron a retourne une valeur bizzare !", true);
+				return;
+			}
 			
 			// On calcule le nouvel angle de la camera en fonction de l'angle entre les porte.
 			float rotationYaw = (entity.rotationYaw - angleRotation) % 360;
@@ -927,12 +940,10 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			// On teleporte l'entite.
 			if(entity instanceof EntityPlayerMP) {
 				// FIXME - l'angle de la camera des joueurs n'est pas positionne correctement... en mode survie !
-				//((EntityPlayerMP) entity).serverForThisPlayer.setPlayerLocation(xTP, yTP, zTP, rotationYaw, rotationPitch);
-				((EntityPlayerMP) entity).serverForThisPlayer.setPlayerLocation(xTP, yTP, zTP, entity.rotationYaw, entity.rotationPitch);
+				((EntityPlayerMP) entity).serverForThisPlayer.setPlayerLocation(xTP, yTP, zTP, rotationYaw, rotationPitch);
 			}
 			else {
-				//entity.setLocationAndAngles(xTP, yTP, zTP, rotationYaw, rotationPitch);
-				entity.setLocationAndAngles(xTP, yTP, zTP, entity.rotationYaw, entity.rotationPitch);
+				entity.setLocationAndAngles(xTP, yTP, zTP, rotationYaw, rotationPitch);
 			}
 			
 			// On met a jour la vitesse de l'entite.
