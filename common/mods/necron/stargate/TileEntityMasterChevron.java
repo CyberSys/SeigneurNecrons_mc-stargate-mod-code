@@ -9,6 +9,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.BlockFluid;
 import net.minecraft.src.ChunkPosition;
 import net.minecraft.src.Entity;
+import net.minecraft.src.EntityMinecart;
 import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
@@ -870,9 +871,9 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			this.teleportedEntities.put(entity.entityId, TELEPORT_LOCK_TIME);
 			
 			// On recupere la position de l'entite par rapport aux chevron maitre de la porte de depart.
-			double xDiff = entity.posX - this.xCoord;
-			double yDiff = entity.posY - this.yCoord;
-			double zDiff = entity.posZ - this.zCoord;
+			double xDiff = entity.posX - (this.xCoord + 0.5);
+			double yDiff = entity.posY - (this.yCoord + 0.5);
+			double zDiff = entity.posZ - (this.zCoord + 0.5);
 			
 			// On recupere la vitesse de l'entite.
 			double motionX = entity.motionX;
@@ -895,17 +896,17 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			double yMotion = motionY;
 			double zMotion = motionZ;
 			switch(rotation) {
+				case 0:
+					xTP = -xDiff;
+					zTP = -zDiff;
+					xMotion = -motionX;
+					zMotion = -motionZ;
+					break;
 				case 1:
 					xTP = -zDiff;
 					zTP = xDiff;
 					xMotion = motionZ;
 					zMotion = -motionX;
-					break;
-				case 2:
-					xTP = -xDiff;
-					zTP = -zDiff;
-					xMotion = -motionX;
-					zMotion = -motionZ;
 					break;
 				case 3:
 					xTP = zDiff;
@@ -916,9 +917,9 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			}
 			
 			// On calcule les coordonnees finales de teleportation.
-			xTP = this.xDest + xTP;
-			yTP = this.yDest + yTP;
-			zTP = this.zDest + zTP;
+			xTP = (this.xDest + 0.5) + xTP;
+			yTP = (this.yDest + 0.5) + yTP;
+			zTP = (this.zDest + 0.5) + zTP;
 			
 			// On produit le son de passage dans le vortex a la position de depart.
 			this.playSoundEffect(entity, "stargate.enterVortex");
@@ -926,14 +927,16 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			// On teleporte l'entite.
 			if(entity instanceof EntityPlayerMP) {
 				// FIXME - l'angle de la camera des joueurs n'est pas positionne correctement... en mode survie !
-				((EntityPlayerMP) entity).serverForThisPlayer.setPlayerLocation(xTP, yTP, zTP, rotationYaw, rotationPitch);
+				//((EntityPlayerMP) entity).serverForThisPlayer.setPlayerLocation(xTP, yTP, zTP, rotationYaw, rotationPitch);
+				((EntityPlayerMP) entity).serverForThisPlayer.setPlayerLocation(xTP, yTP, zTP, entity.rotationYaw, entity.rotationPitch);
 			}
 			else {
-				entity.setLocationAndAngles(xTP, yTP, zTP, rotationYaw, rotationPitch);
+				//entity.setLocationAndAngles(xTP, yTP, zTP, rotationYaw, rotationPitch);
+				entity.setLocationAndAngles(xTP, yTP, zTP, entity.rotationYaw, entity.rotationPitch);
 			}
 			
 			// On met a jour la vitesse de l'entite.
-			//entity.setVelocity(xMotion, yMotion, zMotion); fait buguer le server !
+			//entity.setVelocity(xMotion, yMotion, zMotion); fait planter le server car la methode n'est definie que cote client !
 			entity.motionX = xMotion;
 			entity.motionY = yMotion;
 			entity.motionZ = zMotion;
