@@ -6,7 +6,10 @@ import net.minecraft.src.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.asm.SideOnly;
 
+@SideOnly(Side.CLIENT)
 public class StargateClientProxy extends StargateCommonProxy {
 	
 	@Override
@@ -14,13 +17,13 @@ public class StargateClientProxy extends StargateCommonProxy {
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		
 		if(tileEntity != null) {
-			if(tileEntity instanceof TileEntityCoordTeleporter){
+			if(tileEntity instanceof TileEntityCoordTeleporter) {
 				return new GuiTeleporter((TileEntityCoordTeleporter) tileEntity);
 			}
-			else if(tileEntity instanceof TileEntityCoordDhd) { 
+			else if(tileEntity instanceof TileEntityCoordDhd) {
 				return new GuiDhd((TileEntityCoordDhd) tileEntity);
 			}
-			else if(tileEntity instanceof TileEntityDetector) { 
+			else if(tileEntity instanceof TileEntityDetector) {
 				return new GuiDetector((TileEntityDetector) tileEntity);
 			}
 		}
@@ -39,6 +42,7 @@ public class StargateClientProxy extends StargateCommonProxy {
 		// vide pour l'instant...
 	}
 	
+	@Override
 	public void registerSounds() {
 		MinecraftForge.EVENT_BUS.register(new StargateClientEvents());
 	}

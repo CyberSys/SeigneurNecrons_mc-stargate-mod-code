@@ -34,7 +34,7 @@ public class TileEntityCoordTeleporter extends TileEntityCoord {
 	 */
 	public void teleportPlayer(EntityPlayer player) {
 		if(this.destinationValide()) {
-			player.setPositionAndUpdate((double) ((float) this.xDest + 0.5F), (double) this.yDest, (double) ((float) this.zDest + 0.5F));
+			player.setPositionAndUpdate(this.xDest + 0.5F, this.yDest, this.zDest + 0.5F);
 		}
 	}
 	
@@ -55,6 +55,7 @@ public class TileEntityCoordTeleporter extends TileEntityCoord {
 	/**
 	 * Signal au renderer que le block situe au dessus du block lie a cette tile entity a besoin d'etre mit a jour.
 	 */
+	@Override
 	protected void updateBlockTexture() {
 		if(this.worldObj.isRemote) {
 			this.worldObj.markBlockNeedsUpdate(this.xCoord, this.yCoord + 1, this.zCoord);

@@ -2,7 +2,11 @@ package mods.necron.stargate;
 
 public enum GateState {
 	
-	BROKEN(0, "Broken"), OFF(1, "Off"), ACTIVATING(2, "Activating"), OUTPUT(3, "Output"), INPUT(4, "Input");
+	BROKEN(0, "Broken"),
+	OFF(1, "Off"),
+	ACTIVATING(2, "Activating"),
+	OUTPUT(3, "Output"),
+	INPUT(4, "Input");
 	
 	private int value;
 	private String toString;

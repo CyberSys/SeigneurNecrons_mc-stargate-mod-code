@@ -26,7 +26,7 @@ public class ItemMobSpawner extends ItemCustomPlaceable {
 	public ItemMobSpawner(int id, String mobName) {
 		super(id, CustomMod.itemMobSpawnerTextureIndex, "itemSpawner" + mobName, CreativeTabs.tabDeco, Block.mobSpawner);
 		this.mobName = mobName;
-		this.addMapping(this.mobName, this.shiftedIndex);
+		ItemMobSpawner.addMapping(this.mobName, this.shiftedIndex);
 	}
 	
 	/**

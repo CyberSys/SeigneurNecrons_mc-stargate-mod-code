@@ -10,7 +10,7 @@ public class BlockChevron extends BlockStargateSolidPart {
 	
 	public BlockChevron(int id, int textureIndex, String name) {
 		super(id, textureIndex, name);
-        this.setCreativeTab(null);
+		this.setCreativeTab(null);
 	}
 	
 	/**

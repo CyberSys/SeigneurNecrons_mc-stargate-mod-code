@@ -110,7 +110,7 @@ public class ItemCustomPlaceable extends ItemCustom {
 					block.onBlockPlacedBy(world, this.xPlaced, this.yPlaced, this.zPlaced, entityPlayer);
 					this.succes = true;
 				}
-				world.playSoundEffect((double) ((float) this.xPlaced + 0.5F), (double) ((float) this.yPlaced + 0.5F), (double) ((float) this.zPlaced + 0.5F), block.stepSound.getStepSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
+				world.playSoundEffect(this.xPlaced + 0.5F, this.yPlaced + 0.5F, this.zPlaced + 0.5F, block.stepSound.getStepSound(), (block.stepSound.getVolume() + 1.0F) / 2.0F, block.stepSound.getPitch() * 0.8F);
 				--itemStack.stackSize;
 			}
 			

@@ -8,6 +8,10 @@ import net.minecraft.src.Tessellator;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.asm.SideOnly;
+
+@SideOnly(Side.CLIENT)
 public class GuiIntegerField extends Gui {
 	
 	private static final String numbers = "0123456789";
@@ -480,10 +484,10 @@ public class GuiIntegerField extends Gui {
 		GL11.glEnable(GL11.GL_COLOR_LOGIC_OP);
 		GL11.glLogicOp(GL11.GL_OR_REVERSE);
 		var6.startDrawingQuads();
-		var6.addVertex((double) par1, (double) par4, 0.0D);
-		var6.addVertex((double) par3, (double) par4, 0.0D);
-		var6.addVertex((double) par3, (double) par2, 0.0D);
-		var6.addVertex((double) par1, (double) par2, 0.0D);
+		var6.addVertex(par1, par4, 0.0D);
+		var6.addVertex(par3, par4, 0.0D);
+		var6.addVertex(par3, par2, 0.0D);
+		var6.addVertex(par1, par2, 0.0D);
 		var6.draw();
 		GL11.glDisable(GL11.GL_COLOR_LOGIC_OP);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);

@@ -18,7 +18,7 @@ public class BlockMasterChevron extends BlockContainer {
 		this.setHardness(StargateMod.resitantBlockHardness);
 		this.setResistance(StargateMod.resitantBlockResistance);
 		this.setStepSound(soundStoneFootstep);
-        this.setCreativeTab(null);
+		this.setCreativeTab(null);
 		this.setBlockName(name);
 	}
 	
@@ -38,7 +38,7 @@ public class BlockMasterChevron extends BlockContainer {
 	 */
 	@Override
 	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLiving entityLiving) {
-		int angle = MathHelper.floor_double((double) (entityLiving.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3;
+		int angle = MathHelper.floor_double(entityLiving.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 		
 		switch(angle) {
 			case 0:

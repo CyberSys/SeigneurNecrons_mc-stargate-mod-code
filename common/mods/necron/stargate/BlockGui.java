@@ -5,7 +5,6 @@ import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.Material;
 import net.minecraft.src.World;
 
-
 public abstract class BlockGui extends BlockStargate {
 	
 	public BlockGui(int id, int textureIndex, String name) {

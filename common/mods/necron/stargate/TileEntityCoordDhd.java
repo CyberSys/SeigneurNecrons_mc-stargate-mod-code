@@ -83,7 +83,7 @@ public class TileEntityCoordDhd extends TileEntityCoord {
 			for(int rayon = 1; rayon <= maxRange; ++rayon) {
 				for(int i = -rayon; i <= rayon; ++i) {
 					for(int j = -rayon; j <= rayon; ++j) {
-						for(int k = - rayon; k <= rayon; ++k) {
+						for(int k = -rayon; k <= rayon; ++k) {
 							int x = this.xCoord + k;
 							int y = this.yCoord + i;
 							int z = this.zCoord + j;
