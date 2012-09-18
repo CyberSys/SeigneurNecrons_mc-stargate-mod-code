@@ -9,7 +9,6 @@ import net.minecraft.src.Block;
 import net.minecraft.src.BlockFluid;
 import net.minecraft.src.ChunkPosition;
 import net.minecraft.src.Entity;
-import net.minecraft.src.EntityMinecart;
 import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
@@ -415,7 +414,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 				StargateMod.debug(blockId + " ", false);
 				
 				// Si le block est remplassable par le vortex.
-				if(this.blocksRemplassables.contains(blockId)) {
+				if(TileEntityMasterChevron.blocksRemplassables.contains(blockId)) {
 					// On l'ajoute a la liste des blocks a remplacer.
 					blocksARemplacer.add(new ChunkPosition(x, y, z));
 				}
@@ -703,7 +702,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			
 			// Selon l'etat de la porte...
 			switch(this.state) {
-				// Si la porte est ouverte en entree.
+			// Si la porte est ouverte en entree.
 				case INPUT:
 					// Si la duree d'activation maximale a ete atteinte, on ferme la porte.
 					if(this.count <= 0) {
@@ -728,7 +727,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 				case ACTIVATING:
 					// Selon l'etape d'activation...
 					switch(this.activationState) {
-						// Si aucun chevron n'est active.
+					// Si aucun chevron n'est active.
 						case E0:
 							// Si il s'est ecoule environ 1s.
 							if(this.count <= 176) {
@@ -940,6 +939,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			// On teleporte l'entite.
 			if(entity instanceof EntityPlayerMP) {
 				// FIXME - l'angle de la camera des joueurs n'est pas positionne correctement... en mode survie !
+				// FIXME - on peut tenter de faire une double téléportation pour changer la vitesse de manière detournée...
 				((EntityPlayerMP) entity).serverForThisPlayer.setPlayerLocation(xTP, yTP, zTP, rotationYaw, rotationPitch);
 			}
 			else {

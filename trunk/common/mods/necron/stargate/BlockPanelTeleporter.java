@@ -22,8 +22,8 @@ public class BlockPanelTeleporter extends BlockPanel {
 			return false;
 		}
 		
-		if(!world.isRemote && world.getBlockId(x, y-1, z) == StargateMod.teleporterCoord.blockID) {
-			TileEntity tileEntity = world.getBlockTileEntity(x, y-1, z);
+		if(!world.isRemote && world.getBlockId(x, y - 1, z) == StargateMod.teleporterCoord.blockID) {
+			TileEntity tileEntity = world.getBlockTileEntity(x, y - 1, z);
 			
 			if(tileEntity != null && tileEntity instanceof TileEntityCoordTeleporter) {
 				((TileEntityCoordTeleporter) tileEntity).teleportPlayer(player);
@@ -52,7 +52,7 @@ public class BlockPanelTeleporter extends BlockPanel {
 				blockIndexInTexture += 3;
 			}
 			
-			TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y-1, z);
+			TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y - 1, z);
 			if(tileEntity != null && tileEntity instanceof TileEntityCoordTeleporter && ((TileEntityCoordTeleporter) tileEntity).destinationValide()) {
 				blockIndexInTexture += 16;
 			}

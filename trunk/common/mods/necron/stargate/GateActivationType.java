@@ -2,7 +2,9 @@ package mods.necron.stargate;
 
 public enum GateActivationType {
 	
-	FAILED(0, "Failed"), OUTPUT(3, "Output"), INPUT(4, "Input");
+	FAILED(0, "Failed"),
+	OUTPUT(3, "Output"),
+	INPUT(4, "Input");
 	
 	private int value;
 	private String toString;

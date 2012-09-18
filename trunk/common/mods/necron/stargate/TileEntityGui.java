@@ -2,7 +2,6 @@ package mods.necron.stargate;
 
 import java.util.LinkedList;
 
-
 public abstract class TileEntityGui extends TileEntityStargate {
 	
 	/**

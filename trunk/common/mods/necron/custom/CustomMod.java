@@ -16,6 +16,7 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.relauncher.FMLRelaunchLog;
 
 /**
@@ -57,6 +58,9 @@ public class CustomMod {
 	public static final int itemMobSpawnerTextureIndex = 0;
 	public static final int indestructibleItemsMaxDamage = 0;
 	
+	// Custom items :
+	public static final Item itemFireStaff = new ItemFireStaff(5050, 1, "itemFireStaff");
+	
 	// MobSpawner items :
 	public static final Item itemSpawnerCreeper = new ItemMobSpawner(5002, "Creeper");
 	public static final Item itemSpawnerSkeleton = new ItemMobSpawner(5003, "Skeleton");
@@ -96,6 +100,12 @@ public class CustomMod {
 	public void init(FMLInitializationEvent evt) {
 		// Register gui handler :
 		NetworkRegistry.instance().registerGuiHandler(instance, proxy);
+		
+		// Give fr names to Custom items :
+		ModLoader.addName(itemFireStaff, "fr_FR", "itemFireStaff");
+		
+		// Resgister Custom entities :
+		EntityRegistry.registerModEntity(EntityCustomFireBall.class, "customFireBall", 1, this, 250, 5, true);
 		
 		// Mod 1 - Les outils/armures en diaments (et quelques autres outils) sont indestructibles.
 		this.initIndestructibleTools();

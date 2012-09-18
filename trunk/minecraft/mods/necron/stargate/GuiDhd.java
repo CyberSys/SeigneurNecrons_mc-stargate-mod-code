@@ -6,6 +6,10 @@ import net.minecraft.src.ModLoader;
 
 import org.lwjgl.input.Keyboard;
 
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.asm.SideOnly;
+
+@SideOnly(Side.CLIENT)
 public class GuiDhd extends GuiScreen {
 	
 	/** The title string that is displayed in the top-center of the screen. */

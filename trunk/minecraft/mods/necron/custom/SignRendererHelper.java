@@ -1,5 +1,9 @@
 package mods.necron.custom;
 
+import cpw.mods.fml.common.Side;
+import cpw.mods.fml.common.asm.SideOnly;
+
+@SideOnly(Side.CLIENT)
 public class SignRendererHelper {
 	
 	public static String defaultTextureFile = "/item/sign.png";

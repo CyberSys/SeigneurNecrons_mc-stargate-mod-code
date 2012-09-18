@@ -4,10 +4,9 @@ import java.util.Iterator;
 import java.util.List;
 
 import net.minecraft.src.AxisAlignedBB;
+import net.minecraft.src.Block;
 import net.minecraft.src.DamageSource;
 import net.minecraft.src.Entity;
-import net.minecraft.src.EntityDamageSourceIndirect;
-import net.minecraft.src.EntityFireball;
 import net.minecraft.src.EntityLiving;
 import net.minecraft.src.MathHelper;
 import net.minecraft.src.MovingObjectPosition;
@@ -21,6 +20,10 @@ import cpw.mods.fml.common.asm.SideOnly;
 
 public class EntityCustomFireBall extends Entity {
 	
+	private static final float entityPlayerOffset = 1.62F;
+	private static final float mutliplicateur1 = 0.4F;
+	private static final double multiplicateur2 = 0.5D;
+	
 	private int xTile = -1;
 	private int yTile = -1;
 	private int zTile = -1;
@@ -29,43 +32,35 @@ public class EntityCustomFireBall extends Entity {
 	public EntityLiving shootingEntity;
 	private int ticksAlive;
 	private int ticksInAir = 0;
-	public double accelerationX = 0;
-	public double accelerationY = 0;
-	public double accelerationZ = 0;
 	
 	public EntityCustomFireBall(World world) {
 		super(world);
-		this.setSize(1.0F, 1.0F);
+		this.setSize(0.3125F, 0.3125F);
 	}
 	
-	public EntityCustomFireBall(World world, double x, double y, double z, double accX, double accY, double accZ) {
+	public EntityCustomFireBall(World world, EntityLiving entityLiving) {
 		this(world);
 		
-		this.setLocationAndAngles(x, y, z, this.rotationYaw, this.rotationPitch);
-		this.setPosition(x, y, z);
+		double accX = -MathHelper.sin(entityLiving.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(entityLiving.rotationPitch / 180.0F * (float) Math.PI) * mutliplicateur1;
+		double accY = -MathHelper.sin((entityLiving.rotationPitch) / 180.0F * (float) Math.PI) * mutliplicateur1;
+		double accZ = MathHelper.cos(entityLiving.rotationYaw / 180.0F * (float) Math.PI) * MathHelper.cos(entityLiving.rotationPitch / 180.0F * (float) Math.PI) * mutliplicateur1;
 		
-		double acc3D = (double) MathHelper.sqrt_double(accX * accX + accY * accY + accZ * accZ);
-		this.accelerationX = accX / acc3D * 0.1D;
-		this.accelerationY = accY / acc3D * 0.1D;
-		this.accelerationZ = accZ / acc3D * 0.1D;
-	}
-	
-	public EntityCustomFireBall(World world, EntityLiving entityLiving, double accX, double accY, double accZ) {
-		this(world);
-		
-		this.shootingEntity = entityLiving;
-		this.setLocationAndAngles(entityLiving.posX, entityLiving.posY, entityLiving.posZ, entityLiving.rotationYaw, entityLiving.rotationPitch);
-		this.setPosition(this.posX, this.posY, this.posZ);
+		double acc3D = MathHelper.sqrt_double(accX * accX + accY * accY + accZ * accZ);
+		accX = accX / acc3D * multiplicateur2;
+		accY = accY / acc3D * multiplicateur2;
+		accZ = accZ / acc3D * multiplicateur2;
 		
 		this.yOffset = 0.0F;
-		this.motionX = this.motionY = this.motionZ = 0.0D;
+		this.motionX = accX;
+		this.motionY = accY;
+		this.motionZ = accZ;
 		
-		double acc3D = (double) MathHelper.sqrt_double(accX * accX + accY * accY + accZ * accZ);
-		this.accelerationX = accX / acc3D * 0.1D;
-		this.accelerationY = accY / acc3D * 0.1D;
-		this.accelerationZ = accZ / acc3D * 0.1D;
+		this.shootingEntity = entityLiving;
+		this.setLocationAndAngles(entityLiving.posX, entityLiving.posY + entityPlayerOffset, entityLiving.posZ, entityLiving.rotationYaw, entityLiving.rotationPitch);
+		this.setPosition(this.posX + this.motionX, this.posY + this.motionY, this.posZ + this.motionZ);
 	}
 	
+	@Override
 	protected void entityInit() {
 	}
 	
@@ -73,6 +68,7 @@ public class EntityCustomFireBall extends Entity {
 	 * Checks if the entity is in range to render by using the past in distance and comparing it to its average edge
 	 * length * 64 * renderDistanceWeight Args: distance
 	 */
+	@Override
 	@SideOnly(Side.CLIENT)
 	public boolean isInRangeToRenderDist(double distance) {
 		double var3 = this.boundingBox.getAverageEdgeLength() * 4.0D;
@@ -83,6 +79,7 @@ public class EntityCustomFireBall extends Entity {
 	/**
 	 * Called to update the entity's position/logic.
 	 */
+	@Override
 	public void onUpdate() {
 		if(!this.worldObj.isRemote && (this.shootingEntity != null && this.shootingEntity.isDead || !this.worldObj.blockExists((int) this.posX, (int) this.posY, (int) this.posZ))) {
 			this.setDead();
@@ -105,9 +102,9 @@ public class EntityCustomFireBall extends Entity {
 				}
 				
 				this.inGround = false;
-				this.motionX *= (double) (this.rand.nextFloat() * 0.2F);
-				this.motionY *= (double) (this.rand.nextFloat() * 0.2F);
-				this.motionZ *= (double) (this.rand.nextFloat() * 0.2F);
+				this.motionX *= this.rand.nextFloat() * 0.2F;
+				this.motionY *= this.rand.nextFloat() * 0.2F;
+				this.motionZ *= this.rand.nextFloat() * 0.2F;
 				this.ticksAlive = 0;
 				this.ticksInAir = 0;
 			}
@@ -135,7 +132,7 @@ public class EntityCustomFireBall extends Entity {
 				
 				if(entityListElement.canBeCollidedWith() && (!entityListElement.isEntityEqual(this.shootingEntity) || this.ticksInAir >= 25)) {
 					float expendSize = 0.3F;
-					AxisAlignedBB boudingBox = entityListElement.boundingBox.expand((double) expendSize, (double) expendSize, (double) expendSize);
+					AxisAlignedBB boudingBox = entityListElement.boundingBox.expand(expendSize, expendSize, expendSize);
 					MovingObjectPosition collisionPosition = boudingBox.calculateIntercept(startPos, endPos);
 					
 					if(collisionPosition != null) {
@@ -163,7 +160,7 @@ public class EntityCustomFireBall extends Entity {
 			float motionXZ = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
 			this.rotationYaw = (float) (Math.atan2(this.motionX, this.motionZ) * 180.0D / Math.PI);
 			
-			for(this.rotationPitch = (float) (Math.atan2(this.motionY, (double) motionXZ) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F) {
+			for(this.rotationPitch = (float) (Math.atan2(this.motionY, motionXZ) * 180.0D / Math.PI); this.rotationPitch - this.prevRotationPitch < -180.0F; this.prevRotationPitch -= 360.0F) {
 				;
 			}
 			
@@ -181,25 +178,23 @@ public class EntityCustomFireBall extends Entity {
 			
 			this.rotationPitch = this.prevRotationPitch + (this.rotationPitch - this.prevRotationPitch) * 0.2F;
 			this.rotationYaw = this.prevRotationYaw + (this.rotationYaw - this.prevRotationYaw) * 0.2F;
-			float var17 = 0.95F;
+			float rallentissement = 1F;
 			
 			if(this.isInWater()) {
-				for(int var19 = 0; var19 < 4; ++var19) {
+				for(int i = 0; i < 4; ++i) {
 					float var18 = 0.25F;
-					this.worldObj.spawnParticle("bubble", this.posX - this.motionX * (double) var18, this.posY - this.motionY * (double) var18, this.posZ - this.motionZ * (double) var18, this.motionX, this.motionY, this.motionZ);
+					this.worldObj.spawnParticle("bubble", this.posX - this.motionX * var18, this.posY - this.motionY * var18, this.posZ - this.motionZ * var18, this.motionX, this.motionY, this.motionZ);
 				}
 				
-				var17 = 0.8F;
+				rallentissement = 0.8F;
 			}
 			
-			this.motionX += this.accelerationX;
-			this.motionY += this.accelerationY;
-			this.motionZ += this.accelerationZ;
-			this.motionX *= (double) var17;
-			this.motionY *= (double) var17;
-			this.motionZ *= (double) var17;
+			this.motionX *= rallentissement;
+			this.motionY *= rallentissement;
+			this.motionZ *= rallentissement;
 			this.worldObj.spawnParticle("smoke", this.posX, this.posY + 0.5D, this.posZ, 0.0D, 0.0D, 0.0D);
 			this.setPosition(this.posX, this.posY, this.posZ);
+			this.doBlockCollisions();
 		}
 	}
 	
@@ -209,12 +204,40 @@ public class EntityCustomFireBall extends Entity {
 	protected void onImpact(MovingObjectPosition par1MovingObjectPosition) {
 		if(!this.worldObj.isRemote) {
 			if(par1MovingObjectPosition.entityHit != null) {
-				// FIXME - pour l'instant, la boule de feu ne fait aucun degat aux entites.
-				//par1MovingObjectPosition.entityHit.attackEntityFrom(DamageSource.causeFireballDamage(this, this.shootingEntity), 6);
+				if(!par1MovingObjectPosition.entityHit.isImmuneToFire() && par1MovingObjectPosition.entityHit.attackEntityFrom(EntityCustomDamageSourceIndirect.causeFireballDamage(this, this.shootingEntity), 5)) {
+					par1MovingObjectPosition.entityHit.setFire(5);
+				}
+			}
+			else {
+				int var2 = par1MovingObjectPosition.blockX;
+				int var3 = par1MovingObjectPosition.blockY;
+				int var4 = par1MovingObjectPosition.blockZ;
+				
+				switch(par1MovingObjectPosition.sideHit) {
+					case 0:
+						--var3;
+						break;
+					case 1:
+						++var3;
+						break;
+					case 2:
+						--var4;
+						break;
+					case 3:
+						++var4;
+						break;
+					case 4:
+						--var2;
+						break;
+					case 5:
+						++var2;
+				}
+				
+				if(this.worldObj.isAirBlock(var2, var3, var4)) {
+					this.worldObj.setBlockWithNotify(var2, var3, var4, Block.fire.blockID);
+				}
 			}
 			
-			// FIXME - pour l'instant, la boule de feu ne detruit pas le decor (ajout de false).
-			this.worldObj.newExplosion((Entity) null, this.posX, this.posY, this.posZ, 1.0F, true, false);
 			this.setDead();
 		}
 	}
@@ -222,6 +245,7 @@ public class EntityCustomFireBall extends Entity {
 	/**
 	 * (abstract) Protected helper method to write subclass entity data to NBT.
 	 */
+	@Override
 	public void writeEntityToNBT(NBTTagCompound par1NBTTagCompound) {
 		par1NBTTagCompound.setShort("xTile", (short) this.xTile);
 		par1NBTTagCompound.setShort("yTile", (short) this.yTile);
@@ -234,6 +258,7 @@ public class EntityCustomFireBall extends Entity {
 	/**
 	 * (abstract) Protected helper method to read subclass entity data from NBT.
 	 */
+	@Override
 	public void readEntityFromNBT(NBTTagCompound par1NBTTagCompound) {
 		this.xTile = par1NBTTagCompound.getShort("xTile");
 		this.yTile = par1NBTTagCompound.getShort("yTile");
@@ -255,10 +280,12 @@ public class EntityCustomFireBall extends Entity {
 	/**
 	 * Returns true if other Entities should be prevented from moving through this Entity.
 	 */
+	@Override
 	public boolean canBeCollidedWith() {
 		return true;
 	}
 	
+	@Override
 	public float getCollisionBorderSize() {
 		return 1.0F;
 	}
@@ -266,6 +293,7 @@ public class EntityCustomFireBall extends Entity {
 	/**
 	 * Called when the entity is attacked.
 	 */
+	@Override
 	public boolean attackEntityFrom(DamageSource par1DamageSource, int par2) {
 		this.setBeenAttacked();
 		
@@ -276,9 +304,6 @@ public class EntityCustomFireBall extends Entity {
 				this.motionX = var3.xCoord;
 				this.motionY = var3.yCoord;
 				this.motionZ = var3.zCoord;
-				this.accelerationX = this.motionX * 0.1D;
-				this.accelerationY = this.motionY * 0.1D;
-				this.accelerationZ = this.motionZ * 0.1D;
 			}
 			
 			if(par1DamageSource.getEntity() instanceof EntityLiving) {
@@ -292,6 +317,7 @@ public class EntityCustomFireBall extends Entity {
 		}
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public float getShadowSize() {
 		return 0.0F;
@@ -300,10 +326,12 @@ public class EntityCustomFireBall extends Entity {
 	/**
 	 * Gets how bright this entity is.
 	 */
+	@Override
 	public float getBrightness(float par1) {
 		return 1.0F;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	public int getBrightnessForRender(float par1) {
 		return 15728880;

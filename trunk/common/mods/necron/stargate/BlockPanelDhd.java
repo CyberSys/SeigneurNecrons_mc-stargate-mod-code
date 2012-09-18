@@ -22,8 +22,8 @@ public class BlockPanelDhd extends BlockPanel {
 			return false;
 		}
 		
-		if(!world.isRemote && world.getBlockId(x, y-1, z) == StargateMod.dhdCoord.blockID) {
-			TileEntity tileEntity = world.getBlockTileEntity(x, y-1, z);
+		if(!world.isRemote && world.getBlockId(x, y - 1, z) == StargateMod.dhdCoord.blockID) {
+			TileEntity tileEntity = world.getBlockTileEntity(x, y - 1, z);
 			
 			if(tileEntity != null && tileEntity instanceof TileEntityCoordDhd) {
 				((TileEntityCoordDhd) tileEntity).activateGate();
