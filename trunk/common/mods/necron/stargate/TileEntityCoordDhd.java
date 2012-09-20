@@ -2,6 +2,7 @@ package mods.necron.stargate;
 
 import java.util.LinkedList;
 
+import net.minecraft.src.ChunkPosition;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.TileEntity;
 
@@ -79,32 +80,51 @@ public class TileEntityCoordDhd extends TileEntityCoord {
 	private void searchGate() {
 		// Pas la peine de chercher une porte si on en a deja trouve une.
 		if(!this.linkedToGate) {
-			// On cherche d'abord dans un rayon de 1 autour du block, puis on augmente le rayon jusqu'a ce qu'on trouve une porte ou qu'on atteigne la portee max.
-			for(int rayon = 1; rayon <= maxRange; ++rayon) {
-				for(int i = -rayon; i <= rayon; ++i) {
-					for(int j = -rayon; j <= rayon; ++j) {
-						for(int k = -rayon; k <= rayon; ++k) {
-							int x = this.xCoord + k;
-							int y = this.yCoord + i;
-							int z = this.zCoord + j;
-							
-							if(this.worldObj.getBlockId(x, y, z) == StargateMod.masterChevron.blockID) {
-								this.xGate = x;
-								this.yGate = y;
-								this.zGate = z;
-								this.setLinkedToGate(true);
-								return;
-							}
-							
-							// On ne teste pas l'interieur du cube, puisqu'il a deja ete teste dans la boucle precedante (parcours sur rayon).
-							if(Math.abs(i) != rayon && Math.abs(j) != rayon && k == -rayon) {
-								k = rayon - 1;
-							}
+			// On va chercher la liste de tout les chevrons maitre a portee.
+			LinkedList<ChunkPosition> listeChevronsMaitre = new LinkedList<ChunkPosition>();
+			
+			// On cherche dans un cube de cote : portee max.
+			for(int i = -maxRange; i <= maxRange; ++i) {
+				for(int j = -maxRange; j <= maxRange; ++j) {
+					for(int k = -maxRange; k <= maxRange; ++k) {
+						int x = this.xCoord + k;
+						int y = this.yCoord + i;
+						int z = this.zCoord + j;
+						
+						// Si le block est un chevron maitre, on l'ajoute a la liste des blocks pouvant etre lies au dhd.
+						if(this.worldObj.getBlockId(x, y, z) == StargateMod.masterChevron.blockID) {
+							listeChevronsMaitre.add(new ChunkPosition(x, y, z));
 						}
 					}
 				}
 			}
+			
+			// Si on a trouve au moins un chevron maitre.
+			if(listeChevronsMaitre.size() > 0) {
+				// On parcoure la liste a la recherche du chevron le plus proche.
+				for(ChunkPosition pos : listeChevronsMaitre) {
+					// Si le dhd n'etait pas encore lie ou si le nouveau chevron maitre est plus proche que l'ancien.
+					if(!this.linkedToGate || this.distanceCarre(pos.x, pos.y, pos.z) < this.distanceCarre(this.xGate, this.yGate, this.zGate)) {
+						// On lie le dhd au nouveau chevron maitre.
+						this.xGate = pos.x;
+						this.yGate = pos.y;
+						this.zGate = pos.z;
+						this.setLinkedToGate(true);
+					}
+				}
+			}
 		}
+	}
+	
+	/**
+	 * Retourne le carre de la distance entre ce dhd et le block aux cooradonnees indiquees.
+	 * @param x - la coordonnee en X du block dont on veut connaitre la distance.
+	 * @param y - la coordonnee en Y du block dont on veut connaitre la distance.
+	 * @param z - la coordonnee en Z du block dont on veut connaitre la distance.
+	 * @return le carre de la distance entre ce dhd et le block aux cooradonnees indiquees.
+	 */
+	private double distanceCarre(int x, int y, int z) {
+		return Math.pow(this.xCoord - x, 2) + Math.pow(this.yCoord - y, 2) + Math.pow(this.zCoord - z, 2);
 	}
 	
 	/**

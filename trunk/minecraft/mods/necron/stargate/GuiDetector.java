@@ -55,7 +55,7 @@ public class GuiDetector extends GuiScreen {
 		catch(NumberFormatException argh) {
 		}
 		
-		ModLoader.sendPacket(entityDetector.getAuxillaryInfoPacketWhithId(TileEntityStargate.packetId_CloseGuiDetector));
+		StargateMod.sendPacketToServer(entityDetector.getAuxillaryInfoPacketWhithId(TileEntityStargate.packetId_CloseGuiDetector));
 	}
 	
 	/**

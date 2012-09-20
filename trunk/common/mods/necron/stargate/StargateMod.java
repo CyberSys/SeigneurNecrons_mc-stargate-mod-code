@@ -4,6 +4,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.Item;
 import net.minecraft.src.ItemStack;
 import net.minecraft.src.ModLoader;
+import net.minecraft.src.Packet;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.Init;
@@ -184,6 +185,31 @@ public class StargateMod {
 	@PostInit
 	public void postInit(FMLPostInitializationEvent evt) {
 		//Post-Initialization code such as mod hooks
+	}
+	
+	/**
+	 * Envoie un packet du client au server.
+	 * @param packet - le packet a envoyer.
+	 */
+	public static void sendPacketToServer(Packet packet) {
+		ModLoader.sendPacket(packet);
+	}
+	
+	/**
+	 * Envoie un packet du server a tout les joueurs.
+	 * @param packet - le packet a envoyer.
+	 */
+	public static void sendPacketToAllPlayers(Packet packet) {
+		ModLoader.getMinecraftServerInstance().getConfigurationManager().sendPacketToAllPlayers(packet);
+	}
+	
+	/**
+	 * Envoie un packet du server a tout les joueurs situes dans la dimension specifiee.
+	 * @param packet - le packet a envoyer.
+	 * @param dimension - la dimension dans laquelle les joueurs doivent etre situes.
+	 */
+	public static void sendPacketToAllPlayersInDimension(Packet packet, int dimension) {
+		ModLoader.getMinecraftServerInstance().getConfigurationManager().sendPacketToAllPlayersInDimension(packet, dimension);
 	}
 	
 	/**
