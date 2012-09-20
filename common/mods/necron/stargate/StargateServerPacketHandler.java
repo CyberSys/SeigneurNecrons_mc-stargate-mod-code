@@ -13,8 +13,15 @@ public class StargateServerPacketHandler extends StargatePacketHandler {
 	
 	@Override
 	public void onPacketData(NetworkManager manager, Packet250CustomPayload packet, Player player) {
+		// On verifie que le packet est bien un packet de ce mode.
+		if(packet != null && packet.channel.equals(StargateMod.chanel)) {
+			this.handlePacket(manager, packet, player);
+		}
+	}
+	
+	private void handlePacket(NetworkManager manager, Packet250CustomPayload packet, Player player) {
 		// La longueur du packet doit etre au moins de 20 (id + dim + x + y + z).
-		if(packet != null && packet.data != null && packet.length >= 20) {
+		if(packet.data != null && packet.length >= 20) {
 			LinkedList<Byte> list = TileEntityStargate.arrayToList(packet.data);
 			int id = TileEntityStargate.readInt(list);
 			

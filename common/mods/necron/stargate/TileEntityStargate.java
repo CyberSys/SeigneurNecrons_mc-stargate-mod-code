@@ -4,7 +4,6 @@ import java.nio.ByteBuffer;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import net.minecraft.src.ModLoader;
 import net.minecraft.src.NetworkManager;
 import net.minecraft.src.Packet;
 import net.minecraft.src.Packet250CustomPayload;
@@ -259,7 +258,7 @@ public abstract class TileEntityStargate extends TileEntity {
 	 */
 	protected void updateClients() {
 		if(!this.worldObj.isRemote) {
-			ModLoader.getMinecraftServerInstance().getConfigurationManager().sendPacketToAllPlayersInDimension(this.getAuxillaryInfoPacket(), this.worldObj.getWorldInfo().getDimension());
+			StargateMod.sendPacketToAllPlayersInDimension(this.getAuxillaryInfoPacket(), this.worldObj.getWorldInfo().getDimension());
 		}
 	}
 	

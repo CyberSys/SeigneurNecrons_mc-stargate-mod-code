@@ -44,4 +44,8 @@ public class StargateClientPacketHandler extends StargatePacketHandler {
 		}
 	}
 	
+	private void handleEntityTeleport() {
+		// FIXME - traiter le packet de teleportation.
+	}
+	
 }

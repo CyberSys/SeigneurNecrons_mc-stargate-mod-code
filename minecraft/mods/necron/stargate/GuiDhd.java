@@ -71,7 +71,7 @@ public class GuiDhd extends GuiScreen {
 		catch(NumberFormatException argh) {
 		}
 		
-		ModLoader.sendPacket(entityDhd.getAuxillaryInfoPacketWhithId(TileEntityStargate.packetId_CloseGuiDhd));
+		StargateMod.sendPacketToServer(entityDhd.getAuxillaryInfoPacketWhithId(TileEntityStargate.packetId_CloseGuiDhd));
 	}
 	
 	/**
@@ -114,17 +114,33 @@ public class GuiDhd extends GuiScreen {
 			this.valider();
 		}
 		else if(key == Keyboard.KEY_TAB) {
-			if(this.xField.isFocused()) {
-				this.xField.setFocused(false);
-				this.yField.setFocused(true);
+			if(GuiScreen.isShiftKeyDown()) {
+				if(this.xField.isFocused()) {
+					this.xField.setFocused(false);
+					this.zField.setFocused(true);
+				}
+				else if(this.yField.isFocused()) {
+					this.yField.setFocused(false);
+					this.xField.setFocused(true);
+				}
+				else if(this.zField.isFocused()) {
+					this.zField.setFocused(false);
+					this.yField.setFocused(true);
+				}
 			}
-			else if(this.yField.isFocused()) {
-				this.yField.setFocused(false);
-				this.zField.setFocused(true);
-			}
-			else if(this.zField.isFocused()) {
-				this.zField.setFocused(false);
-				this.xField.setFocused(true);
+			else {
+				if(this.xField.isFocused()) {
+					this.xField.setFocused(false);
+					this.yField.setFocused(true);
+				}
+				else if(this.yField.isFocused()) {
+					this.yField.setFocused(false);
+					this.zField.setFocused(true);
+				}
+				else if(this.zField.isFocused()) {
+					this.zField.setFocused(false);
+					this.xField.setFocused(true);
+				}
 			}
 		}
 		else if(this.xField.isFocused()) {

@@ -11,6 +11,8 @@ import net.minecraft.src.ChunkPosition;
 import net.minecraft.src.Entity;
 import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.Packet28EntityVelocity;
+import net.minecraft.src.Packet34EntityTeleport;
 import net.minecraft.src.TileEntity;
 
 public class TileEntityMasterChevron extends TileEntityStargate {
@@ -892,7 +894,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			
 			// Si l'angle de rotation est anormal, on quitte.
 			if(rotation == -1) {
-				StargateMod.debug("Une TileEntityMasterChevron a retourne une valeur bizzare !", true);
+				StargateMod.debug("Une porte a retourne une valeur bizzare en orientation !", true);
 				return;
 			}
 			
@@ -915,14 +917,14 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 					zMotion = -motionZ;
 					break;
 				case 1:
-					xTP = -zDiff;
-					zTP = xDiff;
+					xTP = zDiff;
+					zTP = -xDiff;
 					xMotion = motionZ;
 					zMotion = -motionX;
 					break;
 				case 3:
-					xTP = zDiff;
-					zTP = -xDiff;
+					xTP = -zDiff;
+					zTP = xDiff;
 					xMotion = -motionZ;
 					zMotion = motionX;
 					break;
@@ -936,6 +938,14 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			// On produit le son de passage dans le vortex a la position de depart.
 			this.playSoundEffect(entity, "stargate.enterVortex");
 			
+			// On met a jour la vitesse de l'entite.
+			//entity.setVelocity(xMotion, yMotion, zMotion); fait planter le server car la methode n'est definie que cote client !
+			entity.motionX = xMotion;
+			entity.motionY = yMotion;
+			entity.motionZ = zMotion;
+			// FIXME - peut etre faut-il envoyer un packet ici aussi...
+			StargateMod.sendPacketToAllPlayers(new Packet28EntityVelocity(entity.entityId, xMotion, yMotion, zMotion));
+			
 			// On teleporte l'entite.
 			if(entity instanceof EntityPlayerMP) {
 				// FIXME - l'angle de la camera des joueurs n'est pas positionne correctement... en mode survie !
@@ -943,14 +953,9 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 				((EntityPlayerMP) entity).serverForThisPlayer.setPlayerLocation(xTP, yTP, zTP, rotationYaw, rotationPitch);
 			}
 			else {
+				// FIXME - peut etre faut-il envoyer un packet ici aussi...
 				entity.setLocationAndAngles(xTP, yTP, zTP, rotationYaw, rotationPitch);
 			}
-			
-			// On met a jour la vitesse de l'entite.
-			//entity.setVelocity(xMotion, yMotion, zMotion); fait planter le server car la methode n'est definie que cote client !
-			entity.motionX = xMotion;
-			entity.motionY = yMotion;
-			entity.motionZ = zMotion;
 			
 			// On produit le son de passage dans le vortex a la position d'arrivee.
 			this.playSoundEffect(entity, "stargate.enterVortex");
