@@ -1,8 +1,11 @@
 package mods.necron.stargate;
 
+import net.minecraft.src.EntityClientPlayerMP;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
+import net.minecraft.src.WorldClient;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 public class StargateCommonProxy implements IGuiHandler {
@@ -35,7 +38,11 @@ public class StargateCommonProxy implements IGuiHandler {
 		// Vide cote server.
 	}
 	
-	public World getClientWorld() {
+	public WorldClient getClientWorld() {
+		return null;
+	}
+	
+	public EntityClientPlayerMP getClientPlayer() {
 		return null;
 	}
 	

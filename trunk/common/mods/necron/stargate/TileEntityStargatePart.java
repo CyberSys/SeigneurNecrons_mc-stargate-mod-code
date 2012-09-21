@@ -1,5 +1,10 @@
 package mods.necron.stargate;
 
+import static mods.necron.stargate.StargatePacketHandler.readBoolean;
+import static mods.necron.stargate.StargatePacketHandler.readInt;
+import static mods.necron.stargate.StargatePacketHandler.writeBoolean;
+import static mods.necron.stargate.StargatePacketHandler.writeInt;
+
 import java.util.LinkedList;
 
 import net.minecraft.src.NBTTagCompound;

@@ -2,6 +2,8 @@ package mods.necron.stargate;
 
 import java.util.LinkedList;
 
+import net.minecraft.src.Entity;
+import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.ModLoader;
 import net.minecraft.src.NetworkManager;
 import net.minecraft.src.Packet250CustomPayload;
@@ -16,25 +18,31 @@ public class StargateClientPacketHandler extends StargatePacketHandler {
 	
 	@Override
 	public void onPacketData(NetworkManager manager, Packet250CustomPayload packet, Player player) {
-		// La longueur du packet doit etre au moins de 20 (id + dim + x + y + z).
-		if(packet != null && packet.data != null && packet.length >= 20) {
-			LinkedList<Byte> list = TileEntityStargate.arrayToList(packet.data);
-			int id = TileEntityStargate.readInt(list);
+		// La longueur du packet doit etre au moins de 4 (int id).
+		if(packet != null && packet.data != null && packet.length >= 4) {
+			LinkedList<Byte> list = arrayToList(packet.data);
+			int id = readInt(list);
 			
-			if(TileEntityStargate.isMapped(id)) {
-				// Cas ou le packet est un packet de mise a jours de tile entity :
-				/*DEBUG*///StargateMod.debug("Client: packet recu - maj tile entity (id = " + id + ")", true);
-				int dim = TileEntityStargate.readInt(list);
-				int x = TileEntityStargate.readInt(list);
-				int y = TileEntityStargate.readInt(list);
-				int z = TileEntityStargate.readInt(list);
-				
-				this.updateTileEntity(manager, packet, dim, x, y, z);
+			if(isMapped(id)) {
+				// Cas ou le packet est un packet de mise a jours de tile entity.
+				this.handleTileEntityUpdate(manager, packet);
+			}
+			else if(id == packetId_TeleportEntity) {
+				// Cas ou le packet est un packet de teleportation d'entity.
+				StargateMod.debug("Client: packet recu - teleportation", true);
+				this.handleEntityTeleport(manager, packet);
 			}
 		}
 	}
 	
-	private void updateTileEntity(NetworkManager manager, Packet250CustomPayload packet, int dim, int x, int y, int z) {
+	private void handleTileEntityUpdate(NetworkManager manager, Packet250CustomPayload packet) {
+		LinkedList<Byte> list = arrayToList(packet.data);
+		int id = readInt(list);
+		int dim = readInt(list);
+		int x = readInt(list);
+		int y = readInt(list);
+		int z = readInt(list);
+		
 		WorldClient world = ModLoader.getMinecraftInstance().theWorld;
 		if(world != null && world.getWorldInfo().getDimension() == dim) {
 			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
@@ -44,8 +52,27 @@ public class StargateClientPacketHandler extends StargatePacketHandler {
 		}
 	}
 	
-	private void handleEntityTeleport() {
-		// FIXME - traiter le packet de teleportation.
+	private void handleEntityTeleport(NetworkManager manager, Packet250CustomPayload packet) {
+		LinkedList<Byte> list = arrayToList(packet.data);
+		int id = readInt(list);
+		double posX = readDouble(list);
+		double posY = readDouble(list);
+		double posZ = readDouble(list);
+		float rotationYaw = readFloat(list);
+		float rotationPitch = readFloat(list);
+		double motionX = readDouble(list);
+		double motionY = readDouble(list);
+		double motionZ = readDouble(list);
+		
+		Entity entity = StargateMod.proxy.getClientPlayer().entityId == id ? StargateMod.proxy.getClientPlayer() : StargateMod.proxy.getClientWorld().getEntityByID(id);
+		if(entity != null) {
+			StargateMod.debug("joueur :" + (entity instanceof EntityPlayer), true);
+			entity.setPositionAndRotation2(posX, posY, posZ, rotationYaw, rotationPitch, 3);
+			entity.setVelocity(motionX, motionY, motionZ);
+		}
+		else {
+			StargateMod.debug("entity == null", true);
+		}
 	}
 	
 }
