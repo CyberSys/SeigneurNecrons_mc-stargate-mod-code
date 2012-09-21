@@ -69,7 +69,7 @@ public class TileEntityCoordTeleporter extends TileEntityCoord {
 	 */
 	@Override
 	protected boolean isCorrectId(int id) {
-		return (super.isCorrectId(id) || id == packetId_CloseGuiTeleporter);
+		return (super.isCorrectId(id) || id == StargatePacketHandler.packetId_CloseGuiTeleporter);
 	}
 	
 	/**

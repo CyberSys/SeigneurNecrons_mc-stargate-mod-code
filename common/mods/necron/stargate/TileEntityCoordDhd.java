@@ -1,5 +1,10 @@
 package mods.necron.stargate;
 
+import static mods.necron.stargate.StargatePacketHandler.readBoolean;
+import static mods.necron.stargate.StargatePacketHandler.readInt;
+import static mods.necron.stargate.StargatePacketHandler.writeBoolean;
+import static mods.necron.stargate.StargatePacketHandler.writeInt;
+
 import java.util.LinkedList;
 
 import net.minecraft.src.ChunkPosition;
@@ -210,7 +215,7 @@ public class TileEntityCoordDhd extends TileEntityCoord {
 	 */
 	@Override
 	protected boolean isCorrectId(int id) {
-		return (super.isCorrectId(id) || id == packetId_CloseGuiDhd);
+		return (super.isCorrectId(id) || id == StargatePacketHandler.packetId_CloseGuiDhd);
 	}
 	
 	/**

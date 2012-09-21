@@ -1,8 +1,10 @@
 package mods.necron.stargate;
 
+import net.minecraft.src.EntityClientPlayerMP;
 import net.minecraft.src.EntityPlayer;
 import net.minecraft.src.TileEntity;
 import net.minecraft.src.World;
+import net.minecraft.src.WorldClient;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -48,8 +50,13 @@ public class StargateClientProxy extends StargateCommonProxy {
 	}
 	
 	@Override
-	public World getClientWorld() {
+	public WorldClient getClientWorld() {
 		return FMLClientHandler.instance().getClient().theWorld;
+	}
+	
+	@Override
+	public EntityClientPlayerMP getClientPlayer() {
+		return FMLClientHandler.instance().getClient().thePlayer;
 	}
 	
 }

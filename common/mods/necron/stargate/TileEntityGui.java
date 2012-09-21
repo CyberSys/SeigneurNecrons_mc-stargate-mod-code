@@ -1,5 +1,8 @@
 package mods.necron.stargate;
 
+import static mods.necron.stargate.StargatePacketHandler.readBoolean;
+import static mods.necron.stargate.StargatePacketHandler.writeBoolean;
+
 import java.util.LinkedList;
 
 public abstract class TileEntityGui extends TileEntityStargate {

@@ -20,25 +20,26 @@ public class StargateServerPacketHandler extends StargatePacketHandler {
 	}
 	
 	private void handlePacket(NetworkManager manager, Packet250CustomPayload packet, Player player) {
-		// La longueur du packet doit etre au moins de 20 (id + dim + x + y + z).
-		if(packet.data != null && packet.length >= 20) {
-			LinkedList<Byte> list = TileEntityStargate.arrayToList(packet.data);
-			int id = TileEntityStargate.readInt(list);
+		// La longueur du packet doit etre au moins de 4 (int id).
+		if(packet.data != null && packet.length >= 4) {
+			LinkedList<Byte> list = arrayToList(packet.data);
+			int id = readInt(list);
 			
-			if(id == TileEntityStargate.packetId_CloseGuiTeleporter || id == TileEntityStargate.packetId_CloseGuiDhd || id == TileEntityStargate.packetId_CloseGuiDetector) {
-				// Cas ou le packet proviens de la fermeture d'une interface :
-				/*DEBUG*///StargateMod.debug("Server: packet recu - fermeture d'une interface", true);
-				int dim = TileEntityStargate.readInt(list);
-				int x = TileEntityStargate.readInt(list);
-				int y = TileEntityStargate.readInt(list);
-				int z = TileEntityStargate.readInt(list);
-				
-				this.updateTileEntityGui(manager, packet, dim, x, y, z);
+			if(id == packetId_CloseGuiTeleporter || id == packetId_CloseGuiDhd || id == packetId_CloseGuiDetector) {
+				// Cas ou le packet proviens de la fermeture d'une interface.
+				this.updateTileEntityGui(manager, packet);
 			}
 		}
 	}
 	
-	private void updateTileEntityGui(NetworkManager manager, Packet250CustomPayload packet, int dim, int x, int y, int z) {
+	private void updateTileEntityGui(NetworkManager manager, Packet250CustomPayload packet) {
+		LinkedList<Byte> list = arrayToList(packet.data);
+		int id = readInt(list);
+		int dim = readInt(list);
+		int x = readInt(list);
+		int y = readInt(list);
+		int z = readInt(list);
+		
 		WorldServer world = ModLoader.getMinecraftServerInstance().worldServerForDimension(dim);
 		if(world != null) {
 			TileEntity tileEntity = world.getBlockTileEntity(x, y, z);

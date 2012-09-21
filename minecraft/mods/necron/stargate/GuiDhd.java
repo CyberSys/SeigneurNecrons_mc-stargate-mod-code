@@ -2,7 +2,6 @@ package mods.necron.stargate;
 
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
-import net.minecraft.src.ModLoader;
 
 import org.lwjgl.input.Keyboard;
 
@@ -71,7 +70,7 @@ public class GuiDhd extends GuiScreen {
 		catch(NumberFormatException argh) {
 		}
 		
-		StargateMod.sendPacketToServer(entityDhd.getAuxillaryInfoPacketWhithId(TileEntityStargate.packetId_CloseGuiDhd));
+		StargateMod.sendPacketToServer(entityDhd.getAuxillaryInfoPacketWhithId(StargatePacketHandler.packetId_CloseGuiDhd));
 	}
 	
 	/**

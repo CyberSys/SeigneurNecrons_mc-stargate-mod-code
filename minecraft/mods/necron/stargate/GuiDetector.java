@@ -2,7 +2,6 @@ package mods.necron.stargate;
 
 import net.minecraft.src.GuiButton;
 import net.minecraft.src.GuiScreen;
-import net.minecraft.src.ModLoader;
 
 import org.lwjgl.input.Keyboard;
 
@@ -55,7 +54,7 @@ public class GuiDetector extends GuiScreen {
 		catch(NumberFormatException argh) {
 		}
 		
-		StargateMod.sendPacketToServer(entityDetector.getAuxillaryInfoPacketWhithId(TileEntityStargate.packetId_CloseGuiDetector));
+		StargateMod.sendPacketToServer(entityDetector.getAuxillaryInfoPacketWhithId(StargatePacketHandler.packetId_CloseGuiDetector));
 	}
 	
 	/**

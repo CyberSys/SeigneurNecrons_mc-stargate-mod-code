@@ -1,5 +1,11 @@
 package mods.necron.stargate;
 
+import static mods.necron.stargate.StargatePacketHandler.listToArray;
+import static mods.necron.stargate.StargatePacketHandler.readInt;
+import static mods.necron.stargate.StargatePacketHandler.writeInt;
+import static mods.necron.stargate.StargatePacketHandler.writeFloat;
+import static mods.necron.stargate.StargatePacketHandler.writeDouble;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -9,9 +15,8 @@ import net.minecraft.src.Block;
 import net.minecraft.src.BlockFluid;
 import net.minecraft.src.ChunkPosition;
 import net.minecraft.src.Entity;
-import net.minecraft.src.EntityMinecart;
-import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.NBTTagCompound;
+import net.minecraft.src.Packet250CustomPayload;
 import net.minecraft.src.Packet28EntityVelocity;
 import net.minecraft.src.Packet34EntityTeleport;
 import net.minecraft.src.TileEntity;
@@ -937,7 +942,9 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			StargateMod.debug("xDiff = " + xTP + "; yDiff = " + yTP + "; zDiff = " + zTP, true);
 			StargateMod.debug("xMotion = " + xMotion + "; yMotion = " + yMotion + "; zMotion = " + zMotion, true);
 			StargateMod.debug("rotationYaw = " + entity.rotationYaw + "; rotationPitch = " + entity.rotationPitch, true);
+			StargateMod.debug("", true);
 			StargateMod.debug("rotation = " + rotation + " (" + angleRotation + ")", true);
+			StargateMod.debug("", true);
 			
 			switch(rotation) {
 				case 0:
@@ -1016,7 +1023,7 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			StargateMod.debug("Arrivee (orientation = " + this.getOtherAngle() + ") :", true);
 			StargateMod.debug("xDiff = " + xTP + "; yDiff = " + yTP + "; zDiff = " + zTP, true);
 			StargateMod.debug("xMotion = " + xMotion + "; yMotion = " + yMotion + "; zMotion = " + zMotion, true);
-			StargateMod.debug("rotationYaw = " + rotationYaw + "; rotationPitch = " + rotationPitch, true);
+			StargateMod.debug("rotationYaw = " + rotationYaw + "; rotationPitch = " + rotationPitch + "\n\n", true);
 			
 			// On calcule les coordonnees finales de teleportation.
 			xTP = (this.xDest + 0.5) + xTP;
@@ -1027,30 +1034,44 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			this.playSoundEffect(entity, "stargate.enterVortex");
 			
 			// On met a jour la vitesse de l'entite.
-			//entity.setVelocity(xMotion, yMotion, zMotion); fait planter le server car la methode n'est definie que cote client !
 			entity.motionX = xMotion;
 			entity.motionY = yMotion;
 			entity.motionZ = zMotion;
-			// FIXME - peut etre faut-il envoyer un packet ici aussi...
-			StargateMod.sendPacketToAllPlayers(new Packet28EntityVelocity(entity.entityId, xMotion, yMotion, zMotion));
 			
-			// On teleporte l'entite.
-			if(entity instanceof EntityPlayerMP) {
-				// FIXME - l'angle de la camera des joueurs n'est pas positionne correctement... en mode survie !
-				// FIXME - on peut tenter de faire une double téléportation pour changer la vitesse de manière detournée...
-				((EntityPlayerMP) entity).serverForThisPlayer.setPlayerLocation(xTP, yTP, zTP, rotationYaw, rotationPitch);
-			}
-//			else if(entity instanceof EntityMinecart) {
-//				entity.setLocationAndAngles(xTP, yTP, zTP, entity.rotationYaw, entity.rotationPitch);
+//			// On teleporte l'entite.
+//			StargateMod.sendPacketToAllPlayers(new Packet28EntityVelocity(entity.entityId, xMotion, yMotion, zMotion));
+//			if(entity instanceof EntityPlayerMP) {
+//				// FIXME - l'angle de la camera des joueurs n'est pas positionne correctement... en mode survie !
+//				((EntityPlayerMP) entity).serverForThisPlayer.setPlayerLocation(xTP, yTP, zTP, rotationYaw, rotationPitch);
 //			}
-			else {
-				// FIXME - peut etre faut-il envoyer un packet ici aussi...
-				entity.setLocationAndAngles(xTP, yTP, zTP, rotationYaw, rotationPitch);
-			}
+//			else {
+//				entity.setLocationAndAngles(xTP, yTP, zTP, rotationYaw, rotationPitch);
+//			}
+			
+			entity.setPositionAndRotation(xTP, yTP, zTP, rotationYaw, rotationPitch);
+			
+//			StargateMod.sendPacketToAllPlayers(new Packet34EntityTeleport(entity));
+//			StargateMod.sendPacketToAllPlayers(new Packet28EntityVelocity(entity));
+			
+			StargateMod.sendPacketToAllPlayers(this.getTeleportPacket(entity));
 			
 			// On produit le son de passage dans le vortex a la position d'arrivee.
 			this.playSoundEffect(entity, "stargate.enterVortex");
 		}
+	}
+	
+	private static Packet250CustomPayload getTeleportPacket(Entity entity) {
+		LinkedList<Byte> list = new LinkedList<Byte>();
+		writeInt(list, StargatePacketHandler.packetId_TeleportEntity);
+		writeDouble(list, entity.posX);
+		writeDouble(list, entity.posY);
+		writeDouble(list, entity.posZ);
+		writeFloat(list, entity.rotationYaw);
+		writeFloat(list, entity.rotationPitch);
+		writeDouble(list, entity.motionX);
+		writeDouble(list, entity.motionY);
+		writeDouble(list, entity.motionZ);
+		return new Packet250CustomPayload(StargateMod.chanel, listToArray(list));
 	}
 	
 	/**
