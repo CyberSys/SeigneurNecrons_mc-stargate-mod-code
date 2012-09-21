@@ -9,6 +9,7 @@ import net.minecraft.src.Block;
 import net.minecraft.src.BlockFluid;
 import net.minecraft.src.ChunkPosition;
 import net.minecraft.src.Entity;
+import net.minecraft.src.EntityMinecart;
 import net.minecraft.src.EntityPlayerMP;
 import net.minecraft.src.NBTTagCompound;
 import net.minecraft.src.Packet28EntityVelocity;
@@ -830,11 +831,11 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	}
 	
 	/**
-	 * Retourne l'angle correspondant aux metadata d'une tile entity de chevron maitre.
+	 * Retourne l'orientation correspondant aux metadata d'une tile entity de chevron maitre.
 	 * @param metadata - les metadata du chevron maitre.
-	 * @return l'angle correspondant aux metadata.
+	 * @return l'orientation correspondant aux metadata.
 	 */
-	private int getAngle(int metadata) {
+	private static int getAngleFromMetadata(int metadata) {
 		switch(metadata) {
 			case 5:
 				return 1;
@@ -850,18 +851,47 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 	}
 	
 	/**
+	 * Retourne l'orientation de cette porte.
+	 * @return l'orientation de cette porte.
+	 */
+	private int getThisAngle() {
+		return getAngleFromMetadata(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
+	}
+	
+	/**
+	 * Retourne l'orientation de la porte de destination.
+	 * @return l'orientation de la porte de destination.
+	 */
+	private int getOtherAngle() {
+		return getAngleFromMetadata(this.worldObj.getBlockMetadata(this.xDest, this.yDest, this.zDest));
+	}
+	
+	/**
 	 * Reroutre l'angle entre cette porte et la porte de destination.
 	 * @return l'angle entre cette porte et la porte de destination.
 	 */
 	private int getRotation() {
-		int thisAngle = this.getAngle(this.worldObj.getBlockMetadata(this.xCoord, this.yCoord, this.zCoord));
-		int otherAngle = this.getAngle(this.worldObj.getBlockMetadata(this.xDest, this.yDest, this.zDest));
+		int thisAngle = this.getThisAngle();
+		int otherAngle = this.getOtherAngle();
 		
 		if(thisAngle < 0 || thisAngle > 3 || otherAngle < 0 || otherAngle > 3) {
 			return -1;
 		}
 		
 		return (otherAngle - thisAngle + 4) % 4;
+	}
+	
+	private static GateOrientation getOrientation(int angle) {
+		switch(angle) {
+			case 0:
+			case 2:
+				return GateOrientation.X_AXIS;
+			case 1:
+			case 3:
+				return GateOrientation.Z_AXIS;
+			default:
+				return GateOrientation.ERROR;
+		}
 	}
 	
 	/**
@@ -888,47 +918,105 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 			double motionY = entity.motionY;
 			double motionZ = entity.motionZ;
 			
-			// On recupere l'angle entre la porte de depart et la porte d'arrivee.
+			// On recupere l'orientation de cette porte ansi que l'angle entre la porte de depart et la porte d'arrivee.
+			GateOrientation orientation = getOrientation(this.getThisAngle());
 			int rotation = this.getRotation();
 			float angleRotation = rotation * 90;
 			
-			// Si l'angle de rotation est anormal, on quitte.
-			if(rotation == -1) {
-				StargateMod.debug("Une porte a retourne une valeur bizzare en orientation !", true);
-				return;
-			}
-			
-			// On calcule le nouvel angle de la camera en fonction de l'angle entre les porte.
-			float rotationYaw = (entity.rotationYaw - angleRotation) % 360;
-			float rotationPitch = entity.rotationPitch;
-			
-			// On fait une rotation sur les coordonnees relatives au chevron maitre et sur les donnees de vitesse, en fonction de l'angle entre les portes.
+			// On fait une rotation sur les coordonnees relatives au chevron maitre et sur les donnees de vitesse et d'orientation, en fonction de l'angle entre les portes.
 			double xTP = xDiff;
 			double yTP = yDiff;
 			double zTP = zDiff;
 			double xMotion = motionX;
 			double yMotion = motionY;
 			double zMotion = motionZ;
+			float rotationYaw = entity.rotationYaw;
+			float rotationPitch = entity.rotationPitch;
+			
+			StargateMod.debug("Depart (orientation = " + this.getThisAngle() + ") :", true);
+			StargateMod.debug("xDiff = " + xTP + "; yDiff = " + yTP + "; zDiff = " + zTP, true);
+			StargateMod.debug("xMotion = " + xMotion + "; yMotion = " + yMotion + "; zMotion = " + zMotion, true);
+			StargateMod.debug("rotationYaw = " + entity.rotationYaw + "; rotationPitch = " + entity.rotationPitch, true);
+			StargateMod.debug("rotation = " + rotation + " (" + angleRotation + ")", true);
+			
 			switch(rotation) {
 				case 0:
-					xTP = -xDiff;
-					zTP = -zDiff;
+					switch(orientation) {
+						case X_AXIS:
+							xTP = -xDiff;
+							zTP = zDiff;
+							break;
+						case Z_AXIS:
+							xTP = xDiff;
+							zTP = -zDiff;
+							break;
+						case ERROR:
+							return;
+					}
 					xMotion = -motionX;
 					zMotion = -motionZ;
+					rotationYaw = (entity.rotationYaw + 180) % 360;
 					break;
 				case 1:
-					xTP = zDiff;
-					zTP = -xDiff;
+					switch(orientation) {
+						case X_AXIS:
+							xTP = -zDiff;
+							zTP = -xDiff;
+							break;
+						case Z_AXIS:
+							xTP = zDiff;
+							zTP = xDiff;
+							break;
+						case ERROR:
+							return;
+					}
 					xMotion = motionZ;
 					zMotion = -motionX;
+					rotationYaw = (entity.rotationYaw + 270) % 360;
+					break;
+				case 2:
+					switch(orientation) {
+						case X_AXIS:
+							xTP = xDiff;
+							zTP = -zDiff;
+							break;
+						case Z_AXIS:
+							xTP = -xDiff;
+							zTP = zDiff;
+							break;
+						case ERROR:
+							return;
+					}
+					xMotion = motionX;
+					zMotion = motionZ;
+					rotationYaw = entity.rotationYaw;
 					break;
 				case 3:
-					xTP = -zDiff;
-					zTP = xDiff;
+					switch(orientation) {
+						case X_AXIS:
+							xTP = zDiff;
+							zTP = xDiff;
+							break;
+						case Z_AXIS:
+							xTP = -zDiff;
+							zTP = -xDiff;
+							break;
+						case ERROR:
+							return;
+					}
 					xMotion = -motionZ;
 					zMotion = motionX;
+					rotationYaw = (entity.rotationYaw + 90) % 360;
 					break;
+				default:
+					StargateMod.debug("Une porte a retourne une valeur bizzare en orientation !", true);
+					return;
 			}
+			
+			StargateMod.debug("Arrivee (orientation = " + this.getOtherAngle() + ") :", true);
+			StargateMod.debug("xDiff = " + xTP + "; yDiff = " + yTP + "; zDiff = " + zTP, true);
+			StargateMod.debug("xMotion = " + xMotion + "; yMotion = " + yMotion + "; zMotion = " + zMotion, true);
+			StargateMod.debug("rotationYaw = " + rotationYaw + "; rotationPitch = " + rotationPitch, true);
 			
 			// On calcule les coordonnees finales de teleportation.
 			xTP = (this.xDest + 0.5) + xTP;
@@ -952,6 +1040,9 @@ public class TileEntityMasterChevron extends TileEntityStargate {
 				// FIXME - on peut tenter de faire une double téléportation pour changer la vitesse de manière detournée...
 				((EntityPlayerMP) entity).serverForThisPlayer.setPlayerLocation(xTP, yTP, zTP, rotationYaw, rotationPitch);
 			}
+//			else if(entity instanceof EntityMinecart) {
+//				entity.setLocationAndAngles(xTP, yTP, zTP, entity.rotationYaw, entity.rotationPitch);
+//			}
 			else {
 				// FIXME - peut etre faut-il envoyer un packet ici aussi...
 				entity.setLocationAndAngles(xTP, yTP, zTP, rotationYaw, rotationPitch);
