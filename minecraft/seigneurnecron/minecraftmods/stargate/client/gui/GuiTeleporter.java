@@ -1,0 +1,167 @@
+package seigneurnecron.minecraftmods.stargate.client.gui;
+
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+
+import org.lwjgl.input.Keyboard;
+
+import seigneurnecron.minecraftmods.stargate.StargateMod;
+import seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityCoordTeleporter;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
+@SideOnly(Side.CLIENT)
+public class GuiTeleporter extends GuiScreen {
+	
+	/** The title string that is displayed in the top-center of the screen. */
+	protected String screenTitle = "Coordinates of destination :";
+	
+	/** La tile entity du teleporteur. */
+	private TileEntityCoordTeleporter entityTeleporter;
+	
+	private GuiIntegerField xField;
+	private GuiIntegerField yField;
+	private GuiIntegerField zField;
+	
+	public GuiTeleporter(TileEntityCoordTeleporter tileEntity) {
+		this.entityTeleporter = tileEntity;
+	}
+	
+	@Override
+	public void drawScreen(int par1, int par2, float par3) {
+		this.drawDefaultBackground();
+		this.drawCenteredString(this.fontRenderer, this.screenTitle, this.width / 2, 40, 16777215);
+		this.drawString(this.fontRenderer, "x :", this.width / 2 - 40, 65, 10526880);
+		this.drawString(this.fontRenderer, "y :", this.width / 2 - 40, 85, 10526880);
+		this.drawString(this.fontRenderer, "z :", this.width / 2 - 40, 105, 10526880);
+		this.xField.drawTextBox();
+		this.yField.drawTextBox();
+		this.zField.drawTextBox();
+		super.drawScreen(par1, par2, par3);
+	}
+	
+	@Override
+	public void initGui() {
+		this.controlList.clear();
+		Keyboard.enableRepeatEvents(true);
+		this.controlList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 120, "Ok"));
+		this.xField = new GuiIntegerField(this.fontRenderer, this.width / 2 - 20, 60, 50, 20);
+		this.yField = new GuiIntegerField(this.fontRenderer, this.width / 2 - 20, 80, 50, 20);
+		this.zField = new GuiIntegerField(this.fontRenderer, this.width / 2 - 20, 100, 50, 20);
+		this.xField.setText(String.valueOf(this.entityTeleporter.getXDest()));
+		this.yField.setText(String.valueOf(this.entityTeleporter.getYDest()));
+		this.zField.setText(String.valueOf(this.entityTeleporter.getZDest()));
+		this.xField.setFocused(true);
+	}
+	
+	@Override
+	public void onGuiClosed() {
+		Keyboard.enableRepeatEvents(false);
+		
+		try {
+			this.entityTeleporter.setXDest(Integer.parseInt(this.xField.getText()));
+		}
+		catch(NumberFormatException argh) {
+			// Si la valeur n'est pas un entier valide, on l'ignore.
+		}
+		
+		try {
+			this.entityTeleporter.setYDest(Integer.parseInt(this.yField.getText()));
+		}
+		catch(NumberFormatException argh) {
+			// Si la valeur n'est pas un entier valide, on l'ignore.
+		}
+		
+		try {
+			this.entityTeleporter.setZDest(Integer.parseInt(this.zField.getText()));
+		}
+		catch(NumberFormatException argh) {
+			// Si la valeur n'est pas un entier valide, on l'ignore.
+		}
+		
+		StargateMod.sendPacketToServer(this.entityTeleporter.getDescriptionPacketWhithId(StargatePacketHandler.packetId_CloseGuiTeleporter));
+	}
+	
+	@Override
+	public void updateScreen() {
+		this.xField.updateCursorCounter();
+		this.yField.updateCursorCounter();
+		this.zField.updateCursorCounter();
+	}
+	
+	/**
+	 * Cette fonction est appelee quand on clic sur le bonton "Ok".
+	 */
+	@Override
+	protected void actionPerformed(GuiButton guiButton) {
+		if(guiButton.enabled) {
+			if(guiButton.id == 0) {
+				this.valider();
+			}
+		}
+	}
+	
+	/**
+	 * Ferme la fenetre de configuration du teleporteur.
+	 */
+	private void valider() {
+		this.entityTeleporter.onInventoryChanged();
+		this.mc.displayGuiScreen((GuiScreen) null);
+	}
+	
+	@Override
+	protected void keyTyped(char character, int key) {
+		if(key == Keyboard.KEY_RETURN || key == Keyboard.KEY_ESCAPE || key == this.mc.gameSettings.keyBindInventory.keyCode) {
+			this.valider();
+		}
+		else if(key == Keyboard.KEY_TAB) {
+			if(GuiScreen.isShiftKeyDown()) {
+				if(this.xField.isFocused()) {
+					this.xField.setFocused(false);
+					this.zField.setFocused(true);
+				}
+				else if(this.yField.isFocused()) {
+					this.yField.setFocused(false);
+					this.xField.setFocused(true);
+				}
+				else if(this.zField.isFocused()) {
+					this.zField.setFocused(false);
+					this.yField.setFocused(true);
+				}
+			}
+			else {
+				if(this.xField.isFocused()) {
+					this.xField.setFocused(false);
+					this.yField.setFocused(true);
+				}
+				else if(this.yField.isFocused()) {
+					this.yField.setFocused(false);
+					this.zField.setFocused(true);
+				}
+				else if(this.zField.isFocused()) {
+					this.zField.setFocused(false);
+					this.xField.setFocused(true);
+				}
+			}
+		}
+		else if(this.xField.isFocused()) {
+			this.xField.textboxKeyTyped(character, key);
+		}
+		else if(this.yField.isFocused()) {
+			this.yField.textboxKeyTyped(character, key);
+		}
+		else if(this.zField.isFocused()) {
+			this.zField.textboxKeyTyped(character, key);
+		}
+	}
+	
+	@Override
+	protected void mouseClicked(int par1, int par2, int par3) {
+		super.mouseClicked(par1, par2, par3);
+		this.xField.mouseClicked(par1, par2, par3);
+		this.yField.mouseClicked(par1, par2, par3);
+		this.zField.mouseClicked(par1, par2, par3);
+	}
+	
+}
