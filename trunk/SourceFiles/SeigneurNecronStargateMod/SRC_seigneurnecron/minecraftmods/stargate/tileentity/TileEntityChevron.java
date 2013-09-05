@@ -1,11 +1,8 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.readBoolean;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.readInt;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.writeBoolean;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.writeInt;
-
-import java.util.LinkedList;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -46,7 +43,8 @@ public class TileEntityChevron extends TileEntityStargatePart {
 	 */
 	public void setNo(int no) {
 		this.no = no;
-		this.updateClients();
+		this.setChanged();
+		this.update();
 	}
 	
 	/**
@@ -72,24 +70,19 @@ public class TileEntityChevron extends TileEntityStargatePart {
 	}
 	
 	@Override
-	protected LinkedList<Byte> getEntityData() {
-		LinkedList<Byte> list = super.getEntityData();
+	protected void getEntityData(DataOutputStream output) throws IOException {
+		super.getEntityData(output);
 		
-		writeInt(list, this.no);
-		writeBoolean(list, this.activating);
-		
-		return list;
+		output.writeInt(this.no);
+		output.writeBoolean(this.activating);
 	}
 	
 	@Override
-	protected boolean loadEntityData(LinkedList<Byte> list) {
-		if(super.loadEntityData(list)) {
-			this.no = readInt(list);
-			this.activating = readBoolean(list);
-			this.updateBlockTexture();
-			return true;
-		}
-		return false;
+	protected void loadEntityData(DataInputStream input) throws IOException {
+		super.loadEntityData(input);
+		
+		this.no = input.readInt();
+		this.activating = input.readBoolean();
 	}
 	
 }

@@ -1,10 +1,8 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.readBoolean;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.readInt;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.writeBoolean;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.writeInt;
-
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -34,18 +32,22 @@ import seigneurnecron.minecraftmods.stargate.block.BlockStargateControl;
 import seigneurnecron.minecraftmods.stargate.block.BlockStargatePart;
 import seigneurnecron.minecraftmods.stargate.client.sound.Sound;
 import seigneurnecron.minecraftmods.stargate.client.sound.StargateSounds;
-import seigneurnecron.minecraftmods.stargate.damageSource.CustomDamageSource;
-import seigneurnecron.minecraftmods.stargate.enums.GateActivationSequence;
-import seigneurnecron.minecraftmods.stargate.enums.GateActivationState;
-import seigneurnecron.minecraftmods.stargate.enums.GateActivationType;
-import seigneurnecron.minecraftmods.stargate.enums.GateKawooshState;
-import seigneurnecron.minecraftmods.stargate.enums.GateOrientation;
-import seigneurnecron.minecraftmods.stargate.enums.GateState;
+import seigneurnecron.minecraftmods.stargate.entity.damageSource.CustomDamageSource;
+import seigneurnecron.minecraftmods.stargate.tools.enums.GateActivationSequence;
+import seigneurnecron.minecraftmods.stargate.tools.enums.GateActivationState;
+import seigneurnecron.minecraftmods.stargate.tools.enums.GateActivationType;
+import seigneurnecron.minecraftmods.stargate.tools.enums.GateKawooshState;
+import seigneurnecron.minecraftmods.stargate.tools.enums.GateOrientation;
+import seigneurnecron.minecraftmods.stargate.tools.enums.GateState;
+import seigneurnecron.minecraftmods.stargate.tools.loadable.StargateCoordinates;
+import seigneurnecron.minecraftmods.stargate.tools.worldData.WorldStargateData;
 
 /**
  * @author Seigneur Necron
  */
 public class TileEntityStargateControl extends TileEntityStargate {
+	
+	// FIXME - extends TileEntityGuiScreen.
 	
 	// Constants :
 	
@@ -144,6 +146,11 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	// Fields :
 	
 	/**
+	 * The gate address.
+	 */
+	private String address = null;
+	
+	/**
 	 * The gate state : Broken/Off/Activating/Output/Input/Kawoosh.
 	 */
 	private GateState state = GateState.BROKEN;
@@ -213,7 +220,15 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	 */
 	private HashMap<Integer, Integer> teleportedEntities = new HashMap<Integer, Integer>();
 	
-	// Methods :
+	// Getters :
+	
+	/**
+	 * Returns the gate address.
+	 * @return the gate address.
+	 */
+	public String getAddress() {
+		return this.address;
+	}
 	
 	/**
 	 * Returns the gate state : Broken/Off/Activating/Output/Input/Kawoosh.
@@ -319,12 +334,21 @@ public class TileEntityStargateControl extends TileEntityStargate {
 		return this.zDest;
 	}
 	
+	// Setters :
+	
+	private void setAddress(String address) {
+		this.address = address;
+		this.setChanged();
+		
+	}
+	
 	/**
 	 * Sets the gate state and informs clients.
 	 * @param state - the new gate state.
 	 */
 	private void setState(GateState state) {
 		this.state = state;
+		this.setChanged();
 		
 		if(state == GateState.OFF) {
 			this.setKawooshState(GateKawooshState.K0);
@@ -332,10 +356,11 @@ public class TileEntityStargateControl extends TileEntityStargate {
 		}
 		else if(state == GateState.BROKEN) {
 			this.onShieldConsoleDestroyed();
+			StargateCoordinates stargate = new StargateCoordinates(this.address, this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord);
+			WorldStargateData.get(this.worldObj).deleteElement(stargate);
 		}
-		else {
-			this.updateClients();
-		}
+		
+		this.update();
 	}
 	
 	/**
@@ -344,6 +369,7 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	 */
 	private void setActivationType(GateActivationType activationType) {
 		this.activationType = activationType;
+		this.setChanged();
 	}
 	
 	/**
@@ -352,6 +378,7 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	 */
 	private void setActivationSequence(GateActivationSequence activationSequence) {
 		this.activationSequence = activationSequence;
+		this.setChanged();
 	}
 	
 	/**
@@ -360,6 +387,7 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	 */
 	private void setActivationState(GateActivationState activationState) {
 		this.activationState = activationState;
+		this.setChanged();
 		
 		if(activationState == GateActivationState.E0) {
 			for(int i = 1; i <= 9; i++) {
@@ -375,7 +403,7 @@ public class TileEntityStargateControl extends TileEntityStargate {
 			this.activateChevron(this.activationState.getValue());
 		}
 		
-		this.updateClients();
+		this.update();
 	}
 	
 	/**
@@ -384,6 +412,7 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	 */
 	private void setKawooshState(GateKawooshState kawooshState) {
 		this.kawooshState = kawooshState;
+		this.setChanged();
 		
 		if(this.kawooshState != GateKawooshState.K0) {
 			this.proceedKawoosh();
@@ -397,7 +426,7 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	private void setShieldActivated(boolean shieldActivated) {
 		boolean needVortexUpdate = this.shieldActivated != shieldActivated;
 		this.shieldActivated = shieldActivated;
-		this.updateClients();
+		this.setChanged();
 		
 		if(needVortexUpdate) {
 			// Plays the sound corresponding to a shield activation/deactivation.
@@ -406,6 +435,8 @@ public class TileEntityStargateControl extends TileEntityStargate {
 			// Updates the shield.
 			this.updateVortex();
 		}
+		
+		this.update();
 	}
 	
 	/**
@@ -413,7 +444,10 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	 * @param shieldAutomated - true if the shield must be automatically activated, else false.
 	 */
 	private void setShieldAutomated(boolean shieldAutomated) {
-		this.shieldAutomated = shieldAutomated;
+		if(shieldAutomated != this.shieldAutomated) {
+			this.shieldAutomated = shieldAutomated;
+			this.setChanged();
+		}
 	}
 	
 	/**
@@ -429,7 +463,10 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	 * @param code - the code which deactivates the shield.
 	 */
 	private void setCode(int code) {
-		this.code = code;
+		if(code != this.code) {
+			this.code = code;
+			this.setChanged();
+		}
 	}
 	
 	/**
@@ -452,13 +489,28 @@ public class TileEntityStargateControl extends TileEntityStargate {
 		this.zDest = z;
 	}
 	
+	// Methods :
+	
 	/**
 	 * Checks that the gate can be activated. <br />
 	 * The gate state must be OFF.
-	 * @return true id the gate can be activated, else false.
+	 * @return true if the gate can be activated, else false.
 	 */
 	public boolean isActivable() {
 		return this.state == GateState.OFF;
+	}
+	
+	private static boolean isAddressValidAndAvailable(String address) {
+		// FIXME - verifier l'adresse.
+		StargateMod.debug("The address \"" + address + "\" isn't valid.", true);
+		return false;
+	}
+	
+	private void registerGate(String address) {
+		this.setState(GateState.OFF);
+		this.setAddress(address);
+		StargateCoordinates stargate = new StargateCoordinates(this.address, this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord);
+		WorldStargateData.get(this.worldObj).addElement(stargate);
 	}
 	
 	/**
@@ -547,11 +599,12 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	/**
 	 * Creates a stargate, if possible. <br />
 	 * Informs each block of the gate that they now belong to a gate, and give numbers to chevrons.
+	 * @param address - the address of the gate.
 	 * @return true if the creation was successfull, else false.
 	 */
-	public boolean createGate() {
+	public boolean createGate(String address) {
 		// If the gate is not created yet, and the pattern is checked.
-		if(this.state == GateState.BROKEN && this.checkPattern()) {
+		if(this.state == GateState.BROKEN && isAddressValidAndAvailable(address) && this.checkPattern()) {
 			// Initialization.
 			StargateMod.debug("Creation of the gate...", true);
 			int x = this.xCoord;
@@ -607,7 +660,7 @@ public class TileEntityStargateControl extends TileEntityStargate {
 			
 			// Updates the gate state.
 			StargateMod.debug("Creation complete.\n", true);
-			this.setState(GateState.OFF);
+			this.registerGate(address);
 			return true;
 		}
 		
@@ -680,6 +733,9 @@ public class TileEntityStargateControl extends TileEntityStargate {
 			// Updates the gate state.
 			StargateMod.debug("Deactivation complete.\n", true);
 			this.setState(GateState.BROKEN);
+			
+			// Deactivates all stargate consoles connected to that gate.
+			this.deactivateStargateConsoles();
 		}
 	}
 	
@@ -752,36 +808,54 @@ public class TileEntityStargateControl extends TileEntityStargate {
 		return true;
 	}
 	
-	/**
-	 * This method is called when the DHD is activated. Closes the gate if it is open, opens it if it is closed. <br />
-	 * The activation process can only be canceled from the input side.
-	 * @param x - the X coordinate of the destination.
-	 * @param y - the Y coordinate of the destination.
-	 * @param z - the Z coordinate of the destination.
-	 */
-	public void onDhdActivation(int x, int y, int z) {
-		// If the gate is activated, or activating from that side.
-		if(this.state == GateState.INPUT || this.state == GateState.OUTPUT || (this.state == GateState.ACTIVATING && this.activationType != GateActivationType.OUTPUT)) {
-			// Closes the gate.
-			this.close();
-		}
-		else if(this.state == GateState.OFF || this.state == GateState.BROKEN) {
-			// Else, activates the gate.
-			this.activate(x, y, z);
+	protected void deactivateStargateConsoles() {
+		final int maxRange = TileEntityBaseStargateConsole.MAX_RANGE;
+		
+		// Searches in a cube with a side length of MAX_RANGE.
+		for(int i = -maxRange; i <= maxRange; ++i) {
+			for(int j = -maxRange; j <= maxRange; ++j) {
+				for(int k = -maxRange; k <= maxRange; ++k) {
+					TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord + k, this.yCoord + i, this.zCoord + j);
+					
+					// If the block is a control unit, adds it to the list of stargates that can be linked to the DHD.
+					if(tileEntity != null && tileEntity instanceof TileEntityBaseStargateConsole) {
+						TileEntityBaseStargateConsole console = (TileEntityBaseStargateConsole) tileEntity;
+						
+						if(console.isLinkedToGate() && (console.getXGate() == this.xCoord) && (console.getYGate() == this.yCoord) && (console.getZGate() == this.zCoord)) {
+							console.onStargateDestroyed(this);
+						}
+					}
+				}
+			}
 		}
 	}
 	
 	/**
-	 * This method is called when the shield consol is activated. Activates the shield if it is possible, deactivates it if it is activated.
-	 * @param panelActivated - indicates whether the shield must be activated/deactivted when receiving the informations.
-	 * @param shieldAutomated - indicates whether the shield must be automatically activated.
-	 * @param code - the code which deactivates the shield.
+	 * This method is called when the DHD is activated. Closes the gate if possible. <br />
+	 * The activation process can only be canceled from the input side.
 	 */
-	public void onShieldConsoleActivated(boolean panelActivated, boolean shieldAutomated, int code) {
-		this.setCode(code);
-		this.setShieldAutomated(shieldAutomated);
-		
-		if(panelActivated) {
+	public void onDhdCloseCommand() {
+		if(this.state == GateState.INPUT || this.state == GateState.OUTPUT || (this.state == GateState.ACTIVATING && this.activationType != GateActivationType.OUTPUT)) {
+			this.close();
+		}
+	}
+	
+	/**
+	 * This method is called when the DHD is activated. Opens the gate if possible.
+	 * @param address - the address of the gate to contact.
+	 */
+	public void onDhdOpenCommand(String address) {
+		if(this.state == GateState.OFF) {
+			this.activate(address);
+		}
+	}
+	
+	/**
+	 * This method is called when the shield console is activated. Activates/deactivates the shield if possible.
+	 * @param activate - true if the shield must be activated, false if it must be deactivated.
+	 */
+	public void onShieldConsoleActivated(boolean activate) {
+		if(activate != this.shieldActivated) {
 			if(this.shieldActivated) {
 				this.setShieldActivated(false);
 			}
@@ -792,26 +866,49 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	}
 	
 	/**
-	 * This method is called when the shield consol is destroyed. Deactivates the shield, and the automatic activation of the shield.
+	 * Changes the automated shield state.
+	 * @param shieldAutomated - indicates whether the shield must be automatically activated.
 	 */
-	public void onShieldConsoleDestroyed() {
-		this.setCode(0);
-		this.setShieldAutomated(false);
-		this.setShieldActivated(false);
+	public void changeShieldAutomated(boolean shieldAutomated) {
+		this.setShieldAutomated(shieldAutomated);
+		this.update();
 	}
 	
 	/**
-	 * Activates the gate, creating a vortex to the other gate at the given coordinates, if possible.
-	 * @param x - the X coordinate of the destination.
-	 * @param y - the Y coordinate of the destination.
-	 * @param z - the Z coordinate of the destination.
+	 * Changes the code which deactivates the shield.
+	 * @param code - the code which deactivates the shield.
 	 */
-	public void activate(int x, int y, int z) {
-		// If this gate isn't created yet, Tries to create it; if it don't work, exits.
-		if(this.state == GateState.BROKEN && !this.createGate()) {
-			StargateMod.debug("The gate couldn't be created !", true);
+	public void changeShieldCode(int code) {
+		this.setCode(code);
+		this.update();
+	}
+	
+	/**
+	 * This method is called when the shield console is destroyed. Deactivates the shield, and the automatic activation of the shield.
+	 */
+	public void onShieldConsoleDestroyed() {
+		this.setShieldAutomated(false);
+		this.setShieldActivated(false);
+		this.update();
+	}
+	
+	/**
+	 * Activates the gate, creating a vortex to the other gate at the given address, if possible.
+	 * @param address - the address of the destination.
+	 */
+	public void activate(String address) {
+		// If the input gate can't be activated, exits.
+		if(!this.isActivable()) {
+			StargateMod.debug("The gate couldn't be activated !", true);
 			return;
 		}
+		
+		// Translate the address.
+		// FIXME - vrai instructions.
+		//int dim = 0;
+		int x = 42;
+		int y = 42;
+		int z = 42;
 		
 		// If the given coordinates are those of that gate, exits.
 		if(x == this.xCoord && y == this.yCoord && z == this.zCoord) {
@@ -819,13 +916,8 @@ public class TileEntityStargateControl extends TileEntityStargate {
 			return;
 		}
 		
-		// If the input gate can't be activated, exits.
-		if(!this.isActivable()) {
-			StargateMod.debug("The gate couldn't be activated !", true);
-			return;
-		}
-		
 		// Choose an activation sequence.
+		// FIXME - vrai instructions.
 		GateActivationSequence activationSequence = GateActivationSequence.S7;
 		
 		// If there is no gate at the given coordinates, launches a false activation.
@@ -1898,50 +1990,39 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	}
 	
 	@Override
-	protected LinkedList<Byte> getEntityData() {
-		LinkedList<Byte> list = super.getEntityData();
+	protected void getEntityData(DataOutputStream output) throws IOException {
+		super.getEntityData(output);
 		
-		writeInt(list, this.state.getValue());
-		writeInt(list, this.activationType.getValue());
-		writeInt(list, this.activationSequence.getValue());
-		writeInt(list, this.activationState.getValue());
-		writeInt(list, this.kawooshState.getValue());
-		writeBoolean(list, this.shieldActivated);
-		writeBoolean(list, this.shieldAutomated);
-		writeInt(list, this.code);
-		writeInt(list, this.count);
-		writeInt(list, this.xDest);
-		writeInt(list, this.yDest);
-		writeInt(list, this.zDest);
-		
-		return list;
+		output.writeInt(this.state.getValue());
+		output.writeInt(this.activationType.getValue());
+		output.writeInt(this.activationSequence.getValue());
+		output.writeInt(this.activationState.getValue());
+		output.writeInt(this.kawooshState.getValue());
+		output.writeBoolean(this.shieldActivated);
+		output.writeBoolean(this.shieldAutomated);
+		output.writeInt(this.code);
+		output.writeInt(this.count);
+		output.writeInt(this.xDest);
+		output.writeInt(this.yDest);
+		output.writeInt(this.zDest);
 	}
 	
 	@Override
-	protected boolean loadEntityData(LinkedList<Byte> list) {
-		if(super.loadEntityData(list)) {
-			this.state = GateState.valueOf(readInt(list));
-			this.activationType = GateActivationType.valueOf(readInt(list));
-			this.activationSequence = GateActivationSequence.valueOf(readInt(list));
-			this.activationState = GateActivationState.valueOf(readInt(list));
-			this.kawooshState = GateKawooshState.valueOf(readInt(list));
-			this.shieldActivated = readBoolean(list);
-			this.shieldAutomated = readBoolean(list);
-			this.code = readInt(list);
-			this.count = readInt(list);
-			this.xDest = readInt(list);
-			this.yDest = readInt(list);
-			this.zDest = readInt(list);
-			this.updateBlockTexture();
-			return true;
-		}
-		return false;
-	}
-	
-	@Override
-	protected void updateClients() {
-		this.onInventoryChanged();
-		super.updateClients();
+	protected void loadEntityData(DataInputStream input) throws IOException {
+		super.loadEntityData(input);
+		
+		this.state = GateState.valueOf(input.readInt());
+		this.activationType = GateActivationType.valueOf(input.readInt());
+		this.activationSequence = GateActivationSequence.valueOf(input.readInt());
+		this.activationState = GateActivationState.valueOf(input.readInt());
+		this.kawooshState = GateKawooshState.valueOf(input.readInt());
+		this.shieldActivated = input.readBoolean();
+		this.shieldAutomated = input.readBoolean();
+		this.code = input.readInt();
+		this.count = input.readInt();
+		this.xDest = input.readInt();
+		this.yDest = input.readInt();
+		this.zDest = input.readInt();
 	}
 	
 }

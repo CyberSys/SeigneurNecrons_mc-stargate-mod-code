@@ -3,6 +3,8 @@ package seigneurnecron.minecraftmods.stargate.entity;
 import java.lang.reflect.Field;
 import java.util.List;
 
+import seigneurnecron.minecraftmods.stargate.StargateMod;
+
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,20 +28,20 @@ public class EntityCustomFishHook extends EntityFishHook {
 	
 	// Fields obfuscated names :
 	
-	private static String X_TILE = "field_70202_d";
-	private static String Y_TILE = "field_70203_e";
-	private static String Z_TILE = "field_70200_f";
-	private static String IN_TILE = "field_70201_g";
-	private static String IN_GROUND = "field_70214_h";
-	private static String TICKS_IN_GROUND = "field_70216_i";
-	private static String TICKS_IN_AIR = "field_70211_j";
-	private static String TICKS_CATCHABLE = "field_70219_an";
-	private static String FISH_POS_ROTATION_INCREMENTS = "field_70217_ao";
-	private static String FISH_X = "field_70218_ap";
-	private static String FISH_Y = "field_70210_aq";
-	private static String FISH_Z = "field_70209_ar";
-	private static String FISH_YAW = "field_70208_as";
-	private static String FISH_PITCH = "field_70207_at";
+	private static String X_TILE = StargateMod.obfuscated ? "field_70202_d" : "xTile";
+	private static String Y_TILE = StargateMod.obfuscated ? "field_70203_e" : "yTile";
+	private static String Z_TILE = StargateMod.obfuscated ? "field_70200_f" : "zTile";
+	private static String IN_TILE = StargateMod.obfuscated ? "field_70201_g" : "inTile";
+	private static String IN_GROUND = StargateMod.obfuscated ? "field_70214_h" : "inGround";
+	private static String TICKS_IN_GROUND = StargateMod.obfuscated ? "field_70216_i" : "ticksInGround";
+	private static String TICKS_IN_AIR = StargateMod.obfuscated ? "field_70211_j" : "ticksInAir";
+	private static String TICKS_CATCHABLE = StargateMod.obfuscated ? "field_70219_an" : "ticksCatchable";
+	private static String FISH_POS_ROTATION_INCREMENTS = StargateMod.obfuscated ? "field_70217_ao" : "fishPosRotationIncrements";
+	private static String FISH_X = StargateMod.obfuscated ? "field_70218_ap" : "fishX";
+	private static String FISH_Y = StargateMod.obfuscated ? "field_70210_aq" : "fishY";
+	private static String FISH_Z = StargateMod.obfuscated ? "field_70209_ar" : "fishZ";
+	private static String FISH_YAW = StargateMod.obfuscated ? "field_70208_as" : "fishYaw";
+	private static String FISH_PITCH = StargateMod.obfuscated ? "field_70207_at" : "fishPitch";
 	
 	// Builders - just call super class builders :
 	

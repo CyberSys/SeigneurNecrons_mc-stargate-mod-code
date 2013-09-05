@@ -10,7 +10,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.StargateModConfig;
+import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
 
 /**
  * @author Seigneur Necron

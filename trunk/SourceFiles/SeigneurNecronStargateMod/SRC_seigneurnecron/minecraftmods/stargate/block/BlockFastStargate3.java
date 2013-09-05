@@ -58,9 +58,15 @@ public class BlockFastStargate3 extends BlockFastStargate2 {
 		int[] zCoords = {z, -z};
 		
 		for(int i : yCoords) {
-			for(int j : xCoords) {
-				for(int k : zCoords) {
-					world.setBlock(xCoord + j, yCoord + i, zCoord + k, StargateMod.block_selfPoweredRedstoneLight.blockID);
+			int y = yCoord + i;
+			
+			if(y > 0 && y < 256) {
+				for(int j : xCoords) {
+					for(int k : zCoords) {
+						x = xCoord + j;
+						z = zCoord + k;
+						world.setBlock(x, y, z, StargateMod.block_selfPoweredRedstoneLight.blockID);
+					}
 				}
 			}
 		}

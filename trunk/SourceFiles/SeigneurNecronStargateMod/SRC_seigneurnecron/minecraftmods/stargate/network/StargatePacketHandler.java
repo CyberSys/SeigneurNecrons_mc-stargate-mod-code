@@ -1,13 +1,25 @@
 package seigneurnecron.minecraftmods.stargate.network;
 
-import java.nio.ByteBuffer;
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.reflect.Field;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.Map;
+import java.util.logging.Level;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargate;
+import seigneurnecron.minecraftmods.stargate.tools.playerData.PlayerDataList;
+import seigneurnecron.minecraftmods.stargate.tools.playerData.PlayerStargateData;
+import seigneurnecron.minecraftmods.stargate.tools.playerData.PlayerTeleporterData;
 import cpw.mods.fml.common.network.IPacketHandler;
 import cpw.mods.fml.common.network.Player;
 
@@ -16,296 +28,332 @@ import cpw.mods.fml.common.network.Player;
  */
 public class StargatePacketHandler implements IPacketHandler {
 	
+	// Command names :
+	
+	@Retention(RetentionPolicy.RUNTIME)
+	private static @interface CommandName {
+		// Nothing here.
+	}
+	
+	@CommandName
+	public static final String TELEPORT = "telport";
+	
+	@CommandName
+	public static final String STARGATE_OPEN = "stargateOpen";
+	
+	@CommandName
+	public static final String STARGATE_CLOSE = "stargateClose";
+	
+	@CommandName
+	public static final String SHIELD = "shield";
+	
+	@CommandName
+	public static final String SHIELD_AUTOMATED = "shieldAutomated";
+	
+	@CommandName
+	public static final String SHIELD_CODE = "shieldCode";
+	
+	/**
+	 * This method gets the list of the StargatePacketHandler class static fields, and registers the content of those which have the @CommandName annotation as a command packet name.
+	 */
+	public static void registerCommandPackets() {
+		try {
+			Field[] fields = StargatePacketHandler.class.getFields();
+			
+			for(Field field : fields) {
+				if(field.isAnnotationPresent(CommandName.class)) {
+					registerCommandPacket((String) field.get(null));
+				}
+			}
+		}
+		catch(Exception argh) {
+			StargateMod.debug("Error while registering a command packet id. Teleporters and stargates will not be usable.", Level.SEVERE, true);
+			argh.printStackTrace();
+		}
+	}
+	
 	// Tile entity mapping part :
 	
-	private static final HashMap<Integer, Class<? extends TileEntityStargate>> tileEntityUpdatePacketId_to_class_map = new HashMap<Integer, Class<? extends TileEntityStargate>>();
-	private static final HashMap<Class<? extends TileEntityStargate>, Integer> class_to_tileEntityUpdatePacketId_map = new HashMap<Class<? extends TileEntityStargate>, Integer>();
-	private static final HashMap<Integer, Class<? extends TileEntityStargate>> guiClosedPacketId_to_class_map = new HashMap<Integer, Class<? extends TileEntityStargate>>();
-	private static final HashMap<Class<? extends TileEntityStargate>, Integer> class_to_guiClosedPacketId_map = new HashMap<Class<? extends TileEntityStargate>, Integer>();
+	private static final Map<Integer, Class<? extends TileEntityStargate>> tileEntityPacketId_to_class_map = new HashMap<Integer, Class<? extends TileEntityStargate>>();
+	private static final Map<Class<? extends TileEntityStargate>, Integer> class_to_tileEntityPacketId_map = new HashMap<Class<? extends TileEntityStargate>, Integer>();
 	
-	private static int nextId = 0;
+	private static final Map<Integer, Class<? extends PlayerDataList>> playerDataPacketId_to_class_map = new HashMap<Integer, Class<? extends PlayerDataList>>();
+	private static final Map<Class<? extends PlayerDataList>, Integer> class_to_playerDataPacketId_map = new HashMap<Class<? extends PlayerDataList>, Integer>();
+	
+	private static final Map<Integer, String> commandPacketId_to_name_map = new HashMap<Integer, String>();
+	private static final Map<String, Integer> name_to_commandPacketId_map = new HashMap<String, Integer>();
 	
 	/**
-	 * Adds a class extending TileEntityStargate to the mapping of tile entity update packets.
+	 * The next unused packet id.
+	 */
+	private static int nextId = 1;
+	
+	/**
+	 * Adds a class extending TileEntityStargate to the mapping of tile entity packets.
 	 * @param clazz - the class to add.
 	 */
-	public static void registerTileEntityUpdatePacket(Class<? extends TileEntityStargate> clazz) {
-		if(!isTileEntityUpdatePaketMapped(clazz)) {
-			int id = getAvailableId();
-			tileEntityUpdatePacketId_to_class_map.put(id, clazz);
-			class_to_tileEntityUpdatePacketId_map.put(clazz, id);
+	public static void registerTileEntityPacket(Class<? extends TileEntityStargate> clazz) {
+		if(!isTileEntityPacketMapped(clazz)) {
+			int id = getNextId();
+			tileEntityPacketId_to_class_map.put(id, clazz);
+			class_to_tileEntityPacketId_map.put(clazz, id);
 		}
 	}
 	
 	/**
-	 * Adds a class extending TileEntityStargate to the mapping of gui closed packets.
+	 * Adds a class extending PlayerDataList to the mapping of player data packets.
 	 * @param clazz - the class to add.
 	 */
-	public static void registerGuiClosedPacket(Class<? extends TileEntityStargate> clazz) {
-		if(!isGuiClosedPaketMapped(clazz)) {
-			int id = getAvailableId();
-			guiClosedPacketId_to_class_map.put(id, clazz);
-			class_to_guiClosedPacketId_map.put(clazz, id);
+	public static void registerPlayerDataPacket(Class<? extends PlayerDataList> clazz) {
+		if(!isPlayerDataPacketMapped(clazz)) {
+			int id = getNextId();
+			playerDataPacketId_to_class_map.put(id, clazz);
+			class_to_playerDataPacketId_map.put(clazz, id);
 		}
 	}
 	
 	/**
-	 * Returns the id of the tile entity update packet for the given tile entity class.
+	 * Adds a command name to the mapping of command packets.
+	 * @param name - the command name to add.
+	 */
+	public static void registerCommandPacket(String name) {
+		if(!isCommandPacketMapped(name)) {
+			int id = getNextId();
+			commandPacketId_to_name_map.put(id, name);
+			name_to_commandPacketId_map.put(name, id);
+		}
+	}
+	
+	/**
+	 * Returns the tile entity packet id for the given tile entity class.
 	 * @param clazz - a class extending TileEntityStargate.
-	 * @return the id of the tile entity update packet if it exists, else -1.
+	 * @return the tile entity packet id if it exists, else -1.
 	 */
-	public static int getTileEntityUpdatePacketIdFromClass(Class<? extends TileEntityStargate> clazz) {
-		Integer id = class_to_tileEntityUpdatePacketId_map.get(clazz);
+	public static int getTileEntityPacketIdFromClass(Class<? extends TileEntityStargate> clazz) {
+		Integer id = class_to_tileEntityPacketId_map.get(clazz);
 		return(id != null ? id : -1);
 	}
 	
 	/**
-	 * Returns the id of the gui closed packet for the given tile entity class.
-	 * @param clazz - a class extending TileEntityStargate.
-	 * @return the id of the gui closed packet if it exists, else -1.
+	 * Returns the player data packet id for the given tile entity class.
+	 * @param clazz - a class extending PlayerDataList.
+	 * @return the player data packet id if it exists, else -1.
 	 */
-	public static int getGuiClosedPacketIdFromClass(Class<? extends TileEntityStargate> clazz) {
-		Integer id = class_to_guiClosedPacketId_map.get(clazz);
+	public static int getPlayerDataPacketIdFromClass(Class<? extends PlayerDataList> clazz) {
+		Integer id = class_to_playerDataPacketId_map.get(clazz);
 		return(id != null ? id : -1);
 	}
 	
 	/**
-	 * Returns the tile entity class for the given tile entity update packet id.
-	 * @param id - the id of a tile entity update packet.
+	 * Returns the command packet id for the given command name.
+	 * @param name - a command name.
+	 * @return the command packet id if it exists, else -1.
+	 */
+	public static int getCommandPacketIdFromName(String name) {
+		Integer id = name_to_commandPacketId_map.get(name);
+		return(id != null ? id : -1);
+	}
+	
+	/**
+	 * Returns the tile entity class for the given tile entity packet id.
+	 * @param id - the id of a tile entity packet.
 	 * @return a class extending TileEntityStargate if the id is in the map, else null.
 	 */
-	public static Class<? extends TileEntityStargate> getClassFromTileEntityUpdatePacketId(int id) {
-		return tileEntityUpdatePacketId_to_class_map.get(id);
+	public static Class<? extends TileEntityStargate> getClassFromTileEntityPacketId(int id) {
+		return tileEntityPacketId_to_class_map.get(id);
 	}
 	
 	/**
-	 * Returns the tile entity class for the given gui closed packet id.
-	 * @param id - the id of a gui closed packet.
-	 * @return a class extending TileEntityStargate if the id is in the map, else null.
+	 * Returns the tile entity class for the given player data packet id.
+	 * @param id - the id of a player data packet.
+	 * @return a class extending PlayerDataList if the id is in the map, else null.
 	 */
-	public static Class<? extends TileEntityStargate> getClassFromGuiClosedPacketId(int id) {
-		return guiClosedPacketId_to_class_map.get(id);
+	public static Class<? extends PlayerDataList> getClassFromPlayerDataPacketId(int id) {
+		return playerDataPacketId_to_class_map.get(id);
 	}
 	
 	/**
-	 * Indicates whether the given id is a tile entity update packet id.
-	 * @param id - the id the check.
-	 * @return true if the id is a tile entity update packet id, else false.
+	 * Returns the command name for the given command packet id.
+	 * @param id - the id of command packet.
+	 * @return a commande name if the id is in the map, else null.
 	 */
-	public static boolean isTileEntityUpdatePaketId(int id) {
-		return tileEntityUpdatePacketId_to_class_map.containsKey(id);
+	public static String getNameFromCommandPacketId(int id) {
+		return commandPacketId_to_name_map.get(id);
 	}
 	
 	/**
-	 * Indicates whether the given id is a gui closed packet id.
-	 * @param id - the id the check.
-	 * @return true if the id is a gui closed packet id, else false.
+	 * Indicates whether the given id is a tile entity packet id.
+	 * @param id - the id to check.
+	 * @return true if the id is a tile entity packet id, else false.
 	 */
-	public static boolean isGuiClosedPaketId(int id) {
-		return guiClosedPacketId_to_class_map.containsKey(id);
+	public static boolean isTileEntityPacketId(int id) {
+		return tileEntityPacketId_to_class_map.containsKey(id);
 	}
 	
 	/**
-	 * Indicates whether the given tile entity class is in the tile entity update packet map.
+	 * Indicates whether the given id is a player data packet id.
+	 * @param id - the id to check.
+	 * @return true if the id is a player data packet id, else false.
+	 */
+	public static boolean isPlayerDataPacketId(int id) {
+		return playerDataPacketId_to_class_map.containsKey(id);
+	}
+	
+	/**
+	 * Indicates whether the given id is a command packet id.
+	 * @param id - the id to check.
+	 * @return true if the id is a command packet id, else false.
+	 */
+	public static boolean isCommandPacketId(int id) {
+		return commandPacketId_to_name_map.containsKey(id);
+	}
+	
+	/**
+	 * Indicates whether the given tile entity class is in the tile entity packet map.
 	 * @param clazz - a class extending TileEntityStargate.
-	 * @return true if the class is in the tile entity update packet map, else false.
+	 * @return true if the class is in the tile entity packet map, else false.
 	 */
-	public static boolean isTileEntityUpdatePaketMapped(Class<? extends TileEntityStargate> clazz) {
-		return class_to_tileEntityUpdatePacketId_map.containsKey(clazz);
+	public static boolean isTileEntityPacketMapped(Class<? extends TileEntityStargate> clazz) {
+		return class_to_tileEntityPacketId_map.containsKey(clazz);
 	}
 	
 	/**
-	 * Indicates whether the given tile entity class is in the gui closed packet map.
-	 * @param clazz - a class extending TileEntityStargate.
-	 * @return true if the class is in the gui closed packet map, else false.
+	 * Indicates whether the given player data class is in the player data packet map.
+	 * @param clazz - a class extending PlayerDataList.
+	 * @return true if the class is in the player data packet map, else false.
 	 */
-	public static boolean isGuiClosedPaketMapped(Class<? extends TileEntityStargate> clazz) {
-		return class_to_guiClosedPacketId_map.containsKey(clazz);
+	public static boolean isPlayerDataPacketMapped(Class<? extends PlayerDataList> clazz) {
+		return class_to_playerDataPacketId_map.containsKey(clazz);
 	}
 	
 	/**
-	 * Indicates whether the given id is a valid id for a packet addressed to an instance of the given tile entity class.
-	 * @param id - a packet id.
-	 * @param clazz -  a class extending TileEntityStargate.
-	 * @return true if the given id is a valid id for a packet addressed to an instance of the given tile entity class, else false.
+	 * Indicates whether the given command name is in the command packet map.
+	 * @param name - a command name.
+	 * @return true if the command name is in the command packet map, else false.
 	 */
-	public static boolean isValidPacketIdForTileEntity(int id, Class<? extends TileEntityStargate> clazz) {
-		return(getClassFromTileEntityUpdatePacketId(id) == clazz || getClassFromGuiClosedPacketId(id) == clazz);
+	public static boolean isCommandPacketMapped(String name) {
+		return name_to_commandPacketId_map.containsKey(name);
 	}
 	
 	/**
-	 * Indicates whether the given id is already used in the packet mapping.
-	 * @param id - an id.
-	 * @return true if the id is already used in the packet mapping, else false.
+	 * Returns the next available id for the packet mapping.
+	 * @return the next available id for the packet mapping.
 	 */
-	public static boolean isIdUsed(int id) {
-		return(isTileEntityUpdatePaketId(id) || isGuiClosedPaketId(id));
-	}
-	
-	/**
-	 * Returns the next available id for the paket mapping.
-	 * @return the next available id for the paket mapping.
-	 */
-	private static int getAvailableId() {
-		while(isIdUsed(nextId)) {
-			nextId++;
-		}
-		
-		return nextId;
-	}
-	
-	// Conversion part :
-	
-	/**
-	 * Transforms a byte array in a LinkedList of Byte.
-	 * @param array - a byte array.
-	 * @return a LinkedList of Byte.
-	 */
-	public static LinkedList<Byte> arrayToList(byte[] array) {
-		LinkedList<Byte> list = new LinkedList<Byte>();
-		for(int i = 0; i < array.length; ++i) {
-			list.add(array[i]);
-		}
-		return list;
-	}
-	
-	/**
-	 * Transforms a LinkedList of Byte in a byte array.
-	 * @param list - a LinkedList of Byte.
-	 * @return a byte array.
-	 */
-	public static byte[] listToArray(LinkedList<Byte> list) {
-		byte[] array = new byte[list.size()];
-		for(int i = 0; i < list.size(); ++i) {
-			array[i] = list.get(i);
-		}
-		return array;
-	}
-	
-	/**
-	 * Writes the given integer, in the form of 4 bytes, at the end of the given LinkedList of Byte.
-	 * @param list - a LinkedList of Byte.
-	 * @param value - an integer.
-	 */
-	public static void writeInt(LinkedList<Byte> list, int value) {
-		byte[] tmp = ByteBuffer.allocate(4).putInt(value).array();
-		for(int i = 0; i < tmp.length; ++i) {
-			list.add(tmp[i]);
-		}
-	}
-	
-	/**
-	 * Writes the given float, in the form of 4 bytes, at the end of the given LinkedList of Byte.
-	 * @param list - a LinkedList of Byte.
-	 * @param value - a float.
-	 */
-	public static void writeFloat(LinkedList<Byte> list, float value) {
-		byte[] tmp = ByteBuffer.allocate(4).putFloat(value).array();
-		for(int i = 0; i < tmp.length; ++i) {
-			list.add(tmp[i]);
-		}
-	}
-	
-	/**
-	 * Writes the given double, in the form of 8 bytes, at the end of the given LinkedList of Byte.
-	 * @param list - a LinkedList of Byte.
-	 * @param value - a double.
-	 */
-	public static void writeDouble(LinkedList<Byte> list, double value) {
-		byte[] tmp = ByteBuffer.allocate(8).putDouble(value).array();
-		for(int i = 0; i < tmp.length; ++i) {
-			list.add(tmp[i]);
-		}
-	}
-	
-	/**
-	 * Writes the given boolean, in the form of 1 byte, at the end of the given LinkedList of Byte.
-	 * @param list - a LinkedList of Byte.
-	 * @param value - a boolean.
-	 */
-	public static void writeBoolean(LinkedList<Byte> list, boolean value) {
-		byte tmp = (byte) (value ? 1 : 0);
-		list.add(tmp);
-	}
-	
-	/**
-	 * Reads an integer from the first 4 elements of the given LinkedList of Byte.<br />
-	 * (The read elements are deleted from de list)
-	 * @param list - a LinkedList of Byte, containing at least 4 bytes.
-	 * @return an integer.
-	 */
-	public static int readInt(LinkedList<Byte> list) {
-		ByteBuffer tmp = ByteBuffer.allocate(4);
-		for(int i = 0; i < tmp.capacity(); ++i) {
-			tmp.put(i, list.remove(0));
-		}
-		return tmp.getInt(0);
-	}
-	
-	/**
-	 * Reads a float from the first 4 elements of the given LinkedList of Byte.<br />
-	 * (The read elements are deleted from de list)
-	 * @param list - a LinkedList of Byte, containing at least 4 bytes.
-	 * @return a float.
-	 */
-	public static float readFloat(LinkedList<Byte> list) {
-		ByteBuffer tmp = ByteBuffer.allocate(4);
-		for(int i = 0; i < tmp.capacity(); ++i) {
-			tmp.put(i, list.remove(0));
-		}
-		return tmp.getFloat(0);
-	}
-	
-	/**
-	 * Reads a double from the first 8 elements of the given LinkedList of Byte.<br />
-	 * (The read elements are deleted from de list)
-	 * @param list - a LinkedList of Byte, containing at least 8 bytes.
-	 * @return a double.
-	 */
-	public static double readDouble(LinkedList<Byte> list) {
-		ByteBuffer tmp = ByteBuffer.allocate(8);
-		for(int i = 0; i < tmp.capacity(); ++i) {
-			tmp.put(i, list.remove(0));
-		}
-		return tmp.getDouble(0);
-	}
-	
-	/**
-	 * Reads a boolean from the first element of the given LinkedList of Byte.<br />
-	 * (The read elements are deleted from de list)
-	 * @param list - a LinkedList of Byte, containing at least 1 byte.
-	 * @return a boolean.
-	 */
-	public static boolean readBoolean(LinkedList<Byte> list) {
-		byte tmp = list.remove(0);
-		return(tmp != 0);
-	}
-	
-	/**
-	 * Writes the given integer on the first 4 bytes of the given LinkedList of Byte.<br />
-	 * The purpose being to change the id of the packet.
-	 * @param list - a LinkedList of Byte.
-	 * @param id - the id to be assigned to the packet.
-	 */
-	public static void changeId(LinkedList<Byte> list, int id) {
-		byte[] tmp = ByteBuffer.allocate(4).putInt(id).array();
-		for(int i = 0; i < tmp.length; ++i) {
-			list.set(i, tmp[i]);
-		}
+	private static int getNextId() {
+		return nextId++;
 	}
 	
 	// Packet handling part :
 	
 	@Override
 	public void onPacketData(INetworkManager manager, Packet250CustomPayload packet, Player player) {
-		// Checks that the packet is a packet of this mod and that the packet length is at least 4 (int id).
-		if(packet != null && packet.channel.equals(StargateMod.CHANEL) && packet.data != null && packet.length >= 4) {
-			handlePacket(manager, packet, player);
+		if(packet != null && packet.channel != null && packet.data != null) {
+			if(packet.channel.equals(StargateMod.CHANEL_TILE_ENTITY) && packet.length >= 20) {
+				// Here, packet lenght must be >= 20 because the packet must contain at least : id + dim + x + y + z (5 * intSize = 20).
+				this.handleTileEntityPacket(packet, (EntityPlayer) player);
+			}
+			else if(packet.channel.equals(StargateMod.CHANEL_COMMANDS) && packet.length >= 20) {
+				// Here, packet lenght must be >= 20 because the packet must contain at least : id + dim + x + y + z (5 * intSize = 20).
+				this.handleCommandPacket(packet, (EntityPlayer) player);
+			}
+			else if(packet.channel.equals(StargateMod.CHANEL_PLAYER_DATA) && packet.length >= 4) {
+				// Here, packet lenght must be >= 4 because the packet must contain at least : id (intSize = 4).
+				this.handlePlayerDataPacket(packet, (EntityPlayer) player);
+			}
 		}
 	}
 	
-	protected void handlePacket(INetworkManager manager, Packet250CustomPayload packet, Player player) {
-		// Packet handling on server/client side.
+	/**
+	 * Handle a tile entity packet for the given player.
+	 * @param packet - the tile entity packet.
+	 * @param player - the player associated with the client which sent/received the packet.
+	 */
+	protected void handleTileEntityPacket(Packet250CustomPayload packet, EntityPlayer player) {
+		DataInputStream input = new DataInputStream(new ByteArrayInputStream(packet.data));
+		
+		try {
+			int id = input.readInt();
+			int dim = input.readInt();
+			int x = input.readInt();
+			int y = input.readInt();
+			int z = input.readInt();
+			
+			World world = this.getWorldForDimension(dim);
+			
+			if(world != null) {
+				TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+				
+				if(tileEntity != null && tileEntity instanceof TileEntityStargate) {
+					TileEntityStargate tileEntityStargate = (TileEntityStargate) tileEntity;
+					
+					if(getTileEntityPacketIdFromClass(tileEntityStargate.getClass()) == id) {
+						tileEntityStargate.onDataPacket(input);
+					}
+					else {
+						StargateMod.debug("Error while reading a tile entity packet : wrong id.", Level.WARNING, true);
+					}
+				}
+			}
+			
+			input.close();
+		}
+		catch(IOException argh) {
+			StargateMod.debug("Error while reading in a DataInputStream. Couldn't read a tile entity packet.", Level.SEVERE, true);
+			argh.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Handle a command packet for the given player.
+	 * @param packet - the command packet.
+	 * @param player - the player associated with the client which sent/received the packet.
+	 */
+	protected void handleCommandPacket(Packet250CustomPayload packet, EntityPlayer player) {
+		// Handling on server side only.
+	}
+	
+	/**
+	 * Handle a player data packet for the given player.
+	 * @param packet - the player data packet.
+	 * @param player - the player associated with the client which sent/received the packet.
+	 */
+	protected void handlePlayerDataPacket(Packet250CustomPayload packet, EntityPlayer player) {
+		DataInputStream input = new DataInputStream(new ByteArrayInputStream(packet.data));
+		
+		try {
+			int id = input.readInt();
+			Class<? extends PlayerDataList> clazz = getClassFromPlayerDataPacketId(id);
+			
+			PlayerDataList playerData = null;
+			
+			if(clazz == PlayerTeleporterData.class) {
+				playerData = PlayerTeleporterData.get(player);
+			}
+			else if(clazz == PlayerStargateData.class) {
+				playerData = PlayerStargateData.get(player);
+			}
+			
+			if(playerData != null) {
+				playerData.loadProperties(input);
+			}
+			
+			input.close();
+		}
+		catch(IOException argh) {
+			StargateMod.debug("Error while reading in a DataInputStream. Couldn't read a player data packet.", Level.SEVERE, true);
+			argh.printStackTrace();
+			return;
+		}
+	}
+	
+	/**
+	 * Returns the world corresponding to the given dimension id, if it exists.
+	 * @param dim - the dimension id.
+	 * @return the world corresponding to the dimension id if it exists, else null.
+	 */
+	protected World getWorldForDimension(int dim) {
+		// True result in client/server version. This class can't be abstract.
+		return null;
 	}
 	
 }

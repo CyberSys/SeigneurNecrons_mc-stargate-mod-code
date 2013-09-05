@@ -32,8 +32,8 @@ public abstract class BlockPanel extends BlockNaquadahMade {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset) {
 		Block baseBlock = this.baseBlock();
 		
-		if(!world.isRemote && world.getBlockId(x, y - 1, z) == baseBlock.blockID && baseBlock instanceof BlockBase) {
-			((BlockBase) this.baseBlock()).activate(world, x, y - 1, z, player, side, xOffset, yOffset, zOffset);
+		if(world.getBlockId(x, y - 1, z) == baseBlock.blockID && baseBlock instanceof BlockBase) {
+			((BlockBase) this.baseBlock()).activate(world, x, y - 1, z, player);
 		}
 		
 		return true;

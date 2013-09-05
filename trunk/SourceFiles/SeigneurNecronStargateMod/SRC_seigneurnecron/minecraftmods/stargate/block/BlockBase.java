@@ -27,12 +27,8 @@ public abstract class BlockBase extends BlockGuiScreen {
 		this.setBlockBounds(0.1F, 0.0F, 0.1F, 0.9F, 1.0F, 0.9F);
 	}
 	
-	public void activate(World world, int x, int y, int z, EntityPlayer player, int side, float xOffset, float yOffset, float zOffset) {
-		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
-		
-		if(tileEntity != null && tileEntity instanceof TileEntityBase) {
-			((TileEntityBase) tileEntity).activate(player, side, xOffset, yOffset, zOffset);
-		}
+	public void activate(World world, int x, int y, int z, EntityPlayer player) {
+		this.openGui(world, x, y, z, player);
 	}
 	
 	public void onConsoleDestroyed(World world, int x, int y, int z) {

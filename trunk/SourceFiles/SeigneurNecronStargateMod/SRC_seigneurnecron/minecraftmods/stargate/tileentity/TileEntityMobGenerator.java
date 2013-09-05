@@ -1,11 +1,8 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.readBoolean;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.readInt;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.writeBoolean;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.writeInt;
-
-import java.util.LinkedList;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
@@ -71,7 +68,8 @@ public class TileEntityMobGenerator extends TileEntityGuiContainer {
 	public void setPowered(boolean powered) {
 		if(this.powered != powered) {
 			this.powered = powered;
-			this.updateClients();
+			this.setChanged();
+			this.update();
 		}
 	}
 	
@@ -82,7 +80,10 @@ public class TileEntityMobGenerator extends TileEntityGuiContainer {
 	private void setCrystal(ItemStack crystal) {
 		if(!ItemStack.areItemStacksEqual(this.crystal, crystal)) {
 			this.crystal = crystal;
-			this.updateClients();
+			
+			if(!this.worldObj.isRemote) {
+				this.setChanged();
+			}
 		}
 	}
 	
@@ -109,6 +110,7 @@ public class TileEntityMobGenerator extends TileEntityGuiContainer {
 	public void setInventorySlotContents(int index, ItemStack itemStack) {
 		if(index == 0) {
 			this.setCrystal(itemStack);
+			this.update();
 		}
 	}
 	
@@ -176,31 +178,25 @@ public class TileEntityMobGenerator extends TileEntityGuiContainer {
 	}
 	
 	@Override
-	protected LinkedList<Byte> getEntityData() {
-		LinkedList<Byte> list = super.getEntityData();
+	protected void getEntityData(DataOutputStream output) throws IOException {
+		super.getEntityData(output);
 		
-		writeBoolean(list, this.powered);
-		writeInt(list, this.delay);
+		output.writeBoolean(this.powered);
+		output.writeInt(this.delay);
 		
-		writeInt(list, (this.crystal != null) ? this.crystal.itemID : -1);
-		
-		return list;
+		output.writeInt((this.crystal != null) ? this.crystal.itemID : -1);
 	}
 	
 	@Override
-	protected boolean loadEntityData(LinkedList<Byte> list) {
-		if(super.loadEntityData(list)) {
-			this.powered = readBoolean(list);
-			this.delay = readInt(list);
-			
-			int itemId = readInt(list);
-			Item item = (itemId > 0 && itemId < Item.itemsList.length) ? Item.itemsList[itemId] : null;
-			this.setCrystal((item != null) ? new ItemStack(item) : null);
-			
-			this.updateBlockTexture();
-			return true;
-		}
-		return false;
+	protected void loadEntityData(DataInputStream input) throws IOException {
+		super.loadEntityData(input);
+		
+		this.powered = input.readBoolean();
+		this.delay = input.readInt();
+		
+		int itemId = input.readInt();
+		Item item = (itemId > 0 && itemId < Item.itemsList.length) ? Item.itemsList[itemId] : null;
+		this.setCrystal((item != null) ? new ItemStack(item) : null);
 	}
 	
 	@Override

@@ -1,6 +1,7 @@
 package seigneurnecron.minecraftmods.stargate.block;
 
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.client.gui.GuiDhd;
@@ -24,14 +25,14 @@ public class BlockBaseDhd extends BlockBaseStargateConsole {
 	}
 	
 	@Override
-	protected boolean guiOk(TileEntity tileEntity) {
+	protected boolean tileEntityOk(TileEntity tileEntity) {
 		return(tileEntity instanceof TileEntityBaseDhd);
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected GuiScreen getGuiScreen(TileEntityGuiScreen tileEntity) {
-		return new GuiDhd((TileEntityBaseDhd) tileEntity);
+	protected GuiScreen getGuiScreen(TileEntityGuiScreen tileEntity, EntityPlayer player) {
+		return new GuiDhd((TileEntityBaseDhd) tileEntity, player);
 	}
 	
 }

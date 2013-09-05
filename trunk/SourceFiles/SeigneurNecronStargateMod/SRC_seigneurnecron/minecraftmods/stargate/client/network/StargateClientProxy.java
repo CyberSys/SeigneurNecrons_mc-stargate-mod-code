@@ -22,7 +22,6 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStuffLevelUpTa
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.ClientRegistry;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -46,11 +45,6 @@ public class StargateClientProxy extends StargateCommonProxy {
 		}
 		
 		return null;
-	}
-	
-	@Override
-	public void registerConnectionHandlers() {
-		NetworkRegistry.instance().registerConnectionHandler(new StargateClientConnectionHandler());
 	}
 	
 	@Override

@@ -1,121 +1,239 @@
 package seigneurnecron.minecraftmods.stargate.client.gui;
 
+import static seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseShieldConsole.INV_NAME;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-
-import org.lwjgl.input.Keyboard;
-
+import net.minecraft.entity.player.EntityPlayer;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler;
+import seigneurnecron.minecraftmods.stargate.client.gui.tools.Button;
+import seigneurnecron.minecraftmods.stargate.client.gui.tools.IntegerField;
+import seigneurnecron.minecraftmods.stargate.client.gui.tools.Panel;
+import seigneurnecron.minecraftmods.stargate.client.gui.tools.TextField;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseShieldConsole;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Seigneur Necron
  */
-public class GuiShieldConsole extends GuiScreen {
+@SideOnly(Side.CLIENT)
+public class GuiShieldConsole extends GuiStargateConsole<TileEntityBaseShieldConsole> {
 	
-	public static final String SHIELD_PARAMETERS = TileEntityBaseShieldConsole.INV_NAME + ".shieldParameters";
-	public static final String CODE = TileEntityBaseShieldConsole.INV_NAME + ".code";
-	public static final String AUTO_SHIELD_ON = TileEntityBaseShieldConsole.INV_NAME + ".autoShieldOn";
-	public static final String AUTO_SHIELD_OFF = TileEntityBaseShieldConsole.INV_NAME + ".autoShieldOff";
-	public static final String AUTO_SHIELD_SWITCH = TileEntityBaseShieldConsole.INV_NAME + ".autoShieldSwitch";
+	// ####################################################################################################
+	// Lang constants :
+	// ####################################################################################################
 	
-	/** The shield console tile entity. */
-	private TileEntityBaseShieldConsole entityShieldConsole;
+	public static final String CURRENT_CODE = INV_NAME + ".currentCode";
+	public static final String SHIELD_ON = INV_NAME + ".shieldOn";
+	public static final String SHIELD_OFF = INV_NAME + ".shieldOff";
+	public static final String SHIELD_DISCONNECTED = INV_NAME + ".shieldDisconnected";
+	public static final String SHIELD_SWITCH = INV_NAME + ".shieldSwitch";
+	public static final String AUTO_SHIELD_ON = INV_NAME + ".autoShieldOn";
+	public static final String AUTO_SHIELD_OFF = INV_NAME + ".autoShieldOff";
+	public static final String AUTO_SHIELD_DISCONNECTED = INV_NAME + ".autoShieldDisconnected";
+	public static final String AUTO_SHIELD_SWITCH = INV_NAME + ".autoShieldSwitch";
+	public static final String CHANGE_CODE = INV_NAME + ".changeCode";
 	
-	private GuiIntegerField codeField;
+	// ####################################################################################################
+	// Interface fields :
+	// ####################################################################################################
 	
-	public GuiShieldConsole(TileEntityBaseShieldConsole tileEntity) {
-		this.entityShieldConsole = tileEntity;
+	protected String string_invName;
+	protected String string_currentCode;
+	protected String string_shieldOn;
+	protected String string_shieldOff;
+	protected String string_shieldDisconnected;
+	protected String string_autoShieldOn;
+	protected String string_autoShieldOff;
+	protected String string_autoShieldDisconnected;
+	
+	protected Panel panel_main;
+	
+	protected TextField field_code;
+	
+	protected Button button_done;
+	protected Button button_shield;
+	protected Button button_autoShield;
+	protected Button button_code;
+	
+	// ####################################################################################################
+	// Builder :
+	// ####################################################################################################
+	
+	public GuiShieldConsole(TileEntityBaseShieldConsole tileEntity, EntityPlayer player) {
+		super(tileEntity, player);
 	}
+	
+	// ####################################################################################################
+	// Interface definition :
+	// ####################################################################################################
 	
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
-		this.drawDefaultBackground();
-		this.drawCenteredString(this.fontRenderer, I18n.func_135053_a(SHIELD_PARAMETERS) + " :", this.width / 2, 40, 16777215);
-		this.drawString(this.fontRenderer, I18n.func_135053_a(CODE) + " :", this.width / 2 - 40, 65, 10526880);
-		this.drawString(this.fontRenderer, this.entityShieldConsole.isShieldAutomated() ? I18n.func_135053_a(AUTO_SHIELD_ON) : I18n.func_135053_a(AUTO_SHIELD_OFF), this.width / 2 - 40, 85, this.entityShieldConsole.isShieldAutomated() ? 0x44dd44 : 0xdd8844);
-		this.codeField.drawTextBox();
 		super.drawScreen(par1, par2, par3);
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public void initGui() {
-		this.buttonList.clear();
-		Keyboard.enableRepeatEvents(true);
-		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 120, I18n.func_135053_a("gui.done")));
-		this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 100, I18n.func_135053_a(AUTO_SHIELD_SWITCH)));
-		this.codeField = new GuiIntegerField(this.fontRenderer, this.width / 2, 60, 50, 20);
-		this.codeField.setText(String.valueOf(this.entityShieldConsole.getCode()));
-		this.codeField.setFocused(true);
-	}
-	
-	@Override
-	public void onGuiClosed() {
-		Keyboard.enableRepeatEvents(false);
 		
-		try {
-			int code = Integer.parseInt(this.codeField.getText());
-			this.entityShieldConsole.setCode(code);
+		this.panel_main.drawBorder(GRAY);
+		
+		String code;
+		String shieldMessage;
+		int shieldMessageColor;
+		String autoShieldMessage;
+		int autoShieldMessageColor;
+		
+		if(this.stargateConnected) {
+			code = String.valueOf(this.stargate.getCode());
+			
+			if(this.stargate.isShieldActivated()) {
+				shieldMessage = this.string_shieldOn;
+				shieldMessageColor = GREEN;
+			}
+			else {
+				shieldMessage = this.string_shieldOff;
+				shieldMessageColor = RED;
+			}
+			
+			if(this.stargate.isShieldAutomated()) {
+				autoShieldMessage = this.string_autoShieldOn;
+				autoShieldMessageColor = GREEN;
+			}
+			else {
+				autoShieldMessage = this.string_autoShieldOff;
+				autoShieldMessageColor = RED;
+			}
 		}
-		catch(NumberFormatException argh) {
-			// If the value is not a valid integer, it is ignored.
+		else {
+			code = "-";
+			shieldMessage = this.string_shieldDisconnected;
+			shieldMessageColor = GRAY;
+			autoShieldMessage = this.string_autoShieldDisconnected;
+			autoShieldMessageColor = GRAY;
 		}
 		
-		StargateMod.sendPacketToServer(this.entityShieldConsole.getDescriptionPacketWhithId(StargatePacketHandler.getGuiClosedPacketIdFromClass(TileEntityBaseShieldConsole.class)));
+		this.nextYPos = MARGIN;
+		this.panel_main.drawCenteredText(this.fontRenderer, this.string_invName, this.nextYPos, WHITE);
+		this.panel_main.drawText(this.fontRenderer, this.string_currentCode + code, MARGIN, this.nextYPos, WHITE);
+		this.nextYPos += FIELD_HEIGHT + (2 * MARGIN) + BONUS_MARGIN;
+		this.panel_main.drawText(this.fontRenderer, autoShieldMessage, MARGIN + 2, this.nextYPos, autoShieldMessageColor);
+		this.nextYPos += BUTTON_HEIGHT + MARGIN + BONUS_MARGIN;
+		this.panel_main.drawText(this.fontRenderer, shieldMessage, MARGIN + 2, this.nextYPos, shieldMessageColor);
 	}
 	
 	@Override
-	public void updateScreen() {
-		this.codeField.updateCursorCounter();
+	public void initComponents() {
+		super.initComponents();
+		
+		// Panel sizes :
+		
+		int panelWidth = this.width / 2;
+		int panelHeight = (5 * FIELD_HEIGHT) + (3 * BUTTON_HEIGHT) + (10 * MARGIN) + (3 * BONUS_MARGIN);
+		
+		// Panels :
+		
+		this.panel_main = new Panel(this, (this.width - panelWidth) / 2, (this.height - panelHeight) / 2, panelWidth, panelHeight);
+		
+		// Strings :
+		
+		this.string_invName = I18n.func_135053_a(INV_NAME);
+		this.string_currentCode = I18n.func_135053_a(CURRENT_CODE) + " : ";
+		this.string_shieldOn = I18n.func_135053_a(SHIELD_ON);
+		this.string_shieldOff = I18n.func_135053_a(SHIELD_OFF);
+		this.string_shieldDisconnected = I18n.func_135053_a(SHIELD_DISCONNECTED);
+		this.string_autoShieldOn = I18n.func_135053_a(AUTO_SHIELD_ON);
+		this.string_autoShieldOff = I18n.func_135053_a(AUTO_SHIELD_OFF);
+		this.string_autoShieldDisconnected = I18n.func_135053_a(AUTO_SHIELD_DISCONNECTED);
+		
+		int code = (this.stargateConnected) ? this.stargate.getCode() : 0;
+		
+		// Component sizes :
+		
+		int fieldSize = (this.panel_main.getWidth() - (3 * MARGIN)) / 2;
+		int buttonSize = this.panel_main.getWidth() - (2 * MARGIN);
+		
+		// Fields and buttons :
+		
+		this.nextYPos = (2 * FIELD_HEIGHT) + (3 * MARGIN) + FIELD_OFFSET;
+		this.field_code = this.addField(new IntegerField(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, fieldSize, FIELD_HEIGHT, code), false);
+		this.nextYPos -= MARGIN;
+		this.button_code = this.addButton(new Button(this.panel_main, this.getNextButtonId(), fieldSize + (2 * MARGIN), this.nextYPos, fieldSize, I18n.func_135053_a(CHANGE_CODE)));
+		
+		this.nextYPos += FIELD_HEIGHT + MARGIN + BONUS_MARGIN;
+		this.button_autoShield = this.addButton(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(AUTO_SHIELD_SWITCH)));
+		
+		this.nextYPos += FIELD_HEIGHT + MARGIN + BONUS_MARGIN;
+		this.button_shield = this.addButton(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(SHIELD_SWITCH)));
+		
+		this.nextYPos += BONUS_MARGIN;
+		this.button_done = this.addButton(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.done")));
+		
+		this.updateInterface();
 	}
+	
+	// ####################################################################################################
+	// User input :
+	// ####################################################################################################
 	
 	@Override
 	protected void actionPerformed(GuiButton guiButton) {
 		if(guiButton.enabled) {
-			if(guiButton.id == 0) {
-				this.valider();
+			if(guiButton == this.button_done) {
+				this.close();
 			}
-			else if(guiButton.id == 1) {
+			else if(guiButton == this.button_shield) {
+				this.shield();
+			}
+			else if(guiButton == this.button_autoShield) {
 				this.autoShield();
 			}
+			else if(guiButton == this.button_code) {
+				this.changeCode();
+			}
 		}
 	}
 	
-	/**
-	 * Closes the detector configuration window.
-	 */
-	private void valider() {
-		this.entityShieldConsole.onInventoryChanged();
-		this.mc.displayGuiScreen((GuiScreen) null);
+	protected void shield() {
+		if(this.stargateConnected) {
+			StargateMod.sendPacketToServer(this.tileEntity.getShieldPacket(!this.stargate.isShieldActivated()));
+		}
 	}
 	
-	/**
-	 * Sets the state of the detector.
-	 */
-	private void autoShield() {
-		this.entityShieldConsole.setShieldAutomated(!this.entityShieldConsole.isShieldAutomated());
+	protected void autoShield() {
+		if(this.stargateConnected) {
+			StargateMod.sendPacketToServer(this.tileEntity.getShieldAutomatedPacket(!this.stargate.isShieldAutomated()));
+		}
+	}
+	
+	protected void changeCode() {
+		if(this.stargateConnected) {
+			try {
+				int code = Integer.parseInt(this.field_code.getText());
+				StargateMod.sendPacketToServer(this.tileEntity.getShieldCodePacket(code));
+			}
+			catch(NumberFormatException argh) {
+				// If the value is not a valid integer, it is ignored.
+			}
+		}
 	}
 	
 	@Override
-	protected void keyTyped(char character, int key) {
-		if(key == Keyboard.KEY_RETURN || key == Keyboard.KEY_ESCAPE || key == this.mc.gameSettings.keyBindInventory.keyCode) {
-			this.valider();
-		}
-		else if(key == Keyboard.KEY_TAB) {
-			this.autoShield();
-		}
-		else if(this.codeField.isFocused()) {
-			this.codeField.textboxKeyTyped(character, key);
-		}
+	protected void onEnterPressed() {
+		this.shield();
 	}
 	
 	@Override
-	protected void mouseClicked(int par1, int par2, int par3) {
-		super.mouseClicked(par1, par2, par3);
-		this.codeField.mouseClicked(par1, par2, par3);
+	protected void specialTabAction() {
+		this.autoShield();
+	}
+	
+	// ####################################################################################################
+	// Utility :
+	// ####################################################################################################
+	
+	@Override
+	protected void updateInterface() {
+		this.button_shield.enabled = this.stargateConnected;
+		this.button_autoShield.enabled = this.stargateConnected;
+		this.button_code.enabled = this.stargateConnected;
+		this.field_code.setEnabled(this.stargateConnected);
 	}
 	
 }

@@ -2,6 +2,7 @@ package seigneurnecron.minecraftmods.stargate.block;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IconRegister;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
@@ -68,13 +69,18 @@ public class BlockDetector extends BlockGuiScreen {
 	}
 	
 	@Override
-	protected boolean guiOk(TileEntity tileEntity) {
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
+		return this.openGui(world, x, y, z, player);
+	}
+	
+	@Override
+	protected boolean tileEntityOk(TileEntity tileEntity) {
 		return(tileEntity instanceof TileEntityDetector);
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected GuiScreen getGuiScreen(TileEntityGuiScreen tileEntity) {
+	protected GuiScreen getGuiScreen(TileEntityGuiScreen tileEntity, EntityPlayer player) {
 		return new GuiDetector((TileEntityDetector) tileEntity);
 	}
 	

@@ -1,7 +1,8 @@
 package seigneurnecron.minecraftmods.stargate;
 
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.registerGuiClosedPacket;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.registerTileEntityUpdatePacket;
+import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.registerCommandPackets;
+import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.registerPlayerDataPacket;
+import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.registerTileEntityPacket;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,6 +39,7 @@ import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
@@ -70,22 +72,24 @@ import seigneurnecron.minecraftmods.stargate.block.BlockShield;
 import seigneurnecron.minecraftmods.stargate.block.BlockStargateControl;
 import seigneurnecron.minecraftmods.stargate.block.BlockStuffLevelUpTable;
 import seigneurnecron.minecraftmods.stargate.block.BlockVortex;
+import seigneurnecron.minecraftmods.stargate.block.material.VortexMaterial;
 import seigneurnecron.minecraftmods.stargate.block.replace.BlockGlassDropable;
 import seigneurnecron.minecraftmods.stargate.block.replace.BlockGlassPaneDropable;
+import seigneurnecron.minecraftmods.stargate.client.gui.GuiBase;
 import seigneurnecron.minecraftmods.stargate.client.gui.GuiDetector;
 import seigneurnecron.minecraftmods.stargate.client.gui.GuiDhd;
 import seigneurnecron.minecraftmods.stargate.client.gui.GuiShieldConsole;
 import seigneurnecron.minecraftmods.stargate.client.gui.GuiStuffLevelUpTable;
 import seigneurnecron.minecraftmods.stargate.client.gui.GuiTeleporter;
 import seigneurnecron.minecraftmods.stargate.client.network.StargateClientPacketHandler;
-import seigneurnecron.minecraftmods.stargate.damageSource.CustomDamageSource;
-import seigneurnecron.minecraftmods.stargate.dispenserBehavior.DispenserBehaviorCustomExplosiveFireBall;
-import seigneurnecron.minecraftmods.stargate.dispenserBehavior.DispenserBehaviorCustomFireBall;
 import seigneurnecron.minecraftmods.stargate.entity.EntityCustomExplosiveFireBall;
 import seigneurnecron.minecraftmods.stargate.entity.EntityCustomFireBall;
 import seigneurnecron.minecraftmods.stargate.entity.EntityCustomFishHook;
 import seigneurnecron.minecraftmods.stargate.entity.EntityNapalm;
 import seigneurnecron.minecraftmods.stargate.entity.EntityNuke;
+import seigneurnecron.minecraftmods.stargate.entity.damageSource.CustomDamageSource;
+import seigneurnecron.minecraftmods.stargate.entity.dispenserBehavior.DispenserBehaviorCustomExplosiveFireBall;
+import seigneurnecron.minecraftmods.stargate.entity.dispenserBehavior.DispenserBehaviorCustomFireBall;
 import seigneurnecron.minecraftmods.stargate.item.ItemCustomExplosiveFireBall;
 import seigneurnecron.minecraftmods.stargate.item.ItemCustomFireBall;
 import seigneurnecron.minecraftmods.stargate.item.ItemEmptySoulCrystal;
@@ -109,8 +113,8 @@ import seigneurnecron.minecraftmods.stargate.item.stuff.ItemNaquadahPlate;
 import seigneurnecron.minecraftmods.stargate.item.stuff.ItemNaquadahShears;
 import seigneurnecron.minecraftmods.stargate.item.stuff.ItemNaquadahShovel;
 import seigneurnecron.minecraftmods.stargate.item.stuff.ItemNaquadahSword;
-import seigneurnecron.minecraftmods.stargate.material.VortexMaterial;
 import seigneurnecron.minecraftmods.stargate.network.StargateCommonProxy;
+import seigneurnecron.minecraftmods.stargate.network.StargateEventHandler;
 import seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler;
 import seigneurnecron.minecraftmods.stargate.network.StargateServerPacketHandler;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseDhd;
@@ -122,6 +126,9 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityMobGenerator;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargatePart;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStuffLevelUpTable;
+import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
+import seigneurnecron.minecraftmods.stargate.tools.playerData.PlayerStargateData;
+import seigneurnecron.minecraftmods.stargate.tools.playerData.PlayerTeleporterData;
 import seigneurnecron.minecraftmods.stargate.world.NaquadahGenerator;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
@@ -134,6 +141,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.PacketDispatcher;
+import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
@@ -145,24 +154,14 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 // TODO - New coordinates system.                                                                             //
 // - 3 chevrons x 15 symbols for X (15 * 14 * 13 = 2730 chunks)                                               //
 // - 3 chevrons x 15 symbols for Z (15 * 14 * 13 = 2730 chunks)                                               //
-// - 1 chevron x 15 symbols for Y (15 chunks - the first chunk isn't reachable)                               //
+// - 1 chevron x 5 symbols for Y (5 groups of 3 chunks - the last chunk isn't reachable)                      //
 // - 1 chevron x 3 symbols for the dimension (3 dimensions)                                                   //
 // - 1 chevron x 1 symbol for the special address mode                                                        //
-// (Special addresses chosed by users can be assigned to gates, using the GUI of the StargateControl block.   //
+// Special addresses choosed by users can be assigned to gates, using the GUI of the StargateControl block.   //
 // With the 9th chevron, it is possible to :                                                                  //
 // - put several gates in a single chunk.                                                                     //
-// - put a gate in a chunk beyon the normal limite ( -2730 / 2 - 1 < X and Z < 2730 / 2).                     //
+// - put a gate in a chunk beyon the normal limit ( -2730 / 2 < X and Z < 2730 / 2 - 1).                      //
 // - separate a gate from the normal network to make a gate address difficult to find.                        //
-//                                                                                                            //
-// TODO - It would be cool to have a list of recorded gate.                                                   //
-// The player could add/remove gate addresses to/from the list and select an address to enter in a DHD.       //
-// The addresses would no longer be saved in DHDs so each player have to discover gates himself.              //
-// This list has to be saved for each player... in the profil ? a separate file ?                             //
-// Need to find a clean way to store that kind of information, in game and on the file system                 //
-//                                                                                                            //
-// TODO - It would be cool if teleporters could propose a list of all teleporters in range.                   //
-// This means that a list of all teleporters in the world must be saved...                                    //
-// Need to find a clean way to store that too.                                                                //
 //                                                                                                            //
 // TODO - Find a way to get the list of the texture files in the "sign" folder.                               //
 // This would make very easy to add new custom textures for sign.                                             //
@@ -170,22 +169,34 @@ import cpw.mods.fml.common.registry.LanguageRegistry;
 //                                                                                                            //
 // ########################################################################################################## //
 
-// FIXME - ajouter un son pour le teleporter.
+// FIXME - trouver comment enregistrer des infos dans le monde.
+
+// FIXME - lors de la connexion d'un client a un server, verifier que les configurations sont les meme.
+// Refuser la connexion si les configurations sont differentes.
+// Les id de blocs/item sont final, pas de remapage possible.
+
+// FIXME - ajouter les sons manquants - CF autres fixme.
+
+// FIXME - remettre obfuscated a true.
+// FIXME - verifier que la balise @author est bien dans toutes les classes.
 
 /**
  * SeigneurNecron's Stargate Mod main class.
  * @author Seigneur Necron
  */
-@Mod(modid = StargateMod.MOD_ID, name = StargateMod.MOD_NAME, version = StargateMod.VERSION, dependencies = "required-after:FML;required-after:Forge")
-@NetworkMod(channels = {StargateMod.CHANEL}, clientSideRequired = true, serverSideRequired = false, packetHandler = StargatePacketHandler.class, clientPacketHandlerSpec = @SidedPacketHandler(channels = {StargateMod.CHANEL}, packetHandler = StargateClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = {StargateMod.CHANEL}, packetHandler = StargateServerPacketHandler.class))
+@Mod(modid = StargateMod.MOD_ID, name = StargateMod.MOD_NAME, version = StargateMod.VERSION)
+@NetworkMod(channels = {StargateMod.CHANEL_TILE_ENTITY, StargateMod.CHANEL_COMMANDS, StargateMod.CHANEL_PLAYER_DATA}, clientSideRequired = true, serverSideRequired = true, packetHandler = StargatePacketHandler.class, clientPacketHandlerSpec = @SidedPacketHandler(channels = {StargateMod.CHANEL_TILE_ENTITY, StargateMod.CHANEL_COMMANDS, StargateMod.CHANEL_PLAYER_DATA}, packetHandler = StargateClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = {StargateMod.CHANEL_TILE_ENTITY, StargateMod.CHANEL_COMMANDS, StargateMod.CHANEL_PLAYER_DATA}, packetHandler = StargateServerPacketHandler.class))
 public class StargateMod {
 	
 	// Stargate mod basic informations :
 	
 	public static final String MOD_ID = "seigneur_necron_stargate_mod";
 	public static final String MOD_NAME = "SeigneurNecron's Stargate Mod";
-	public static final String VERSION = "[1.6.2] v3.0.0";
-	public static final String CHANEL = "Necron_Stargate";
+	public static final String VERSION = "[1.6.2] v3.1.0";
+	
+	public static final String CHANEL_TILE_ENTITY = "SNSM_TileEntity";
+	public static final String CHANEL_COMMANDS = "SNSM_Commands";
+	public static final String CHANEL_PLAYER_DATA = "SNSM_PlayerData";
 	
 	@Instance(StargateMod.MOD_ID)
 	public static StargateMod instance;
@@ -197,6 +208,7 @@ public class StargateMod {
 	
 	private static Logger logger;
 	private static final StringBuffer logBuffer = new StringBuffer();
+	public static final boolean obfuscated = false; // FIXME - remettre a true.
 	
 	// Stargate assets :
 	
@@ -422,7 +434,7 @@ public class StargateMod {
 		registerDispenserBehaviors();
 		registerTileEntities();
 		this.registerEntities();
-		registerConnectionHandlers();
+		registerEventHandler();
 		registerGuiHandler();
 		registerWorldGenerator();
 		setBlocksHarvestLevel();
@@ -442,21 +454,19 @@ public class StargateMod {
 	}
 	
 	private static void registerPackets() {
-		registerTileEntityUpdatePacket(TileEntityBaseDhd.class);
-		registerTileEntityUpdatePacket(TileEntityBaseTeleporter.class);
-		registerTileEntityUpdatePacket(TileEntityBaseShieldConsole.class);
-		registerTileEntityUpdatePacket(TileEntityChevron.class);
-		registerTileEntityUpdatePacket(TileEntityDetector.class);
-		registerTileEntityUpdatePacket(TileEntityMobGenerator.class);
-		registerTileEntityUpdatePacket(TileEntityStargateControl.class);
-		registerTileEntityUpdatePacket(TileEntityStargatePart.class);
+		registerTileEntityPacket(TileEntityBaseDhd.class);
+		registerTileEntityPacket(TileEntityBaseTeleporter.class);
+		registerTileEntityPacket(TileEntityBaseShieldConsole.class);
+		registerTileEntityPacket(TileEntityChevron.class);
+		registerTileEntityPacket(TileEntityDetector.class);
+		registerTileEntityPacket(TileEntityMobGenerator.class);
+		registerTileEntityPacket(TileEntityStargateControl.class);
+		registerTileEntityPacket(TileEntityStargatePart.class);
 		
-		registerGuiClosedPacket(TileEntityBaseDhd.class);
-		registerGuiClosedPacket(TileEntityBaseTeleporter.class);
-		registerGuiClosedPacket(TileEntityBaseShieldConsole.class);
-		registerGuiClosedPacket(TileEntityDetector.class);
-		registerGuiClosedPacket(TileEntityMobGenerator.class);
-		registerGuiClosedPacket(TileEntityStuffLevelUpTable.class);
+		registerPlayerDataPacket(PlayerTeleporterData.class);
+		registerPlayerDataPacket(PlayerStargateData.class);
+		
+		registerCommandPackets();
 	}
 	
 	private static void registerCreativeTabs() {
@@ -741,8 +751,8 @@ public class StargateMod {
 		EntityRegistry.registerModEntity(EntityNapalm.class, "napalm", 4, this, 250, 5, true);
 	}
 	
-	public static void registerConnectionHandlers() {
-		proxy.registerConnectionHandlers();
+	private static void registerEventHandler() {
+		MinecraftForge.EVENT_BUS.register(new StargateEventHandler());
 	}
 	
 	private static void registerGuiHandler() {
@@ -879,38 +889,57 @@ public class StargateMod {
 		addName(item_crystalSoulHorse, "Horse soul crystal", "Cristal d'ame de cheval");
 		
 		// Inventory :
+		addName(TileEntityBaseTeleporter.INV_NAME, "Teleporter", "Teleporteur");
 		addName(TileEntityBaseDhd.INV_NAME, "DHD", "DHD");
 		addName(TileEntityBaseShieldConsole.INV_NAME, "Shield console", "Console du bouclier");
-		addName(TileEntityBaseTeleporter.INV_NAME, "Teleporter", "Teleporteur");
 		addName(TileEntityDetector.INV_NAME, "Detector", "Detecteur");
 		addName(TileEntityMobGenerator.INV_NAME, "Mob generator", "Generateur de mobs");
 		addName(TileEntityStuffLevelUpTable.INV_NAME, "Stuff level up table", "Table d'amelioration d'equipement");
 		
-		addName(GuiDhd.CONNECTED_GATE, "Connected gate", "Porte connectee");
-		addName(GuiDhd.GATE_NONE, "none", "aucune");
-		addName(GuiDhd.DESTINATION_COORDINATES, "Destination coordinates", "Coordonnees de destination");
+		addName(GuiBase.DESTINATION, "Destination", "Destination");
+		addName(GuiBase.NAME, "Name", "Nom");
+		addName(GuiBase.ADD_THIS, "Add to the list", "Ajouter a la liste");
+		addName(GuiBase.ADD, "Add", "Ajouter");
+		addName(GuiBase.DELETE, "Delete", "Supprimer");
+		addName(GuiBase.OVERWRITE, "Overwrite", "Ecraser");
+		addName(GuiBase.TAB, "Tab", "Tab");
+		addName(GuiBase.ALL, "All", "Tous");
 		
-		addName(GuiShieldConsole.SHIELD_PARAMETERS, "Shield parameters", "Parametres du bouclier");
-		addName(GuiShieldConsole.CODE, "Code", "Code");
+		addName(GuiTeleporter.COORDINATES, "Coordinates", "Coordonnees");
+		addName(GuiTeleporter.TELEPORT, "Teleport (ENTER)", "Teleportation (ENTRER)");
+		addName(GuiTeleporter.IN_RANGE, "In range", "A portee");
+		addName(GuiTeleporter.MESSAGE_OK, "Coordinates in range", "Coordonnees a portee");
+		addName(GuiTeleporter.MESSAGE_OUT_OF_RANGE, "Coordinates out of range", "Coordonnes trop eloignees");
+		addName(GuiTeleporter.MESSAGE_INVALID, "Invalid coordinates", "Coordonnees non valides");
+		
+		addName(GuiDhd.ADDRESS, "Address", "Adresse");
+		addName(GuiDhd.ACTIVATE, "Activate (ENTER)", "Activer (ENTRER)");
+		addName(GuiDhd.EARTH, "Earth", "Terre");
+		addName(GuiDhd.HELL, "Hell", "Enfer");
+		addName(GuiDhd.END, "End", "End");
+		
+		addName(GuiShieldConsole.CURRENT_CODE, "Current code", "Code actuel");
+		addName(GuiShieldConsole.SHIELD_ON, "Shield : ON", "Bouclier : ON");
+		addName(GuiShieldConsole.SHIELD_OFF, "Shield : OFF", "Bouclier : OFF");
+		addName(GuiShieldConsole.SHIELD_DISCONNECTED, "Shield : disconnected", "Bouclier : deconnecte");
+		addName(GuiShieldConsole.SHIELD_SWITCH, "Shield (ENTER)", "Bouclier (ENTRER)");
 		addName(GuiShieldConsole.AUTO_SHIELD_ON, "Automatic shield : ON", "Bouclier automtique : ON");
 		addName(GuiShieldConsole.AUTO_SHIELD_OFF, "Automatic shield : OFF", "Bouclier automatique : OFF");
-		addName(GuiShieldConsole.AUTO_SHIELD_SWITCH, "Automatic shield (press TAB)", "Bouclier automatique (appuyer sur TAB)");
+		addName(GuiShieldConsole.AUTO_SHIELD_DISCONNECTED, "Automatic shield : disconnected", "Bouclier automatique : deconnecte");
+		addName(GuiShieldConsole.AUTO_SHIELD_SWITCH, "Automatic shield (TAB)", "Bouclier automatique (TAB)");
+		addName(GuiShieldConsole.CHANGE_CODE, "Change code", "Changer le code");
 		
-		addName(GuiTeleporter.TELEPORTER_COORDINATES, "Teleporter coordinates", "Coordonnees du teleporteur");
-		addName(GuiTeleporter.DESTINATION_COORDINATES, "Destination coordinates", "Coordonnees de destination");
-		
-		addName(GuiDetector.DETECTOR_PARAMETERS, "Detector parameters", "Parametres du detecteur");
 		addName(GuiDetector.RANGE, "Range", "Portee");
 		addName(GuiDetector.RANGE_LIMITS, "min range = 1, max range = 10", "portee min = 1, portee max = 10");
 		addName(GuiDetector.INVERTED_OUTPUT, "Inverted output.", "Sortie inversee.");
 		addName(GuiDetector.NORMAL_OUTPUT, "Normal output", "Sortie normale");
-		addName(GuiDetector.INVERT_BUTTON, "Invert output (press TAB)", "Inverser la sortie (appuyer sur TAB)");
+		addName(GuiDetector.INVERT_BUTTON, "Invert output (TAB)", "Inverser la sortie (TAB)");
 		
 		addName(GuiStuffLevelUpTable.POWER, "Power", "Puissance");
 		
 		// Damage sources :
 		addName("death.attack." + CustomDamageSource.kawoosh.getDamageType(), "%1$s tried to swim into the kawoosh.", "%1$s a essaye de nager dans le kawoosh.");
-		addName("death.attack." + CustomDamageSource.iris.getDamageType(), "%1$s was dispersed into hyperspace.", "%1$s a ete disperse dans l'hyper espace.");
+		addName("death.attack." + CustomDamageSource.iris.getDamageType(), "%1$s couldn't exit hyperspace.", "%1$s n'a pas pu sortir de l'hyper-espace.");
 	}
 	
 	private static void addRecipe(ItemStack output, Object... params) {
@@ -954,7 +983,7 @@ public class StargateMod {
 	 * @param packet - the packet to send.
 	 */
 	public static void sendPacketToServer(Packet packet) {
-		ModLoader.sendPacket(packet);
+		PacketDispatcher.sendPacketToServer(packet);
 	}
 	
 	/**
@@ -962,7 +991,7 @@ public class StargateMod {
 	 * @param packet - the packet to send.
 	 */
 	public static void sendPacketToAllPlayers(Packet packet) {
-		ModLoader.getMinecraftServerInstance().getConfigurationManager().sendPacketToAllPlayers(packet);
+		PacketDispatcher.sendPacketToAllPlayers(packet);
 	}
 	
 	/**
@@ -971,7 +1000,16 @@ public class StargateMod {
 	 * @param dimension - the dimension in which the players have to be.
 	 */
 	public static void sendPacketToAllPlayersInDimension(Packet packet, int dimension) {
-		ModLoader.getMinecraftServerInstance().getConfigurationManager().sendPacketToAllPlayersInDimension(packet, dimension);
+		PacketDispatcher.sendPacketToAllInDimension(packet, dimension);
+	}
+	
+	/**
+	 * Sends a packet from the server to a player.
+	 * @param packet - the packet to send.
+	 * @param player - the player.
+	 */
+	public static void sendPacketToPlayer(Packet packet, EntityPlayer player) {
+		PacketDispatcher.sendPacketToPlayer(packet, (Player) player);
 	}
 	
 	/**

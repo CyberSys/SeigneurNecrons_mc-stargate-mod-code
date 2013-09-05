@@ -67,11 +67,14 @@ public class BlockFastStargate2 extends BlockFastStargate {
 		
 		for(int i = this.getMinY(); i <= this.getMaxY(); i++) {
 			y = yCoord + i;
-			for(int j = -this.getLenght(); j <= this.getLenght(); j++) {
-				for(int k = -this.getWidth(); k <= this.getWidth(); k++) {
-					x = xCoord + (xAxis * j) + (zAxis * k);
-					z = zCoord + (xAxis * k) + (zAxis * j);
-					world.setBlock(x, y, z, this.getBlockId(i, j, k));
+			
+			if(y > 0 && y < 256) {
+				for(int j = -this.getLenght(); j <= this.getLenght(); j++) {
+					for(int k = -this.getWidth(); k <= this.getWidth(); k++) {
+						x = xCoord + (xAxis * j) + (zAxis * k);
+						z = zCoord + (xAxis * k) + (zAxis * j);
+						world.setBlock(x, y, z, this.getBlockId(i, j, k));
+					}
 				}
 			}
 		}

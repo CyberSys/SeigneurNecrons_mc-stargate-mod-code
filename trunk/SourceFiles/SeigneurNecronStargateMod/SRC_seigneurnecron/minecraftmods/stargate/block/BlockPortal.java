@@ -6,8 +6,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.enums.GateOrientation;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargatePart;
+import seigneurnecron.minecraftmods.stargate.tools.enums.GateOrientation;
 
 public class BlockPortal extends BlockStargatePart {
 	

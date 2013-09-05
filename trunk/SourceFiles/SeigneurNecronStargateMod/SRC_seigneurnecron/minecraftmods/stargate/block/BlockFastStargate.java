@@ -24,7 +24,7 @@ public class BlockFastStargate extends BlockNaquadahMade {
 	
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9) {
-		if(!world.isRemote && y >= 5 && y < 242) {
+		if(!world.isRemote && y >= 4 && y < 244) {
 			int angle = MathHelper.floor_double(entityPlayer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
 			int side = (angle == 0) ? 2 : (angle == 1) ? 5 : (angle == 2) ? 3 : 4;
 			

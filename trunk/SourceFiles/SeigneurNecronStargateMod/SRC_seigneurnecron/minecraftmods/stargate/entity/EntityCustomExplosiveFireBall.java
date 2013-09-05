@@ -3,7 +3,7 @@ package seigneurnecron.minecraftmods.stargate.entity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
-import seigneurnecron.minecraftmods.stargate.StargateModConfig;
+import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
 
 public class EntityCustomExplosiveFireBall extends EntityCustomFireBall {
 	

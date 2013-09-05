@@ -1,9 +1,8 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.readBoolean;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.writeBoolean;
-
-import java.util.LinkedList;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 /**
  * @author Seigneur Necron
@@ -29,25 +28,22 @@ public abstract class TileEntityGuiScreen extends TileEntityStargate {
 	 */
 	public void setEditable(boolean editable) {
 		this.editable = editable;
-		this.updateClients();
+		this.setChanged();
+		this.update();
 	}
 	
 	@Override
-	protected LinkedList<Byte> getEntityData() {
-		LinkedList<Byte> list = super.getEntityData();
+	protected void getEntityData(DataOutputStream output) throws IOException {
+		super.getEntityData(output);
 		
-		writeBoolean(list, this.editable);
-		
-		return list;
+		output.writeBoolean(this.editable);
 	}
 	
 	@Override
-	protected boolean loadEntityData(LinkedList<Byte> list) {
-		if(super.loadEntityData(list)) {
-			this.editable = readBoolean(list);
-			return true;
-		}
-		return false;
+	protected void loadEntityData(DataInputStream input) throws IOException {
+		super.loadEntityData(input);
+		
+		this.editable = input.readBoolean();
 	}
 	
 }
