@@ -23,11 +23,10 @@ public abstract class BlockGuiScreen extends BlockStargateContainer {
 		this.setStepSound(soundStoneFootstep);
 	}
 	
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
+	protected boolean openGui(World world, int x, int y, int z, EntityPlayer player) {
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		
-		if(tileEntity == null || !this.guiOk(tileEntity)) {
+		if(tileEntity == null || !this.tileEntityOk(tileEntity)) {
 			return false;
 		}
 		
@@ -36,16 +35,16 @@ public abstract class BlockGuiScreen extends BlockStargateContainer {
 		if(tileEntityGuiScreen.isEditable()) {
 			tileEntityGuiScreen.setEditable(false);
 			if(world.isRemote) {
-				ModLoader.openGUI(player, this.getGuiScreen(tileEntityGuiScreen));
+				ModLoader.openGUI(player, this.getGuiScreen(tileEntityGuiScreen, player));
 			}
 		}
 		
 		return true;
 	}
 	
-	protected abstract boolean guiOk(TileEntity tileEntity);
+	protected abstract boolean tileEntityOk(TileEntity tileEntity);
 	
 	@SideOnly(Side.CLIENT)
-	protected abstract GuiScreen getGuiScreen(TileEntityGuiScreen tileEntity);
+	protected abstract GuiScreen getGuiScreen(TileEntityGuiScreen tileEntity, EntityPlayer player);
 	
 }

@@ -1,11 +1,8 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.readBoolean;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.readInt;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.writeBoolean;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.writeInt;
-
-import java.util.LinkedList;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 import net.minecraft.nbt.NBTTagCompound;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
@@ -97,8 +94,9 @@ public class TileEntityDetector extends TileEntityGuiScreen {
 	private void setProvidingPower(boolean providingPower) {
 		if(this.providingPower != providingPower) {
 			this.providingPower = providingPower;
-			this.updateClients();
 			this.updateNeighborBlocks();
+			this.setChanged();
+			this.update();
 		}
 	}
 	
@@ -126,7 +124,6 @@ public class TileEntityDetector extends TileEntityGuiScreen {
 	 */
 	@Override
 	public void updateEntity() {
-		// If server side.
 		if(!this.worldObj.isRemote) {
 			this.setProvidingPower(this.inverted != this.anyPlayerInRange());
 		}
@@ -150,26 +147,21 @@ public class TileEntityDetector extends TileEntityGuiScreen {
 	}
 	
 	@Override
-	protected LinkedList<Byte> getEntityData() {
-		LinkedList<Byte> list = super.getEntityData();
+	protected void getEntityData(DataOutputStream output) throws IOException {
+		super.getEntityData(output);
 		
-		writeInt(list, this.range);
-		writeBoolean(list, this.inverted);
-		writeBoolean(list, this.providingPower);
-		
-		return list;
+		output.writeInt(this.range);
+		output.writeBoolean(this.inverted);
+		output.writeBoolean(this.providingPower);
 	}
 	
 	@Override
-	protected boolean loadEntityData(LinkedList<Byte> list) {
-		if(super.loadEntityData(list)) {
-			this.range = readInt(list);
-			this.inverted = readBoolean(list);
-			this.providingPower = readBoolean(list);
-			this.updateBlockTexture();
-			return true;
-		}
-		return false;
+	protected void loadEntityData(DataInputStream input) throws IOException {
+		super.loadEntityData(input);
+		
+		this.range = input.readInt();
+		this.inverted = input.readBoolean();
+		this.providingPower = input.readBoolean();
 	}
 	
 }

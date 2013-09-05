@@ -4,8 +4,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import seigneurnecron.minecraftmods.stargate.enums.GateState;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
+import seigneurnecron.minecraftmods.stargate.tools.enums.GateState;
 
 /**
  * @author Seigneur Necron

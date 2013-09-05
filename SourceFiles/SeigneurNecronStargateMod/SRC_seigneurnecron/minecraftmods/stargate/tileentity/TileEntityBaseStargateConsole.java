@@ -1,17 +1,15 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.readBoolean;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.readInt;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.writeBoolean;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.writeInt;
-
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.util.LinkedList;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.ChunkPosition;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
+import seigneurnecron.minecraftmods.stargate.tools.enums.GateState;
 
 /**
  * @author Seigneur Necron
@@ -21,7 +19,7 @@ public abstract class TileEntityBaseStargateConsole extends TileEntityBase {
 	/**
 	 * The maximum range in which a DHD can connect to a gate.
 	 */
-	private static final int MAX_RANGE = 20;
+	public static final int MAX_RANGE = 20;
 	
 	/**
 	 * Indicates whether the DHD is connected to a gate.
@@ -76,12 +74,25 @@ public abstract class TileEntityBaseStargateConsole extends TileEntityBase {
 	}
 	
 	/**
-	 * Sets the state of the DHD (inform clients).
+	 * Updates the the DHD state (inform clients).
 	 * @param linkedToGate - true if the DHD is connected to a gate, else false.
 	 */
 	private void setLinkedToGate(boolean linkedToGate) {
 		this.linkedToGate = linkedToGate;
-		this.updateClients();
+		this.setChanged();
+		this.update();
+	}
+	
+	/**
+	 * Updates the gate position.
+	 * @param x - the gate X coordinate.
+	 * @param y - the gate Y coordinate.
+	 * @param z - the gate Z coordinate.
+	 */
+	private void setGatePos(int x, int y, int z) {
+		this.xGate = x;
+		this.yGate = y;
+		this.zGate = z;
 	}
 	
 	/**
@@ -89,7 +100,7 @@ public abstract class TileEntityBaseStargateConsole extends TileEntityBase {
 	 */
 	private void searchGate() {
 		// No need to search if the DHD is already connected to a stargate.
-		if(!this.linkedToGate) {
+		if(!this.linkedToGate && this.isIntact()) {
 			// Searches all the control units within range.
 			LinkedList<ChunkPosition> controlUnitsList = new LinkedList<ChunkPosition>();
 			
@@ -101,9 +112,13 @@ public abstract class TileEntityBaseStargateConsole extends TileEntityBase {
 						int y = this.yCoord + i;
 						int z = this.zCoord + j;
 						
-						// If the block is a control unit, adds it to the list of the stargates that can be linked to the DHD.
+						// If the block is a control unit, adds it to the list of stargates that can be linked to the DHD.
 						if(this.worldObj.getBlockId(x, y, z) == StargateMod.block_stargateControl.blockID) {
-							controlUnitsList.add(new ChunkPosition(x, y, z));
+							TileEntity tileEntity = this.worldObj.getBlockTileEntity(x, y, z);
+							
+							if(tileEntity instanceof TileEntityStargateControl && ((TileEntityStargateControl) tileEntity).getState() != GateState.BROKEN) {
+								controlUnitsList.add(new ChunkPosition(x, y, z));
+							}
 						}
 					}
 				}
@@ -111,63 +126,24 @@ public abstract class TileEntityBaseStargateConsole extends TileEntityBase {
 			
 			// If at least one control unit was found.
 			if(controlUnitsList.size() > 0) {
-				// Goes through the list, looking for the nearest chevron.
-				for(ChunkPosition pos : controlUnitsList) {
-					// If the DHD wasn't linked yet or if the new control unit is closer than the previous one.
-					if(!this.linkedToGate || this.squaredDistance(pos.x, pos.y, pos.z) < this.squaredDistance(this.xGate, this.yGate, this.zGate)) {
-						// Links the DHD with the new control unit.
-						this.xGate = pos.x;
-						this.yGate = pos.y;
-						this.zGate = pos.z;
-						this.setLinkedToGate(true);
+				// Takes the first control unit.
+				ChunkPosition pos = controlUnitsList.get(0);
+				this.setGatePos(pos.x, pos.y, pos.z);
+				
+				// Goes through the list, looking for the nearest control unit.
+				for(int i = 1; i < controlUnitsList.size(); i++) {
+					pos = controlUnitsList.get(i);
+					
+					// If the new control unit is closer than the previous one, links the DHD with the new control unit.
+					if(this.squaredDistance(pos.x, pos.y, pos.z) < this.squaredDistance(this.xGate, this.yGate, this.zGate)) {
+						this.setGatePos(pos.x, pos.y, pos.z);
 					}
 				}
+				
+				// Updates the DHD state.
+				this.setLinkedToGate(true);
 			}
 		}
-	}
-	
-	/**
-	 * Sends a command to the stargate connected to this console, if there is one.
-	 */
-	private final void sendCommandeToGate() {
-		this.searchGate();
-		
-		if(this.linkedToGate) {
-			TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xGate, this.yGate, this.zGate);
-			if(tileEntity != null && tileEntity instanceof TileEntityStargateControl) {
-				sendCustomCommand((TileEntityStargateControl) tileEntity);
-			}
-			else {
-				this.setLinkedToGate(false);
-				this.sendCommandeToGate();
-			}
-		}
-	}
-	
-	/**
-	 * Sends a customisable command the stargate.
-	 * @param tileEntity - the tile entity of the stargate.
-	 */
-	protected abstract void sendCustomCommand(TileEntityStargateControl tileEntity);
-	
-	/**
-	 * Defines what happen when the console is destroyed.
-	 */
-	protected final void onStargateConsoleDestroyed() {
-		if(this.linkedToGate) {
-			TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xGate, this.yGate, this.zGate);
-			if(tileEntity != null && tileEntity instanceof TileEntityStargateControl) {
-				informStargateOfConsoleDestruction((TileEntityStargateControl) tileEntity);
-			}
-		}
-	}
-	
-	/**
-	 * Informs the stargate that the console has been destroyed.
-	 * @param tileEntity - the tile entity of the stargate.
-	 */
-	protected void informStargateOfConsoleDestruction(TileEntityStargateControl tileEntity) {
-		// Nothing to do here.
 	}
 	
 	/**
@@ -181,14 +157,48 @@ public abstract class TileEntityBaseStargateConsole extends TileEntityBase {
 		return Math.pow(this.xCoord - x, 2) + Math.pow(this.yCoord - y, 2) + Math.pow(this.zCoord - z, 2);
 	}
 	
-	@Override
-	public final void activate(EntityPlayer player, int side, float xOffset, float yOffset, float zOffset) {
-		this.sendCommandeToGate();
+	/**
+	 * Return the tile entity of the stargate linked to this console.
+	 * @return the tile entity of the stargate linked to this console if it exists, else null.
+	 */
+	public TileEntityStargateControl getStargateControl() {
+		this.searchGate();
+		
+		if(this.linkedToGate) {
+			TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xGate, this.yGate, this.zGate);
+			if(tileEntity != null && tileEntity instanceof TileEntityStargateControl) {
+				return (TileEntityStargateControl) tileEntity;
+			}
+			else {
+				this.setLinkedToGate(false);
+				return this.getStargateControl();
+			}
+		}
+		
+		return null;
 	}
+	
+	/**
+	 * Called when the stargate linked to this console is destroyed.
+	 */
+	public void onStargateDestroyed(TileEntityStargateControl stargate) {
+		this.setLinkedToGate(false);
+	}
+	
+	/**
+	 * Informs the stargate that the console has been destroyed.
+	 * @param tileEntity - the stargate tile entity.
+	 */
+	protected abstract void onStargateConsoleDestroyed(TileEntityStargateControl stargate);
 	
 	@Override
 	public final void onConsoleDestroyed() {
-		this.onStargateConsoleDestroyed();
+		TileEntityStargateControl stargate = this.getStargateControl();
+		
+		if(stargate != null) {
+			onStargateConsoleDestroyed(stargate);
+			this.setLinkedToGate(false);
+		}
 	}
 	
 	@Override
@@ -215,28 +225,23 @@ public abstract class TileEntityBaseStargateConsole extends TileEntityBase {
 	}
 	
 	@Override
-	protected LinkedList<Byte> getEntityData() {
-		LinkedList<Byte> list = super.getEntityData();
+	protected void getEntityData(DataOutputStream output) throws IOException {
+		super.getEntityData(output);
 		
-		writeBoolean(list, this.linkedToGate);
-		writeInt(list, this.xGate);
-		writeInt(list, this.yGate);
-		writeInt(list, this.zGate);
-		
-		return list;
+		output.writeBoolean(this.linkedToGate);
+		output.writeInt(this.xGate);
+		output.writeInt(this.yGate);
+		output.writeInt(this.zGate);
 	}
 	
 	@Override
-	protected boolean loadEntityData(LinkedList<Byte> list) {
-		if(super.loadEntityData(list)) {
-			this.linkedToGate = readBoolean(list);
-			this.xGate = readInt(list);
-			this.yGate = readInt(list);
-			this.zGate = readInt(list);
-			this.updateBlockTexture();
-			return true;
-		}
-		return false;
+	protected void loadEntityData(DataInputStream input) throws IOException {
+		super.loadEntityData(input);
+		
+		this.linkedToGate = input.readBoolean();
+		this.xGate = input.readInt();
+		this.yGate = input.readInt();
+		this.zGate = input.readInt();
 	}
 	
 }

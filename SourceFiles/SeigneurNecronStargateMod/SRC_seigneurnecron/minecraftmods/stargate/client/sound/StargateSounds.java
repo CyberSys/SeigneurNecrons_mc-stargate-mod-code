@@ -35,7 +35,8 @@ public class StargateSounds {
 			}
 		}
 		catch(Exception argh) {
-			StargateMod.debug(argh.getMessage(), Level.WARNING, true);
+			StargateMod.debug("Error while loading sounds. Sound system may not work.", Level.SEVERE, true);
+			argh.printStackTrace();
 		}
 	}
 	

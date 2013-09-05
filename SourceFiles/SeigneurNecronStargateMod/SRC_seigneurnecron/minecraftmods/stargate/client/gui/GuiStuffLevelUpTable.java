@@ -1,6 +1,8 @@
 package seigneurnecron.minecraftmods.stargate.client.gui;
 
 import static seigneurnecron.minecraftmods.stargate.inventory.ContainerStuffLevelUpTable.MIN_NB_BOOKS;
+import static seigneurnecron.minecraftmods.stargate.client.gui.tools.Screen.LIGHT_RED;
+import static seigneurnecron.minecraftmods.stargate.client.gui.tools.Screen.LIGHT_GREEN;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -14,6 +16,9 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerStuffLevelUpTable;
 import seigneurnecron.minecraftmods.stargate.inventory.PowerUp;
@@ -22,6 +27,7 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStuffLevelUpTa
 /**
  * @author Seigneur Necron
  */
+@SideOnly(Side.CLIENT)
 public class GuiStuffLevelUpTable extends GuiContainer {
 	
 	public static final String POWER = TileEntityStuffLevelUpTable.INV_NAME + ".power";
@@ -76,8 +82,8 @@ public class GuiStuffLevelUpTable extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-		this.fontRenderer.drawString(I18n.func_135053_a(TileEntityStuffLevelUpTable.INV_NAME), 12, 6, 4210752);
-		this.fontRenderer.drawString(I18n.func_135053_a("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
+		this.fontRenderer.drawString(I18n.func_135053_a(TileEntityStuffLevelUpTable.INV_NAME), 12, 6, 0x404040);
+		this.fontRenderer.drawString(I18n.func_135053_a("container.inventory"), 8, this.ySize - 96 + 2, 0x404040);
 	}
 	
 	@Override
@@ -107,10 +113,10 @@ public class GuiStuffLevelUpTable extends GuiContainer {
 		int nbBooks = this.getContainer().getNbBooks();
 		
 		if(nbBooks >= MIN_NB_BOOKS) {
-			this.fontRenderer.drawString(I18n.func_135053_a(POWER) + " : " + MIN_NB_BOOKS + " / " + MIN_NB_BOOKS, xPos + 70, yPos + 72, 8453920);
+			this.fontRenderer.drawString(I18n.func_135053_a(POWER) + " : " + MIN_NB_BOOKS + " / " + MIN_NB_BOOKS, xPos + 70, yPos + 72, LIGHT_GREEN);
 		}
 		else {
-			this.fontRenderer.drawString(I18n.func_135053_a(POWER) + " : " + nbBooks + " / " + MIN_NB_BOOKS, xPos + 72, yPos + 72, 16711680);
+			this.fontRenderer.drawString(I18n.func_135053_a(POWER) + " : " + nbBooks + " / " + MIN_NB_BOOKS, xPos + 72, yPos + 72, LIGHT_RED);
 		}
 		
 		LinkedList<PowerUp> enchants = this.getContainer().getEnchantments();
@@ -135,7 +141,7 @@ public class GuiStuffLevelUpTable extends GuiContainer {
 				
 				int cost = (5 * powerUp.level) + baseCost;
 				boolean ok = this.mc.thePlayer.capabilities.isCreativeMode || this.mc.thePlayer.experienceLevel >= cost;
-				int color = ok ? 8453920 : 16711680;
+				int color = ok ? LIGHT_GREEN : LIGHT_RED;
 				String str = String.valueOf(cost);
 				
 				this.fontRenderer.drawString(str, x + SLOT_SIZE - 2 - this.fontRenderer.getStringWidth(str), y + SLOT_SIZE - 8, color);

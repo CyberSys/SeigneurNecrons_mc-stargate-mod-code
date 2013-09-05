@@ -3,7 +3,7 @@ package seigneurnecron.minecraftmods.stargate.item;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.item.Item;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.StargateModConfig;
+import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

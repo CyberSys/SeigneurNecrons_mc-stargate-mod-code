@@ -1,7 +1,7 @@
 package seigneurnecron.minecraftmods.stargate.client.sound;
 
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.StargateModConfig;
+import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
 
 /**
  * @author Seigneur Necron

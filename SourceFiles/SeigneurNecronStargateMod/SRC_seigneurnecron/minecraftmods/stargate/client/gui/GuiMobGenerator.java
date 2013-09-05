@@ -27,8 +27,8 @@ public class GuiMobGenerator extends GuiContainer {
 	
 	@Override
 	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-		this.fontRenderer.drawString(I18n.func_135053_a(TileEntityMobGenerator.INV_NAME), 8, 6, 4210752);
-		this.fontRenderer.drawString(I18n.func_135053_a("container.inventory"), 8, this.ySize - 96 + 2, 4210752);
+		this.fontRenderer.drawString(I18n.func_135053_a(TileEntityMobGenerator.INV_NAME), 8, 6, 0x404040);
+		this.fontRenderer.drawString(I18n.func_135053_a("container.inventory"), 8, this.ySize - 96 + 2, 0x404040);
 	}
 	
 	@Override

@@ -8,7 +8,7 @@ import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.StargateModConfig;
+import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -27,7 +27,7 @@ public class ItemNaquadahPickaxe extends ItemPickaxe {
 	@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
 		if(StargateModConfig.canNaquadahPickaxeMineBedrock && y != 0 && world.getBlockId(x, y, z) == Block.bedrock.blockID) {
-			world.setBlockToAir(x, y, z);
+			world.destroyBlock(x, y, z, false);
 			return true;
 		}
 		

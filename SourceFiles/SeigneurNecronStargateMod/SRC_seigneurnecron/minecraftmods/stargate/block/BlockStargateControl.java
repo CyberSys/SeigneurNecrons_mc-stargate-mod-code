@@ -11,8 +11,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.enums.GateState;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
+import seigneurnecron.minecraftmods.stargate.tools.enums.GateState;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -20,6 +20,8 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Seigneur Necron
  */
 public class BlockStargateControl extends BlockStargateContainer {
+	
+	// FIXME - extends BlockGuiScreen.
 	
 	protected Icon naquadaIcon;
 	
@@ -36,7 +38,7 @@ public class BlockStargateControl extends BlockStargateContainer {
 		
 		if(gate != null && gate.getState() == GateState.BROKEN) {
 			if(!world.isRemote) {
-				gate.createGate();
+				gate.createGate("abcABCv0@"); // FIXME - faire une interface pour entrer l'adresse.
 			}
 			
 			return true;

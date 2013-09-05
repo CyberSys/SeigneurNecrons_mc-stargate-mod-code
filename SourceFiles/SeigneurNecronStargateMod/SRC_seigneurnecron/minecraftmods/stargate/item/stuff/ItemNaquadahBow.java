@@ -7,7 +7,7 @@ import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.StargateModConfig;
+import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

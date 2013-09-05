@@ -1,16 +1,12 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.readBoolean;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.readInt;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.writeBoolean;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.writeInt;
-
-import java.util.LinkedList;
-
-import seigneurnecron.minecraftmods.stargate.enums.GateOrientation;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import seigneurnecron.minecraftmods.stargate.tools.enums.GateOrientation;
 
 /**
  * @author Seigneur Necron
@@ -60,8 +56,7 @@ public class TileEntityStargatePart extends TileEntityStargate {
 	 */
 	protected void setPartOfGate(boolean partOfGate) {
 		this.partOfGate = partOfGate;
-		this.onInventoryChanged();
-		this.updateClients();
+		this.setChanged();
 	}
 	
 	/**
@@ -75,6 +70,7 @@ public class TileEntityStargatePart extends TileEntityStargate {
 		this.yGate = y;
 		this.zGate = z;
 		this.setPartOfGate(true);
+		this.update();
 	}
 	
 	/**
@@ -82,6 +78,7 @@ public class TileEntityStargatePart extends TileEntityStargate {
 	 */
 	public void breakGate() {
 		this.setPartOfGate(false);
+		this.update();
 	}
 	
 	/**
@@ -89,10 +86,8 @@ public class TileEntityStargatePart extends TileEntityStargate {
 	 * @return the gate metadata.
 	 */
 	public int getGateMetadata() {
-		TileEntityStargateControl gate = this.getGateControlUnit();
-		
-		if(gate != null) {
-			return gate.getBlockMetadata();
+		if(this.isPartOfGate()) {
+			return this.worldObj.getBlockMetadata(this.xGate, this.yGate, this.zGate);
 		}
 		
 		return 0;
@@ -117,17 +112,15 @@ public class TileEntityStargatePart extends TileEntityStargate {
 	 * @return the tile entity of the control unit of the gate which this block belongs.
 	 */
 	public TileEntityStargateControl getGateControlUnit() {
-		if(!this.isPartOfGate()) {
-			return null;
+		if(this.isPartOfGate()) {
+			TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xGate, this.yGate, this.zGate);
+			
+			if(tileEntity != null && tileEntity instanceof TileEntityStargateControl) {
+				return (TileEntityStargateControl) tileEntity;
+			}
 		}
 		
-		TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xGate, this.yGate, this.zGate);
-		
-		if(tileEntity == null || !(tileEntity instanceof TileEntityStargateControl)) {
-			return null;
-		}
-		
-		return (TileEntityStargateControl) tileEntity;
+		return null;
 	}
 	
 	@Override
@@ -149,27 +142,23 @@ public class TileEntityStargatePart extends TileEntityStargate {
 	}
 	
 	@Override
-	protected LinkedList<Byte> getEntityData() {
-		LinkedList<Byte> list = super.getEntityData();
+	protected void getEntityData(DataOutputStream output) throws IOException {
+		super.getEntityData(output);
 		
-		writeInt(list, this.xGate);
-		writeInt(list, this.yGate);
-		writeInt(list, this.zGate);
-		writeBoolean(list, this.partOfGate);
-		
-		return list;
+		output.writeInt(this.xGate);
+		output.writeInt(this.yGate);
+		output.writeInt(this.zGate);
+		output.writeBoolean(this.partOfGate);
 	}
 	
 	@Override
-	protected boolean loadEntityData(LinkedList<Byte> list) {
-		if(super.loadEntityData(list)) {
-			this.xGate = readInt(list);
-			this.yGate = readInt(list);
-			this.zGate = readInt(list);
-			this.partOfGate = readBoolean(list);
-			return true;
-		}
-		return false;
+	protected void loadEntityData(DataInputStream input) throws IOException {
+		super.loadEntityData(input);
+		
+		this.xGate = input.readInt();
+		this.yGate = input.readInt();
+		this.zGate = input.readInt();
+		this.partOfGate = input.readBoolean();
 	}
 	
 }

@@ -1,14 +1,12 @@
 package seigneurnecron.minecraftmods.stargate.client.gui;
 
+import static seigneurnecron.minecraftmods.stargate.tileentity.TileEntityDetector.INV_NAME;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-
-import org.lwjgl.input.Keyboard;
-
-import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler;
-import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseShieldConsole;
+import seigneurnecron.minecraftmods.stargate.client.gui.tools.Button;
+import seigneurnecron.minecraftmods.stargate.client.gui.tools.IntegerField;
+import seigneurnecron.minecraftmods.stargate.client.gui.tools.Panel;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityDetector;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -17,114 +15,140 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Seigneur Necron
  */
 @SideOnly(Side.CLIENT)
-public class GuiDetector extends GuiScreen {
+public class GuiDetector extends GuiScreen<TileEntityDetector> {
 	
-	public static final String DETECTOR_PARAMETERS = TileEntityBaseShieldConsole.INV_NAME + ".detectorParameters";
-	public static final String RANGE = TileEntityBaseShieldConsole.INV_NAME + ".range";
-	public static final String RANGE_LIMITS = TileEntityBaseShieldConsole.INV_NAME + ".rangeLimits";
-	public static final String INVERTED_OUTPUT = TileEntityBaseShieldConsole.INV_NAME + ".invertedOutput";
-	public static final String NORMAL_OUTPUT = TileEntityBaseShieldConsole.INV_NAME + ".normalOutput";
-	public static final String INVERT_BUTTON = TileEntityBaseShieldConsole.INV_NAME + ".invertButton";
+	// ####################################################################################################
+	// Lang constants :
+	// ####################################################################################################
 	
-	/** The title string which is displayed in the top-center of the screen. */
-	protected String screenTitle = "Detector parmeters :";
+	public static final String RANGE = INV_NAME + ".range";
+	public static final String RANGE_LIMITS = INV_NAME + ".rangeLimits";
+	public static final String INVERTED_OUTPUT = INV_NAME + ".invertedOutput";
+	public static final String NORMAL_OUTPUT = INV_NAME + ".normalOutput";
+	public static final String INVERT_BUTTON = INV_NAME + ".invertButton";
 	
-	/** The detector tile entity. */
-	private TileEntityDetector entityDetector;
+	// ####################################################################################################
+	// Interface fields :
+	// ####################################################################################################
 	
-	private GuiIntegerField rangeField;
+	protected String string_invName;
+	protected String string_range;
+	protected String string_rangeLimits;
+	protected String string_invertedOutput;
+	protected String string_normalOutput;
+	
+	protected Panel panel_main;
+	
+	private GuiTextField field_range;
+	
+	protected Button button_done;
+	protected Button button_invert;
+	
+	// ####################################################################################################
+	// Builder :
+	// ####################################################################################################
 	
 	public GuiDetector(TileEntityDetector tileEntity) {
-		this.entityDetector = tileEntity;
+		super(tileEntity);
 	}
+	
+	// ####################################################################################################
+	// Interface definition :
+	// ####################################################################################################
 	
 	@Override
 	public void drawScreen(int par1, int par2, float par3) {
-		this.drawDefaultBackground();
-		this.drawCenteredString(this.fontRenderer, I18n.func_135053_a(DETECTOR_PARAMETERS) + " :", this.width / 2, 40, 16777215);
-		this.drawString(this.fontRenderer, I18n.func_135053_a(RANGE) + " :", this.width / 2 - 40, 65, 10526880);
-		this.drawString(this.fontRenderer, I18n.func_135053_a(RANGE_LIMITS), this.width / 2 - 40, 85, 10526880);
-		this.drawString(this.fontRenderer, this.entityDetector.isInverted() ? I18n.func_135053_a(INVERTED_OUTPUT) : I18n.func_135053_a(NORMAL_OUTPUT), this.width / 2 - 40, 100, this.entityDetector.isInverted() ? 0xdd8844 : 0x44dd44);
-		this.rangeField.drawTextBox();
 		super.drawScreen(par1, par2, par3);
-	}
-	
-	@Override
-	@SuppressWarnings("unchecked")
-	public void initGui() {
-		this.buttonList.clear();
-		Keyboard.enableRepeatEvents(true);
-		this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 4 + 120, I18n.func_135053_a("gui.done")));
-		this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 100, I18n.func_135053_a(INVERT_BUTTON)));
-		this.rangeField = new GuiIntegerField(this.fontRenderer, this.width / 2, 60, 50, 20);
-		this.rangeField.setText(String.valueOf(this.entityDetector.getRange()));
-		this.rangeField.setFocused(true);
-	}
-	
-	@Override
-	public void onGuiClosed() {
-		Keyboard.enableRepeatEvents(false);
 		
-		try {
-			int range = Integer.parseInt(this.rangeField.getText());
-			this.entityDetector.setRange(range);
-		}
-		catch(NumberFormatException argh) {
-			// If the value is not a valid integer, it is ignored.
-		}
+		this.panel_main.drawBorder(GRAY);
 		
-		StargateMod.sendPacketToServer(this.entityDetector.getDescriptionPacketWhithId(StargatePacketHandler.getGuiClosedPacketIdFromClass(TileEntityDetector.class)));
+		this.nextYPos = MARGIN;
+		this.panel_main.drawCenteredText(this.fontRenderer, this.string_invName, this.nextYPos, WHITE);
+		this.panel_main.drawText(this.fontRenderer, this.string_range, MARGIN, this.nextYPos, WHITE);
+		this.panel_main.drawText(this.fontRenderer, this.string_rangeLimits, MARGIN, this.nextYPos, WHITE);
+		this.panel_main.drawText(this.fontRenderer, this.tileEntity.isInverted() ? this.string_invertedOutput : this.string_normalOutput, MARGIN, this.nextYPos, this.tileEntity.isInverted() ? RED : GREEN);
 	}
 	
 	@Override
-	public void updateScreen() {
-		this.rangeField.updateCursorCounter();
+	public void initComponents() {
+		super.initComponents();
+		
+		// Panel sizes :
+		
+		int panelWidth = this.width / 2;
+		int panelHeight = (4 * FIELD_HEIGHT) + (2 * BUTTON_HEIGHT) + (7 * MARGIN);
+		
+		// Panels :
+		
+		this.panel_main = new Panel(this, (this.width - panelWidth) / 2, (this.height - panelHeight) / 2, panelWidth, panelHeight);
+		
+		// Strings :
+		
+		this.string_invName = I18n.func_135053_a(INV_NAME);
+		this.string_range = I18n.func_135053_a(RANGE) + " : ";
+		this.string_rangeLimits = I18n.func_135053_a(RANGE_LIMITS);
+		this.string_invertedOutput = I18n.func_135053_a(INVERTED_OUTPUT);
+		this.string_normalOutput = I18n.func_135053_a(NORMAL_OUTPUT);
+		
+		// Component sizes :
+		
+		int stringSize = this.fontRenderer.getStringWidth(this.string_range);
+		int fieldOffset = stringSize + MARGIN;
+		int fieldSize = this.panel_main.getWidth() - (fieldOffset + MARGIN);
+		int buttonSize = this.panel_main.getWidth() - (2 * MARGIN);
+		
+		// Fields and buttons :
+		
+		this.nextYPos = FIELD_HEIGHT + (2 * MARGIN) + FIELD_OFFSET;
+		this.field_range = this.addField(new IntegerField(this.panel_main, this.fontRenderer, fieldOffset, this.nextYPos, fieldSize, FIELD_HEIGHT, this.tileEntity.getRange()));
+		
+		this.nextYPos += (FIELD_HEIGHT + MARGIN) * 2 - FIELD_OFFSET;
+		this.button_invert = this.addButton(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(INVERT_BUTTON)));
+		this.button_done = this.addButton(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.done")));
 	}
+	
+	// ####################################################################################################
+	// User input :
+	// ####################################################################################################
 	
 	@Override
 	protected void actionPerformed(GuiButton guiButton) {
 		if(guiButton.enabled) {
-			if(guiButton.id == 0) {
-				this.valider();
+			if(guiButton == this.button_done) {
+				this.close();
 			}
-			else if(guiButton.id == 1) {
+			else if(guiButton == this.button_invert) {
 				this.invertOutput();
 			}
 		}
 	}
 	
-	/**
-	 * Closes the detector configuration window.
-	 */
-	private void valider() {
-		this.entityDetector.onInventoryChanged();
-		this.mc.displayGuiScreen((GuiScreen) null);
+	@Override
+	protected void close() {
+		this.tileEntity.onInventoryChanged();
+		super.close();
 	}
 	
-	/**
-	 * Sets the state of the detector.
-	 */
 	private void invertOutput() {
-		this.entityDetector.setInverted(!this.entityDetector.isInverted());
+		this.tileEntity.setInverted(!this.tileEntity.isInverted());
 	}
 	
 	@Override
-	protected void keyTyped(char character, int key) {
-		if(key == Keyboard.KEY_RETURN || key == Keyboard.KEY_ESCAPE || key == this.mc.gameSettings.keyBindInventory.keyCode) {
-			this.valider();
-		}
-		else if(key == Keyboard.KEY_TAB) {
-			this.invertOutput();
-		}
-		else if(this.rangeField.isFocused()) {
-			this.rangeField.textboxKeyTyped(character, key);
-		}
+	protected void specialTabAction() {
+		this.invertOutput();
 	}
 	
 	@Override
-	protected void mouseClicked(int par1, int par2, int par3) {
-		super.mouseClicked(par1, par2, par3);
-		this.rangeField.mouseClicked(par1, par2, par3);
+	public void onGuiClosed() {
+		try {
+			int range = Integer.parseInt(this.field_range.getText());
+			this.tileEntity.setRange(range);
+		}
+		catch(NumberFormatException argh) {
+			// If the value is not a valid integer, it is ignored.
+		}
+		
+		super.onGuiClosed();
 	}
 	
 }

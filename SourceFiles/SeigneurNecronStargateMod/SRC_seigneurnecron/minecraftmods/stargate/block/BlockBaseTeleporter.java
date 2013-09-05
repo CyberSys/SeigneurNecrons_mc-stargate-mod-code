@@ -1,6 +1,7 @@
 package seigneurnecron.minecraftmods.stargate.block;
 
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.client.gui.GuiTeleporter;
@@ -24,14 +25,14 @@ public class BlockBaseTeleporter extends BlockBase {
 	}
 	
 	@Override
-	protected boolean guiOk(TileEntity tileEntity) {
+	protected boolean tileEntityOk(TileEntity tileEntity) {
 		return(tileEntity instanceof TileEntityBaseTeleporter);
 	}
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected GuiScreen getGuiScreen(TileEntityGuiScreen tileEntity) {
-		return new GuiTeleporter((TileEntityBaseTeleporter) tileEntity);
+	protected GuiScreen getGuiScreen(TileEntityGuiScreen tileEntity, EntityPlayer player) {
+		return new GuiTeleporter((TileEntityBaseTeleporter) tileEntity, player);
 	}
 	
 }

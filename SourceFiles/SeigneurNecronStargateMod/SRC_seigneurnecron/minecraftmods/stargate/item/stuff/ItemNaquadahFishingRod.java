@@ -7,8 +7,8 @@ import net.minecraft.item.ItemFishingRod;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.StargateModConfig;
 import seigneurnecron.minecraftmods.stargate.entity.EntityCustomFishHook;
+import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
