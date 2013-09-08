@@ -4,11 +4,13 @@ import static seigneurnecron.minecraftmods.stargate.client.gui.tools.Screen.FIEL
 import static seigneurnecron.minecraftmods.stargate.client.gui.tools.Screen.GRAY;
 import static seigneurnecron.minecraftmods.stargate.client.gui.tools.Screen.MARGIN;
 import static seigneurnecron.minecraftmods.stargate.client.gui.tools.Screen.WHITE;
+import net.minecraft.client.renderer.Tessellator;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.Tessellator;
 
+/**
+ * @author Seigneur Necron
+ */
 @SideOnly(Side.CLIENT)
 public abstract class SelectionList<T extends Object> extends CustomGuiScrollingList {
 	
@@ -40,7 +42,6 @@ public abstract class SelectionList<T extends Object> extends CustomGuiScrolling
 	
 	@Override
 	protected void drawSlot(int index, int left, int top, int slotHeight, Tessellator tessellator) {
-		FontRenderer fontRenderer = this.gui.getFontRenderer();
 		T element = this.gui.getList().get(index);
 		
 		int xPos = this.left + MARGIN;
@@ -48,11 +49,11 @@ public abstract class SelectionList<T extends Object> extends CustomGuiScrolling
 		int infoYPos = top + MARGIN + FIELD_HEIGHT;
 		
 		if(nameYPos > this.top && nameYPos + FIELD_HEIGHT - 3 < this.bottom) {
-			fontRenderer.drawString(fontRenderer.trimStringToWidth(this.getName(element), this.listWidth - (2 * MARGIN)), xPos, nameYPos, WHITE);
+			this.gui.getFirstFontRenderer().drawString(this.gui.getFirstFontRenderer().trimStringToWidth(this.getName(element), this.listWidth - (2 * MARGIN)), xPos, nameYPos, WHITE);
 		}
 		
 		if(infoYPos > this.top && infoYPos + FIELD_HEIGHT - 3 < this.bottom) {
-			fontRenderer.drawString(fontRenderer.trimStringToWidth(this.getInfo(element), this.listWidth - (2 * MARGIN)), xPos, infoYPos, GRAY);
+			this.gui.getSecondFontRenderer().drawString(this.gui.getSecondFontRenderer().trimStringToWidth(this.getInfo(element), this.listWidth - (2 * MARGIN)), xPos, infoYPos, GRAY);
 		}
 	}
 	

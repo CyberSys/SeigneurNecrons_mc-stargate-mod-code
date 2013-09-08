@@ -16,7 +16,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * ########## Class copied from TileEntitySignRenderer and modified (1 added code part, 1 modified code part, 2 added lines) ##########<br />
- * Can display different textures according to the text of the sign.
+ * Can display different textures depending on the text of the sign.
  * @author Seigneur Necron
  */
 @SideOnly(Side.CLIENT)

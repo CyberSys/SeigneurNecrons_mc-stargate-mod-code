@@ -7,6 +7,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 import net.minecraft.client.gui.FontRenderer;
 
+/**
+ * @author Seigneur Necron
+ */
 @SideOnly(Side.CLIENT)
 public interface ListProviderGui<T extends Object> {
 	
@@ -18,6 +21,8 @@ public interface ListProviderGui<T extends Object> {
 	
 	public void onElementDoubleClicked();
 	
-	public FontRenderer getFontRenderer();
+	public FontRenderer getFirstFontRenderer();
+	
+	public FontRenderer getSecondFontRenderer();
 	
 }

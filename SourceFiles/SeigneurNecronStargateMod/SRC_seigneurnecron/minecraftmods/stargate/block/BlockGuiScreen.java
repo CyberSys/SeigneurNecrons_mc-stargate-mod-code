@@ -26,20 +26,20 @@ public abstract class BlockGuiScreen extends BlockStargateContainer {
 	protected boolean openGui(World world, int x, int y, int z, EntityPlayer player) {
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		
-		if(tileEntity == null || !this.tileEntityOk(tileEntity)) {
-			return false;
-		}
-		
-		TileEntityGuiScreen tileEntityGuiScreen = (TileEntityGuiScreen) tileEntity;
-		
-		if(tileEntityGuiScreen.isEditable()) {
-			tileEntityGuiScreen.setEditable(false);
-			if(world.isRemote) {
-				ModLoader.openGUI(player, this.getGuiScreen(tileEntityGuiScreen, player));
+		if(tileEntity != null && this.tileEntityOk(tileEntity)) {
+			TileEntityGuiScreen tileEntityGuiScreen = (TileEntityGuiScreen) tileEntity;
+			
+			if(tileEntityGuiScreen.isEditable()) {
+				tileEntityGuiScreen.setEditable(false);
+				if(world.isRemote) {
+					ModLoader.openGUI(player, this.getGuiScreen(tileEntityGuiScreen, player));
+				}
 			}
+			
+			return true;
 		}
 		
-		return true;
+		return false;
 	}
 	
 	protected abstract boolean tileEntityOk(TileEntity tileEntity);

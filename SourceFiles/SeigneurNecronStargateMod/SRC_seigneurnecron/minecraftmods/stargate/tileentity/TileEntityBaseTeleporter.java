@@ -5,6 +5,7 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.packet.Packet;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
+import seigneurnecron.minecraftmods.stargate.client.sound.StargateSounds;
 
 /**
  * @author Seigneur Necron
@@ -88,15 +89,11 @@ public class TileEntityBaseTeleporter extends TileEntityBase {
 				
 				// Checks that there is enough space at the destination.
 				if(!(this.worldObj.isBlockNormalCube(xTp, yTp, zTp) || this.worldObj.isBlockNormalCube(xTp, yTp + 1, zTp))) {
-					// FIXME - jouer le son de teleportation au point de depart.
+					this.playSoundEffect(StargateSounds.teleportation, player);
 					player.playerNetServerHandler.setPlayerLocation(xTp + 0.5, yTp, zTp + 0.5, rotationYaw, rotationPitch);
-					// FIXME - jouer le son de teleportation au point d'arrivee.
-					return;
+					this.playSoundEffect(StargateSounds.teleportation, player);
 				}
 			}
-			
-			// If the teleportation failed, plays the corresponding sound.
-			// FIXME - jouer le son correspondant a une teleportation impossible.
 		}
 	}
 	

@@ -4,20 +4,30 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
+import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.tools.enums.Dimension;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.BlockCoordinates;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.StargateZoneCoordinates;
 
-public class GateAddress {
+/**
+ * @author Seigneur Necron
+ */
+public final class GateAddress {
+	
+	// Construtors :
+	
+	private GateAddress() {
+		// This class don't have to be instanciated, it only contains static methods.
+	}
 	
 	// Symbols :
 	
-	private static final List<Character> X_SYMBOLS = Arrays.asList(new Character[] {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o'});
-	private static final List<Character> Z_SYMBOLS = Arrays.asList(new Character[] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'});
-	private static final List<Character> Y_SYMBOLS = Arrays.asList(new Character[] {'v', 'w', 'x', 'y', 'z'});
+	public static final List<Character> X_SYMBOLS = Arrays.asList(new Character[] {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o'});
+	public static final List<Character> Z_SYMBOLS = Arrays.asList(new Character[] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O'});
+	public static final List<Character> Y_SYMBOLS = Arrays.asList(new Character[] {'v', 'w', 'x', 'y', 'z'});
 	public static final char SPECIAL_SYMBOL = '@';
 	
-	private static final int NB_X_SYMBOLS = 3;
+	public static final int NB_X_SYMBOLS = 3;
 	public static final int OFFSET;
 	private static final int MAX_FACTOR;
 	
@@ -48,6 +58,10 @@ public class GateAddress {
 	// Address => Coordinates :
 	
 	public static StargateZoneCoordinates toCoordinates(String address) throws MalformedGateAddressException {
+		if(address.length() == 9 && address.charAt(8) == SPECIAL_SYMBOL) {
+			address = address.substring(0, 8);
+		}
+		
 		if(address.length() != 8) {
 			throw new MalformedGateAddressException("Invalid address : " + address + ". A gate address must be composed of 8 symbols.");
 		}
@@ -165,19 +179,30 @@ public class GateAddress {
 	// Check methods :
 	
 	public static boolean isValidAddress(String address) {
+		return isValidAddress(address, 0, false, false);
+	}
+	
+	public static boolean isValidAddressForDimension(String address, int dimension) {
+		return isValidAddress(address, dimension, true, true);
+	}
+	
+	protected static boolean isValidAddress(String address, int dimension, boolean checkDimension, boolean displayError) {
 		try {
-			if(address.length() == 9 && address.charAt(8) == SPECIAL_SYMBOL) {
-				toCoordinates(address.substring(0, 9));
+			StargateZoneCoordinates coords = toCoordinates(address);
+			
+			if(checkDimension && coords.dim != dimension) {
+				StargateMod.debug("The address \"" + address + "\" isn't valid for the dimension.", true);
+				return false;
 			}
-			else {
-				toCoordinates(address);
-			}
+			
+			return true;
 		}
 		catch(MalformedGateAddressException argh) {
+			if(displayError) {
+				StargateMod.debug(argh.getMessage(), true);
+			}
 			return false;
 		}
-		
-		return true;
 	}
 	
 	public static boolean isValidCoordinates(BlockCoordinates coords) {

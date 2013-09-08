@@ -6,6 +6,9 @@ import java.io.IOException;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+/**
+ * @author Seigneur Necron
+ */
 public abstract class Coordinates<T extends Coordinates> implements Loadable<T> {
 	
 	// NBTTags names :
@@ -22,7 +25,7 @@ public abstract class Coordinates<T extends Coordinates> implements Loadable<T> 
 	public int y;
 	public int z;
 	
-	// Builders :
+	// Constructors :
 	
 	protected Coordinates(int dim, int x, int y, int z) {
 		this.dim = dim;

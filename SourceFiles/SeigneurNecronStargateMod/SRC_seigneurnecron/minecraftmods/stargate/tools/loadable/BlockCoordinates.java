@@ -4,17 +4,25 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import net.minecraft.nbt.NBTTagCompound;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargate;
 
+/**
+ * @author Seigneur Necron
+ */
 public class BlockCoordinates extends Coordinates<BlockCoordinates> {
 	
 	public static final int CHUNK_SIZE = 16;
 	public static final int ZONE_X_SIZE = 3;
 	public static final int ZONE_Y_SIZE = 3;
 	
-	// Builders :
+	// Constructors :
 	
 	public BlockCoordinates(int dim, int x, int y, int z) {
 		super(dim, x, y, z);
+	}
+	
+	public BlockCoordinates(TileEntityStargate tileEntity) {
+		super(tileEntity.getDimension(), tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 	}
 	
 	public BlockCoordinates(NBTTagCompound tag) {

@@ -2,28 +2,60 @@ package seigneurnecron.minecraftmods.stargate.client.gui.tools;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 
 import org.lwjgl.input.Keyboard;
 
+import seigneurnecron.minecraftmods.stargate.StargateMod;
+import seigneurnecron.minecraftmods.stargate.client.sound.StargateSounds;
+import seigneurnecron.minecraftmods.stargate.tools.reflection.Reflection;
+import seigneurnecron.minecraftmods.stargate.tools.reflection.ReflectionException;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+/**
+ * @author Seigneur Necron
+ */
 @SideOnly(Side.CLIENT)
 public abstract class Screen extends GuiScreen implements Container {
+	
+	// ####################################################################################################
+	// Reflection :
+	// ####################################################################################################
+	
+	// Fields obfuscated names :
+	
+	private static String SELECTED_BUTTON = StargateMod.obfuscated ? "field_73883_a" : "selectedButton";
+	
+	// Setters :
+	
+	private void setSelectedButton(GuiButton selectedButton) throws ReflectionException {
+		try {
+			Reflection.set(GuiScreen.class, this, SELECTED_BUTTON, selectedButton);
+		}
+		catch(Exception argh) {
+			throw new ReflectionException(argh);
+		}
+	}
 	
 	// ####################################################################################################
 	// Interface fields :
 	// ####################################################################################################
 	
+	public static final int TRANSPARENT = 0x00000000;
 	public static final int WHITE = 0xFFFFFFFF;
 	public static final int GRAY = 0xFFA0A0A0;
+	public static final int BLACK = 0xFF000000;
+	public static final int BLUE = 0xFF0077EE;
 	public static final int GREEN = 0xFF44DD44;
 	public static final int YELLOW = 0xFFDDCC44;
 	public static final int RED = 0xFFDD8844;
+	public static final int LIGHT_BLUE = 0xFFAACCEE;
 	public static final int LIGHT_GREEN = 0xFF80FF20;
 	public static final int LIGHT_YELLOW = 0xFFFFDD00;
 	public static final int LIGHT_RED = 0xFFFF0000;
@@ -31,10 +63,10 @@ public abstract class Screen extends GuiScreen implements Container {
 	public static final int PANEL_MARGIN = 5;
 	public static final int MARGIN = 5;
 	public static final int BONUS_MARGIN = 10;
-	public static final int CHEVRON_MARGIN = 1;
+	public static final int DHD_MARGIN = 1;
+	public static final int ADDRESS_MARGIN = 3;
 	public static final int FIELD_HEIGHT = 10;
 	public static final int BUTTON_HEIGHT = 20;
-	public static final int FIELD_OFFSET = -2;
 	
 	// ####################################################################################################
 	// Data fields :
@@ -59,6 +91,16 @@ public abstract class Screen extends GuiScreen implements Container {
 	// ####################################################################################################
 	
 	@Override
+	public int getComponentWidth() {
+		return this.width;
+	}
+	
+	@Override
+	public int getComponentHeight() {
+		return this.height;
+	}
+	
+	@Override
 	public int getXPosInScreen(int xPos) {
 		return xPos;
 	}
@@ -69,49 +111,81 @@ public abstract class Screen extends GuiScreen implements Container {
 	}
 	
 	@Override
-	public int getWidth() {
-		return this.width;
-	}
-	
-	@Override
-	public int getHeight() {
-		return this.height;
-	}
-	
-	@Override
 	public void drawText(FontRenderer fontRenderer, String text, int x, int y, int color) {
-		this.drawString(fontRenderer, text, x, y, color);
+		this.drawString(fontRenderer, text, x, y + (FIELD_HEIGHT - fontRenderer.FONT_HEIGHT), color);
 		this.nextYPos += FIELD_HEIGHT + MARGIN;
 	}
 	
 	@Override
 	public void drawCenteredText(FontRenderer fontRenderer, String text, int x, int y, int color) {
-		this.drawCenteredString(fontRenderer, text, x, y, color);
+		this.drawCenteredString(fontRenderer, text, x, y + (FIELD_HEIGHT - fontRenderer.FONT_HEIGHT), color);
 		this.nextYPos += FIELD_HEIGHT + MARGIN;
 	}
 	
 	@Override
 	public void drawCenteredText(FontRenderer fontRenderer, String text, int y, int color) {
 		this.drawCenteredText(fontRenderer, text, this.width / 2, y, color);
-		this.nextYPos += FIELD_HEIGHT + MARGIN;
 	}
 	
 	@Override
-	public void drawBorder(int color) {
-		this.drawBorder(0, 0, this.width, this.height, color);
+	public void drawBox(int borderColor) {
+		this.drawBox(0, 0, this.width, this.height, borderColor, TRANSPARENT, false);
 	}
 	
 	@Override
-	public void drawBorder(int xPos, int yPos, int width, int height, int color) {
-		int x1 = xPos;
-		int x2 = xPos + width;
-		int y1 = yPos;
-		int y2 = yPos + height;
+	public void drawBox(int borderColor, int boxColor) {
+		this.drawBox(0, 0, this.width, this.height, borderColor, boxColor, false);
+	}
+	
+	@Override
+	public void drawBox(int borderColor, boolean extendedLikeFields) {
+		this.drawBox(0, 0, this.width, this.height, borderColor, TRANSPARENT, extendedLikeFields);
+	}
+	
+	@Override
+	public void drawBox(int borderColor, int boxColor, boolean extendedLikeFields) {
+		this.drawBox(0, 0, this.width, this.height, borderColor, boxColor, extendedLikeFields);
+	}
+	
+	@Override
+	public void drawBox(int xPos, int yPos, int width, int height, int borderColor) {
+		this.drawBox(xPos, yPos, width, height, borderColor, TRANSPARENT, false);
+	}
+	
+	@Override
+	public void drawBox(int xPos, int yPos, int width, int height, int borderColor, int boxColor) {
+		this.drawBox(xPos, yPos, width, height, borderColor, boxColor, false);
+	}
+	
+	@Override
+	public void drawBox(int xPos, int yPos, int width, int height, int borderColor, boolean extendedLikeFields) {
+		this.drawBox(xPos, yPos, width, height, borderColor, TRANSPARENT, extendedLikeFields);
+	}
+	
+	@Override
+	public void drawBox(int xPos, int yPos, int width, int height, int borderColor, int boxColor, boolean extendedLikeFields) {
+		if(extendedLikeFields) {
+			xPos -= 1;
+			yPos -= 1;
+			width += 2;
+			height += 2;
+		}
 		
-		drawRect(x1, y1, x1 + 1, y2, color);
-		drawRect(x2 - 1, y1, x2, y2, color);
-		drawRect(x1, y1, x2, y1 + 1, color);
-		drawRect(x1, y2 - 1, x2, y2, color);
+		if(boxColor == TRANSPARENT) {
+			int x1 = xPos;
+			int x2 = xPos + width;
+			int y1 = yPos;
+			int y2 = yPos + height;
+			
+			drawRect(x1, y1, x1 + 1, y2, borderColor);
+			drawRect(x2 - 1, y1, x2, y2, borderColor);
+			drawRect(x1, y1, x2, y1 + 1, borderColor);
+			drawRect(x1, y2 - 1, x2, y2, borderColor);
+		}
+		else {
+			drawRect(xPos, yPos, xPos + width, yPos + height, borderColor);
+			drawRect(xPos + 1, yPos + 1, xPos + width - 1, yPos + height - 1, boxColor);
+		}
 	}
 	
 	// ####################################################################################################
@@ -145,7 +219,7 @@ public abstract class Screen extends GuiScreen implements Container {
 			this.fieldList.get(0).setFocused(true);
 		}
 		
-		this.onFieldChanged();
+		this.onGuiInitialized();
 	}
 	
 	/**
@@ -161,7 +235,29 @@ public abstract class Screen extends GuiScreen implements Container {
 	
 	@Override
 	protected void mouseClicked(int x, int y, int button) {
-		super.mouseClicked(x, y, button);
+		try {
+			if(button == 0) {
+				for(int l = 0; l < this.buttonList.size(); ++l) {
+					GuiButton guibutton = (GuiButton) this.buttonList.get(l);
+					
+					if(guibutton.mousePressed(this.mc, x, y)) {
+						this.setSelectedButton(guibutton);
+						String soundName = "random.click";
+						
+						if(guibutton instanceof Button) {
+							soundName = StargateSounds.button.toString();
+						}
+						
+						this.mc.sndManager.playSoundFX(soundName, 1.0F, 1.0F);
+						this.actionPerformed(guibutton);
+					}
+				}
+			}
+		}
+		catch(ReflectionException argh) {
+			StargateMod.debug(argh.getMessage(), Level.WARNING, true);
+			super.mouseClicked(x, y, button);
+		}
 		
 		for(GuiTextField field : this.fieldList) {
 			field.mouseClicked(x, y, button);
@@ -170,7 +266,7 @@ public abstract class Screen extends GuiScreen implements Container {
 	
 	@Override
 	protected void keyTyped(char character, int key) {
-		if(key == Keyboard.KEY_ESCAPE || key == this.mc.gameSettings.keyBindInventory.keyCode) {
+		if(key == Keyboard.KEY_ESCAPE || (key == this.mc.gameSettings.keyBindInventory.keyCode && this.closeLikeInventory())) {
 			this.close();
 		}
 		else if(key == Keyboard.KEY_RETURN) {
@@ -232,65 +328,49 @@ public abstract class Screen extends GuiScreen implements Container {
 		this.close();
 	}
 	
+	protected boolean closeLikeInventory() {
+		return true;
+	}
+	
 	// ####################################################################################################
 	// Utility :
 	// ####################################################################################################
 	
 	/**
-	 * Adds a button to the gui, and increment the next Y position.
-	 * @param button - the button to add to the gui.
-	 * @return the added button.
+	 * Adds a component to the gui and increment the next Y position.
+	 * @param component - the component to add to the gui.
+	 * @return the added component.
 	 */
-	protected final Button addButton(Button button) {
-		return this.addButton(button, true);
+	protected <T extends Component> T addComponent(T component) {
+		return this.addComponent(component, true);
 	}
 	
 	/**
-	 * Adds a field to the gui, and increment the next Y position.
-	 * @param field - the field to add to the gui.
-	 * @return the added field.
-	 */
-	protected final TextField addField(TextField field) {
-		return this.addField(field, true);
-	}
-	
-	/**
-	 * Adds a button to the gui, and optionally increment the next Y position.
-	 * @param button - the button to add to the gui.
+	 * Adds a component to the gui and optionally increment the next Y position.
+	 * @param component - the component to add to the gui.
 	 * @param incrementYPos - indicates whether the next Y position have to be incremented.
-	 * @return the added button.
+	 * @return the added component.
 	 */
-	protected final Button addButton(Button button, boolean incrementYPos) {
-		this.buttonList.add(button);
-		
-		if(incrementYPos) {
-			this.nextYPos += BUTTON_HEIGHT + MARGIN;
+	protected <T extends Component> T addComponent(T component, boolean incrementYPos) {
+		if(component instanceof Button) {
+			this.buttonList.add(component);
+		}
+		else if(component instanceof TextField) {
+			this.fieldList.add((TextField) component);
 		}
 		
-		return button;
-	}
-	
-	/**
-	 * Adds a field to the gui, and optionally increment the next Y position.
-	 * @param field - the field to add to the gui.
-	 * @param incrementYPos - indicates whether the next Y position have to be incremented.
-	 * @return the added field.
-	 */
-	protected final TextField addField(TextField field, boolean incrementYPos) {
-		this.fieldList.add(field);
-		
 		if(incrementYPos) {
-			this.nextYPos += FIELD_HEIGHT + MARGIN;
+			this.nextYPos += component.getComponentHeight() + MARGIN;
 		}
 		
-		return field;
+		return component;
 	}
 	
 	/**
 	 * Returns and increments the next button id.
 	 * @return the next button id.
 	 */
-	protected final int getNextButtonId() {
+	protected int getNextButtonId() {
 		return this.nextButtonId++;
 	}
 	
@@ -314,6 +394,13 @@ public abstract class Screen extends GuiScreen implements Container {
 		for(GuiTextField field : this.fieldList) {
 			field.updateCursorCounter();
 		}
+	}
+	
+	/**
+	 * Called just affter the gui is initialized.
+	 */
+	protected void onGuiInitialized() {
+		this.onFieldChanged();
 	}
 	
 	/**

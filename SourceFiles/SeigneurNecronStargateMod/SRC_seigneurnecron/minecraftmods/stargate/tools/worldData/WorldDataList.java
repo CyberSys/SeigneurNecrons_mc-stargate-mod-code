@@ -5,9 +5,13 @@ import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import net.minecraft.world.World;
 import net.minecraft.world.WorldSavedData;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.Loadable;
 
+/**
+ * @author Seigneur Necron
+ */
 public abstract class WorldDataList<T extends Loadable> extends WorldSavedData {
 	
 	// NBTTags names :
@@ -17,13 +21,22 @@ public abstract class WorldDataList<T extends Loadable> extends WorldSavedData {
 	// Fields :
 	
 	/**
+	 * The world to which the properties belong.
+	 */
+	protected World world;
+	
+	/**
 	 * A list of registered data.
 	 */
 	protected List<T> dataList;
 	
-	// Builders :
+	// Constructors :
 	
-	public WorldDataList(String indentifier) {
+	/**
+	 * You must have a constructor of this form, else you will get a NoSuchMethodException.
+	 * @param indentifier - the property indentifier.
+	 */
+	protected WorldDataList(String indentifier) {
 		super(indentifier);
 		this.initList();
 	}
@@ -46,7 +59,7 @@ public abstract class WorldDataList<T extends Loadable> extends WorldSavedData {
 		this.markDirty();
 	}
 	
-	public void deleteElement(T element) {
+	public void removeElement(T element) {
 		this.dataList.remove(element);
 		this.markDirty();
 	}

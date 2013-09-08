@@ -1,9 +1,7 @@
 package seigneurnecron.minecraftmods.stargate.entity;
 
-import java.lang.reflect.Field;
 import java.util.List;
-
-import seigneurnecron.minecraftmods.stargate.StargateMod;
+import java.util.logging.Level;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
@@ -17,11 +15,13 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import seigneurnecron.minecraftmods.stargate.StargateMod;
+import seigneurnecron.minecraftmods.stargate.tools.reflection.Reflection;
+import seigneurnecron.minecraftmods.stargate.tools.reflection.ReflectionException;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
- * SeigneurNecron's Stargate Mod main class.
  * @author Seigneur Necron
  */
 public class EntityCustomFishHook extends EntityFishHook {
@@ -43,7 +43,7 @@ public class EntityCustomFishHook extends EntityFishHook {
 	private static String FISH_YAW = StargateMod.obfuscated ? "field_70208_as" : "fishYaw";
 	private static String FISH_PITCH = StargateMod.obfuscated ? "field_70207_at" : "fishPitch";
 	
-	// Builders - just call super class builders :
+	// Constructors - just call super class constructors :
 	
 	public EntityCustomFishHook(World world) {
 		super(world);
@@ -60,174 +60,118 @@ public class EntityCustomFishHook extends EntityFishHook {
 	
 	// Getters - use reflexion to get super class private fields :
 	
-	protected int getXTile() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(X_TILE);
-		field.setAccessible(true);
-		return field.getInt(this);
+	protected int getXTile() throws ReflectionException {
+		return Reflection.getInt(EntityFishHook.class, this, X_TILE);
 	}
 	
-	protected int getYTile() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(Y_TILE);
-		field.setAccessible(true);
-		return field.getInt(this);
+	protected int getYTile() throws ReflectionException {
+		return Reflection.getInt(EntityFishHook.class, this, Y_TILE);
 	}
 	
-	protected int getZTile() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(Z_TILE);
-		field.setAccessible(true);
-		return field.getInt(this);
+	protected int getZTile() throws ReflectionException {
+		return Reflection.getInt(EntityFishHook.class, this, Z_TILE);
 	}
 	
-	protected int getInTile() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(IN_TILE);
-		field.setAccessible(true);
-		return field.getInt(this);
+	protected int getInTile() throws ReflectionException {
+		return Reflection.getInt(EntityFishHook.class, this, IN_TILE);
 	}
 	
-	protected boolean getInGround() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(IN_GROUND);
-		field.setAccessible(true);
-		return field.getBoolean(this);
+	protected boolean getInGround() throws ReflectionException {
+		return Reflection.getBoolean(EntityFishHook.class, this, IN_GROUND);
 	}
 	
-	protected int getTicksInGround() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(TICKS_IN_GROUND);
-		field.setAccessible(true);
-		return field.getInt(this);
+	protected int getTicksInGround() throws ReflectionException {
+		return Reflection.getInt(EntityFishHook.class, this, TICKS_IN_GROUND);
 	}
 	
-	protected int getTicksInAir() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(TICKS_IN_AIR);
-		field.setAccessible(true);
-		return field.getInt(this);
+	protected int getTicksInAir() throws ReflectionException {
+		return Reflection.getInt(EntityFishHook.class, this, TICKS_IN_AIR);
 	}
 	
-	protected int getTicksCatchable() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(TICKS_CATCHABLE);
-		field.setAccessible(true);
-		return field.getInt(this);
+	protected int getTicksCatchable() throws ReflectionException {
+		return Reflection.getInt(EntityFishHook.class, this, TICKS_CATCHABLE);
 	}
 	
-	protected int getFishPosRotationIncrements() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(FISH_POS_ROTATION_INCREMENTS);
-		field.setAccessible(true);
-		return field.getInt(this);
+	protected int getFishPosRotationIncrements() throws ReflectionException {
+		return Reflection.getInt(EntityFishHook.class, this, FISH_POS_ROTATION_INCREMENTS);
 	}
 	
-	protected double getFishX() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(FISH_X);
-		field.setAccessible(true);
-		return field.getDouble(this);
+	protected double getFishX() throws ReflectionException {
+		return Reflection.getDouble(EntityFishHook.class, this, FISH_X);
 	}
 	
-	protected double getFishY() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(FISH_Y);
-		field.setAccessible(true);
-		return field.getDouble(this);
+	protected double getFishY() throws ReflectionException {
+		return Reflection.getDouble(EntityFishHook.class, this, FISH_Y);
 	}
 	
-	protected double getFishZ() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(FISH_Z);
-		field.setAccessible(true);
-		return field.getDouble(this);
+	protected double getFishZ() throws ReflectionException {
+		return Reflection.getDouble(EntityFishHook.class, this, FISH_Z);
 	}
 	
-	protected double getFishYaw() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(FISH_YAW);
-		field.setAccessible(true);
-		return field.getDouble(this);
+	protected double getFishYaw() throws ReflectionException {
+		return Reflection.getDouble(EntityFishHook.class, this, FISH_YAW);
 	}
 	
-	protected double getFishPitch() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(FISH_PITCH);
-		field.setAccessible(true);
-		return field.getDouble(this);
+	protected double getFishPitch() throws ReflectionException {
+		return Reflection.getDouble(EntityFishHook.class, this, FISH_PITCH);
 	}
 	
 	// Setters - use reflexion to set super class private fields :
 	
-	protected void setXTile(int xTile) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(X_TILE);
-		field.setAccessible(true);
-		field.setInt(this, xTile);
+	protected void setXTile(int xTile) throws ReflectionException {
+		Reflection.setInt(EntityFishHook.class, this, X_TILE, xTile);
 	}
 	
-	protected void setYTile(int yTile) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(Y_TILE);
-		field.setAccessible(true);
-		field.setInt(this, yTile);
+	protected void setYTile(int yTile) throws ReflectionException {
+		Reflection.setInt(EntityFishHook.class, this, Y_TILE, yTile);
 	}
 	
-	protected void setZTile(int zTile) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(Z_TILE);
-		field.setAccessible(true);
-		field.setInt(this, zTile);
+	protected void setZTile(int zTile) throws ReflectionException {
+		Reflection.setInt(EntityFishHook.class, this, Z_TILE, zTile);
 	}
 	
-	protected void setInTile(int inTile) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(IN_TILE);
-		field.setAccessible(true);
-		field.setInt(this, inTile);
+	protected void setInTile(int inTile) throws ReflectionException {
+		Reflection.setInt(EntityFishHook.class, this, IN_TILE, inTile);
 	}
 	
-	protected void setInGround(boolean inGround) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(IN_GROUND);
-		field.setAccessible(true);
-		field.setBoolean(this, inGround);
+	protected void setInGround(boolean inGround) throws ReflectionException {
+		Reflection.setBoolean(EntityFishHook.class, this, IN_GROUND, inGround);
 	}
 	
-	protected void setTicksInGround(int ticksInGround) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(TICKS_IN_GROUND);
-		field.setAccessible(true);
-		field.setInt(this, ticksInGround);
+	protected void setTicksInGround(int ticksInGround) throws ReflectionException {
+		Reflection.setInt(EntityFishHook.class, this, TICKS_IN_GROUND, ticksInGround);
 	}
 	
-	protected void setTicksInAir(int ticksInAir) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(TICKS_IN_AIR);
-		field.setAccessible(true);
-		field.setInt(this, ticksInAir);
+	protected void setTicksInAir(int ticksInAir) throws ReflectionException {
+		Reflection.setInt(EntityFishHook.class, this, TICKS_IN_AIR, ticksInAir);
 	}
 	
-	protected void setTicksCatchable(int ticksCatchable) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(TICKS_CATCHABLE);
-		field.setAccessible(true);
-		field.setInt(this, ticksCatchable);
+	protected void setTicksCatchable(int ticksCatchable) throws ReflectionException {
+		Reflection.setInt(EntityFishHook.class, this, TICKS_CATCHABLE, ticksCatchable);
 	}
 	
-	protected void setFishPosRotationIncrements(int fishPosRotationIncrements) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(FISH_POS_ROTATION_INCREMENTS);
-		field.setAccessible(true);
-		field.setInt(this, fishPosRotationIncrements);
+	protected void setFishPosRotationIncrements(int fishPosRotationIncrements) throws ReflectionException {
+		Reflection.setInt(EntityFishHook.class, this, FISH_POS_ROTATION_INCREMENTS, fishPosRotationIncrements);
 	}
 	
-	protected void setFishX(double fishX) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(FISH_X);
-		field.setAccessible(true);
-		field.setDouble(this, fishX);
+	protected void setFishX(double fishX) throws ReflectionException {
+		Reflection.setDouble(EntityFishHook.class, this, FISH_X, fishX);
 	}
 	
-	protected void setFishY(double fishY) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(FISH_Y);
-		field.setAccessible(true);
-		field.setDouble(this, fishY);
+	protected void setFishY(double fishY) throws ReflectionException {
+		Reflection.setDouble(EntityFishHook.class, this, FISH_Y, fishY);
 	}
 	
-	protected void setFishZ(double fishZ) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(FISH_Z);
-		field.setAccessible(true);
-		field.setDouble(this, fishZ);
+	protected void setFishZ(double fishZ) throws ReflectionException {
+		Reflection.setDouble(EntityFishHook.class, this, FISH_Z, fishZ);
 	}
 	
-	protected void setFishYaw(double fishYaw) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(FISH_YAW);
-		field.setAccessible(true);
-		field.setDouble(this, fishYaw);
+	protected void setFishYaw(double fishYaw) throws ReflectionException {
+		Reflection.setDouble(EntityFishHook.class, this, FISH_YAW, fishYaw);
 	}
 	
-	protected void setFishPitch(double fishPitch) throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = EntityFishHook.class.getDeclaredField(FISH_PITCH);
-		field.setAccessible(true);
-		field.setDouble(this, fishPitch);
+	protected void setFishPitch(double fishPitch) throws ReflectionException {
+		Reflection.setDouble(EntityFishHook.class, this, FISH_PITCH, fishPitch);
 	}
 	
 	// Changed method - just for one stupid failed test -__- :
@@ -446,21 +390,10 @@ public class EntityCustomFishHook extends EntityFishHook {
 				}
 			}
 		}
-		catch(NoSuchFieldException argh) {
-			argh.printStackTrace();
-			super.onUpdate();
-		}
-		catch(SecurityException argh) {
-			argh.printStackTrace();
-			super.onUpdate();
-		}
-		catch(IllegalArgumentException argh) {
-			argh.printStackTrace();
-			super.onUpdate();
-		}
-		catch(IllegalAccessException argh) {
-			argh.printStackTrace();
+		catch(ReflectionException argh) {
+			StargateMod.debug(argh.getMessage(), Level.SEVERE, true);
 			super.onUpdate();
 		}
 	}
+	
 }

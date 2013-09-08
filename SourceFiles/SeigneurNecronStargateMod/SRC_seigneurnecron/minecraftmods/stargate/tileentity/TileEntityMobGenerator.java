@@ -164,17 +164,17 @@ public class TileEntityMobGenerator extends TileEntityGuiContainer {
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
-		super.readFromNBT(par1NBTTagCompound);
-		this.powered = par1NBTTagCompound.getBoolean("powered");
-		this.delay = par1NBTTagCompound.getInteger("delay");
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		this.powered = compound.getBoolean("powered");
+		this.delay = compound.getInteger("delay");
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
-		super.writeToNBT(par1NBTTagCompound);
-		par1NBTTagCompound.setBoolean("powered", this.powered);
-		par1NBTTagCompound.setInteger("delay", this.delay);
+	public void writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		compound.setBoolean("powered", this.powered);
+		compound.setInteger("delay", this.delay);
 	}
 	
 	@Override

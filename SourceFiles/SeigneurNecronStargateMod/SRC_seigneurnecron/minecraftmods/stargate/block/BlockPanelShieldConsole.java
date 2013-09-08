@@ -3,6 +3,9 @@ package seigneurnecron.minecraftmods.stargate.block;
 import net.minecraft.block.Block;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 
+/**
+ * @author Seigneur Necron
+ */
 public class BlockPanelShieldConsole extends BlockPanelStargateConsole {
 	
 	public BlockPanelShieldConsole(String name) {

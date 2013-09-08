@@ -114,10 +114,10 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
 		
-		this.panel_listSelect.drawBorder(GRAY);
-		this.panel_listButtons.drawBorder(GRAY);
-		this.panel_information.drawBorder(GRAY);
-		this.panel_main.drawBorder(GRAY);
+		this.panel_listSelect.drawBox(GRAY);
+		this.panel_listButtons.drawBox(GRAY);
+		this.panel_information.drawBox(GRAY);
+		this.panel_main.drawBox(GRAY);
 		
 		this.nextYPos = MARGIN;
 		this.panel_information.drawCenteredText(this.fontRenderer, this.string_invName, this.nextYPos, WHITE);
@@ -155,11 +155,11 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 		this.panel_list = new Panel(this, PANEL_MARGIN, PANEL_MARGIN, panelWidth, panelHeight);
 		this.panel_controls = new Panel(this, this.panel_list.getRight() + PANEL_MARGIN, PANEL_MARGIN, panelWidth, panelHeight);
 		
-		this.panel_listButtons = new Panel(this.panel_list, 0, this.panel_list.getHeight() - panelHeight_listButtons, this.panel_list.getWidth(), panelHeight_listButtons);
-		this.panel_listSelect = new Panel(this.panel_list, 0, 0, this.panel_list.getWidth(), this.panel_list.getHeight() - panelHeight_listButtons - PANEL_MARGIN);
+		this.panel_listButtons = new Panel(this.panel_list, 0, this.panel_list.getComponentHeight() - panelHeight_listButtons, this.panel_list.getComponentWidth(), panelHeight_listButtons);
+		this.panel_listSelect = new Panel(this.panel_list, 0, 0, this.panel_list.getComponentWidth(), this.panel_list.getComponentHeight() - panelHeight_listButtons - PANEL_MARGIN);
 		
-		this.panel_information = new Panel(this.panel_controls, 0, 0, this.panel_controls.getWidth(), panelHeight_information);
-		this.panel_main = new Panel(this.panel_controls, 0, this.panel_information.getBottom() + PANEL_MARGIN, this.panel_controls.getWidth(), this.panel_controls.getHeight() - this.panel_information.getBottom() - PANEL_MARGIN);
+		this.panel_information = new Panel(this.panel_controls, 0, 0, this.panel_controls.getComponentWidth(), panelHeight_information);
+		this.panel_main = new Panel(this.panel_controls, 0, this.panel_information.getBottom() + PANEL_MARGIN, this.panel_controls.getComponentWidth(), this.panel_controls.getComponentHeight() - this.panel_information.getBottom() - PANEL_MARGIN);
 		
 		// Strings :
 		
@@ -192,7 +192,7 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 		
 		// Component sizes :
 		
-		this.offset = this.panel_main.getHeight() - ((2 * BUTTON_HEIGHT) + (6 * FIELD_HEIGHT) + (9 * MARGIN));
+		this.offset = this.panel_main.getComponentHeight() - ((2 * BUTTON_HEIGHT) + (6 * FIELD_HEIGHT) + (9 * MARGIN));
 		
 		if(this.offset < 0) {
 			this.offset = 0;
@@ -204,42 +204,41 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 		int fieldOffset_main = stringSize_main + MARGIN;
 		int fieldOffset_information = stringSize_information + MARGIN;
 		
-		int fieldSize_main = this.panel_main.getWidth() - (fieldOffset_main + MARGIN);
-		int fieldSize_information = this.panel_information.getWidth() - (fieldOffset_information + MARGIN);
+		int fieldSize_main = this.panel_main.getComponentWidth() - (fieldOffset_main + MARGIN);
+		int fieldSize_information = this.panel_information.getComponentWidth() - (fieldOffset_information + MARGIN);
 		
-		int buttonSize_main = this.panel_main.getWidth() - (2 * MARGIN);
-		int buttonSize_information = this.panel_information.getWidth() - (2 * MARGIN);
-		int buttonSize_listButtons_1 = (this.panel_listButtons.getWidth() - (3 * MARGIN)) / 2;
-		int buttonSize_listButtons_2 = (this.panel_listButtons.getWidth() - (4 * MARGIN)) / 3;
+		int buttonSize_main = this.panel_main.getComponentWidth() - (2 * MARGIN);
+		int buttonSize_information = this.panel_information.getComponentWidth() - (2 * MARGIN);
+		int buttonSize_listButtons_1 = (this.panel_listButtons.getComponentWidth() - (3 * MARGIN)) / 2;
+		int buttonSize_listButtons_2 = (this.panel_listButtons.getComponentWidth() - (4 * MARGIN)) / 3;
 		
 		int listMargin = 2;
 		
 		// Fields and buttons :
 		
-		this.nextYPos = FIELD_HEIGHT + (2 * MARGIN) + FIELD_OFFSET;
-		this.field_x = this.addField(new IntegerField(this.panel_main, this.fontRenderer, fieldOffset_main, this.nextYPos, fieldSize_main, FIELD_HEIGHT));
-		this.field_y = this.addField(new IntegerField(this.panel_main, this.fontRenderer, fieldOffset_main, this.nextYPos, fieldSize_main, FIELD_HEIGHT));
-		this.field_z = this.addField(new IntegerField(this.panel_main, this.fontRenderer, fieldOffset_main, this.nextYPos, fieldSize_main, FIELD_HEIGHT));
-		this.field_name2 = this.addField(new TextField(this.panel_main, this.fontRenderer, fieldOffset_main, this.nextYPos, fieldSize_main, FIELD_HEIGHT));
-		this.nextYPos += FIELD_HEIGHT + MARGIN - FIELD_OFFSET + this.offset;
-		this.button_teleport = this.addButton(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a(TELEPORT)));
-		this.button_cancel = this.addButton(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a("gui.cancel")));
+		this.nextYPos = FIELD_HEIGHT + (2 * MARGIN);
+		this.field_x = this.addComponent(new IntegerField(this.panel_main, this.fontRenderer, fieldOffset_main, this.nextYPos, fieldSize_main));
+		this.field_y = this.addComponent(new IntegerField(this.panel_main, this.fontRenderer, fieldOffset_main, this.nextYPos, fieldSize_main));
+		this.field_z = this.addComponent(new IntegerField(this.panel_main, this.fontRenderer, fieldOffset_main, this.nextYPos, fieldSize_main));
+		this.field_name2 = this.addComponent(new TextField(this.panel_main, this.fontRenderer, fieldOffset_main, this.nextYPos, fieldSize_main));
+		this.nextYPos += FIELD_HEIGHT + MARGIN + this.offset;
+		this.button_teleport = this.addComponent(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a(TELEPORT)));
+		this.button_cancel = this.addComponent(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a("gui.cancel")));
 		
-		this.nextYPos = (2 * FIELD_HEIGHT) + (3 * MARGIN) + FIELD_OFFSET;
-		this.field_name1 = this.addField(new TextField(this.panel_information, this.fontRenderer, fieldOffset_information, this.nextYPos, fieldSize_information, FIELD_HEIGHT, teleporterName));
-		this.nextYPos -= FIELD_OFFSET;
-		this.button_addThis = this.addButton(new Button(this.panel_information, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize_information, I18n.func_135053_a(ADD_THIS)));
+		this.nextYPos = (2 * FIELD_HEIGHT) + (3 * MARGIN);
+		this.field_name1 = this.addComponent(new TextField(this.panel_information, this.fontRenderer, fieldOffset_information, this.nextYPos, fieldSize_information, teleporterName));
+		this.button_addThis = this.addComponent(new Button(this.panel_information, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize_information, I18n.func_135053_a(ADD_THIS)));
 		
 		this.nextYPos = FIELD_HEIGHT + (2 * MARGIN);
-		this.button_inRange = this.addButton(new Button(this.panel_listButtons, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize_listButtons_1, this.string_inRange), false);
-		this.button_all = this.addButton(new Button(this.panel_listButtons, this.getNextButtonId(), buttonSize_listButtons_1 + (2 * MARGIN), this.nextYPos, buttonSize_listButtons_1, this.string_all));
-		this.button_delete = this.addButton(new Button(this.panel_listButtons, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize_listButtons_2, I18n.func_135053_a(DELETE)), false);
-		this.button_overwrite = this.addButton(new Button(this.panel_listButtons, this.getNextButtonId(), buttonSize_listButtons_2 + (2 * MARGIN), this.nextYPos, buttonSize_listButtons_2, I18n.func_135053_a(OVERWRITE)), false);
-		this.button_add = this.addButton(new Button(this.panel_listButtons, this.getNextButtonId(), (2 * buttonSize_listButtons_2) + (3 * MARGIN), this.nextYPos, buttonSize_listButtons_2, I18n.func_135053_a(ADD)));
+		this.button_inRange = this.addComponent(new Button(this.panel_listButtons, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize_listButtons_1, this.string_inRange), false);
+		this.button_all = this.addComponent(new Button(this.panel_listButtons, this.getNextButtonId(), buttonSize_listButtons_1 + (2 * MARGIN), this.nextYPos, buttonSize_listButtons_1, this.string_all));
+		this.button_delete = this.addComponent(new Button(this.panel_listButtons, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize_listButtons_2, I18n.func_135053_a(DELETE)), false);
+		this.button_overwrite = this.addComponent(new Button(this.panel_listButtons, this.getNextButtonId(), buttonSize_listButtons_2 + (2 * MARGIN), this.nextYPos, buttonSize_listButtons_2, I18n.func_135053_a(OVERWRITE)), false);
+		this.button_add = this.addComponent(new Button(this.panel_listButtons, this.getNextButtonId(), (2 * buttonSize_listButtons_2) + (3 * MARGIN), this.nextYPos, buttonSize_listButtons_2, I18n.func_135053_a(ADD)));
 		
 		// List :
 		
-		this.selectionList = new TeleporterSelectionList(this, this.panel_listSelect.getXPosInScreen(0) + listMargin, this.panel_listSelect.getYPosInScreen(0) + listMargin, this.panel_listSelect.getWidth() - (2 * listMargin), this.panel_listSelect.getHeight() - (2 * listMargin));
+		this.selectionList = new TeleporterSelectionList(this, this.panel_listSelect.getXPosInScreen(0) + listMargin, this.panel_listSelect.getYPosInScreen(0) + listMargin, this.panel_listSelect.getComponentWidth() - (2 * listMargin), this.panel_listSelect.getComponentHeight() - (2 * listMargin));
 		this.selectionList.registerScrollButtons(this.buttonList, this.getNextButtonId(), this.getNextButtonId());
 	}
 	
@@ -318,7 +317,7 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 	
 	protected void remove() {
 		if(this.selectedTeleporter != null) {
-			this.playerData.deleteElementAndSync(this.selectedTeleporter);
+			this.playerData.removeElementAndSync(this.selectedTeleporter);
 			this.setSelectedTeleporter(null);
 			this.updateList();
 		}
@@ -339,7 +338,7 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 	// ####################################################################################################
 	
 	protected Teleporter getThisTeleporter() {
-		int dim = this.tileEntity.worldObj.provider.dimensionId;
+		int dim = this.tileEntity.getDimension();
 		int x = this.tileEntity.xCoord;
 		int y = this.tileEntity.yCoord;
 		int z = this.tileEntity.zCoord;
@@ -348,7 +347,7 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 	
 	protected Teleporter getTeleporterFromFields() {
 		try {
-			int dim = this.tileEntity.worldObj.provider.dimensionId;
+			int dim = this.tileEntity.getDimension();
 			int x = Integer.parseInt(this.field_x.getText());
 			int y = Integer.parseInt(this.field_y.getText());
 			int z = Integer.parseInt(this.field_z.getText());
@@ -364,7 +363,7 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 		List<Teleporter> teleportersInRange = new LinkedList<Teleporter>();
 		
 		for(Teleporter teleporter : this.playerData.getDataList()) {
-			if(teleporter.dim == this.tileEntity.worldObj.provider.dimensionId && (this.displayAll || this.tileEntity.isValid(teleporter.x, teleporter.y, teleporter.z) && this.tileEntity.isInRange(teleporter.x, teleporter.y, teleporter.z))) {
+			if(teleporter.dim == this.tileEntity.getDimension() && (this.displayAll || this.tileEntity.isValid(teleporter.x, teleporter.y, teleporter.z) && this.tileEntity.isInRange(teleporter.x, teleporter.y, teleporter.z))) {
 				teleportersInRange.add(teleporter);
 			}
 		}
@@ -404,13 +403,17 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 		this.button_add.enabled = canSave;
 		this.button_overwrite.enabled = canSave && teleporterSelected;
 		this.button_delete.enabled = teleporterSelected;
-		
-		this.updateTabs();
 	}
 	
 	protected void updateTabs() {
 		this.button_inRange.enabled = this.displayAll;
 		this.button_all.enabled = !this.displayAll;
+	}
+	
+	@Override
+	protected void onGuiInitialized() {
+		super.onGuiInitialized();
+		this.updateTabs();
 	}
 	
 	// ####################################################################################################
@@ -462,7 +465,12 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 	}
 	
 	@Override
-	public FontRenderer getFontRenderer() {
+	public FontRenderer getFirstFontRenderer() {
+		return this.fontRenderer;
+	}
+	
+	@Override
+	public FontRenderer getSecondFontRenderer() {
 		return this.fontRenderer;
 	}
 	

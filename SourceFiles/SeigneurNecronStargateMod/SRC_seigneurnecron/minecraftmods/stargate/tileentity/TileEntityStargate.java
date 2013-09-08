@@ -9,10 +9,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.logging.Level;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
+import seigneurnecron.minecraftmods.stargate.client.sound.Sound;
 
 /**
  * @author Seigneur Necron
@@ -55,7 +57,7 @@ public abstract class TileEntityStargate extends TileEntity {
 	 */
 	protected final void getEntityBasicData(DataOutputStream output, int id) throws IOException {
 		output.writeInt(id);
-		output.writeInt(this.worldObj.provider.dimensionId);
+		output.writeInt(this.getDimension());
 		output.writeInt(this.xCoord);
 		output.writeInt(this.yCoord);
 		output.writeInt(this.zCoord);
@@ -181,7 +183,7 @@ public abstract class TileEntityStargate extends TileEntity {
 	 * Transmits changes to clients.
 	 */
 	private void updateClients() {
-		StargateMod.sendPacketToAllPlayersInDimension(this.getDescriptionPacket(), this.worldObj.provider.dimensionId);
+		StargateMod.sendPacketToAllPlayersInDimension(this.getDescriptionPacket(), this.getDimension());
 	}
 	
 	/**
@@ -189,6 +191,89 @@ public abstract class TileEntityStargate extends TileEntity {
 	 */
 	private void updateBlockTexture() {
 		this.worldObj.markBlockForUpdate(this.xCoord, this.yCoord, this.zCoord);
+	}
+	
+	// Utility :
+	
+	/**
+	 * Returns the dimension of the world containing this tileEntity.
+	 * @return the dimension of the world containing this tileEntity.
+	 */
+	public int getDimension() {
+		return this.worldObj.provider.dimensionId;
+	}
+	
+	/**
+	 * Returns the squared distance between this and the block at the given coordinates.
+	 * @param x - the X coordinate of the block that we want to know the distance.
+	 * @param y - the Y coordinate of the block that we want to know the distance.
+	 * @param z - the Z coordinate of the block that we want to know the distance.
+	 * @return the squared distance between the DHD and the block.
+	 */
+	public double squaredDistance(int x, int y, int z) {
+		return Math.pow(this.xCoord - x, 2) + Math.pow(this.yCoord - y, 2) + Math.pow(this.zCoord - z, 2);
+	}
+	
+	/**
+	 * Plays a sound at the given coordinates, volume and pitch.
+	 * @param sound - the sound.
+	 * @param x - the X coordinate.
+	 * @param y - the Y coordinate.
+	 * @param z - the Z coordinate.
+	 * @param volume - the volume.
+	 * @param pitch - the pitch/frequency.
+	 */
+	public void playSoundEffect(Sound sound, double x, double y, double z, float volume, float pitch) {
+		this.worldObj.playSoundEffect(x, y, z, sound.toString(), volume, pitch);
+	}
+	
+	/**
+	 * Plays a sound at the given coordinates, at the default volume and pitch.
+	 * @param sound - the sound.
+	 * @param x - the X coordinate.
+	 * @param y - the Y coordinate.
+	 * @param z - the Z coordinate.
+	 */
+	public void playSoundEffect(Sound sound, double x, double y, double z) {
+		this.playSoundEffect(sound, x, y, z, 1.0F, 1.0F);
+	}
+	
+	/**
+	 * Plays a sound at the coordinates of the block, at the given volume and pitch.
+	 * @param sound - the sound.
+	 * @param volume - the volume.
+	 * @param pitch - the pitch/frequency.
+	 */
+	public void playSoundEffect(Sound sound, float volume, float pitch) {
+		this.playSoundEffect(sound, this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, volume, pitch);
+	}
+	
+	/**
+	 * Plays a sound at coordinates of the block.
+	 * @param sound - the sound.
+	 */
+	public void playSoundEffect(Sound sound) {
+		this.playSoundEffect(sound, this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D, 1.0F, 1.0F);
+	}
+	
+	/**
+	 * Plays a sound at the coordinates of the given entity, volume and pitch.
+	 * @param sound - the sound.
+	 * @param entity - the entity where the sound must be played.
+	 * @param volume - the volume.
+	 * @param pitch - the pitch/frequency.
+	 */
+	public void playSoundEffect(Sound sound, Entity entity, float volume, float pitch) {
+		this.worldObj.playSoundAtEntity(entity, sound.toString(), volume, pitch);
+	}
+	
+	/**
+	 * Plays a sound at the coordinates of the given entity, at default volume and pitch.
+	 * @param sound - the sound.
+	 * @param entity - the entity where the sound must be played.
+	 */
+	public void playSoundEffect(Sound sound, Entity entity) {
+		this.playSoundEffect(sound, entity, 1.0F, 1.0F);
 	}
 	
 }

@@ -51,10 +51,9 @@ public class TileEntityBaseDhd extends TileEntityBaseStargateConsole {
 	
 	/**
 	 * Returns a stargate open command packet. This is used to activate the stargate connected to this DHD.
-	 * @param address - the address of the gate to contact.
 	 * @return a stargate open command packet.
 	 */
-	public Packet getStargateClosePacket(String address) {
+	public Packet getStargateClosePacket() {
 		return this.getCommandPacket(STARGATE_CLOSE);
 	}
 	

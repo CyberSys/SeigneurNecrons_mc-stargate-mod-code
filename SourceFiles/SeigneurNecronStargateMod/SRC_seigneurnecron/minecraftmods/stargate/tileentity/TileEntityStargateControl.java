@@ -1,5 +1,7 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
+import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.STARGATE_CREATE;
+
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -8,6 +10,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map.Entry;
+import java.util.logging.Level;
 
 import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
@@ -15,6 +18,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet28EntityVelocity;
 import net.minecraft.network.packet.Packet34EntityTeleport;
 import net.minecraft.tileentity.TileEntity;
@@ -33,6 +37,8 @@ import seigneurnecron.minecraftmods.stargate.block.BlockStargatePart;
 import seigneurnecron.minecraftmods.stargate.client.sound.Sound;
 import seigneurnecron.minecraftmods.stargate.client.sound.StargateSounds;
 import seigneurnecron.minecraftmods.stargate.entity.damageSource.CustomDamageSource;
+import seigneurnecron.minecraftmods.stargate.tools.address.GateAddress;
+import seigneurnecron.minecraftmods.stargate.tools.address.MalformedGateAddressException;
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateActivationSequence;
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateActivationState;
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateActivationType;
@@ -45,9 +51,7 @@ import seigneurnecron.minecraftmods.stargate.tools.worldData.WorldStargateData;
 /**
  * @author Seigneur Necron
  */
-public class TileEntityStargateControl extends TileEntityStargate {
-	
-	// FIXME - extends TileEntityGuiScreen.
+public class TileEntityStargateControl extends TileEntityGuiScreen {
 	
 	// Constants :
 	
@@ -148,7 +152,7 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	/**
 	 * The gate address.
 	 */
-	private String address = null;
+	private String address = "";
 	
 	/**
 	 * The gate state : Broken/Off/Activating/Output/Input/Kawoosh.
@@ -201,6 +205,16 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	private int count = 0;
 	
 	/**
+	 * The address of the destination (another gate).
+	 */
+	private String addressDest = "";
+	
+	/**
+	 * The dimension of the destination (another gate).
+	 */
+	private int dimDest = 0;
+	
+	/**
 	 * The X coordinate of the destination (another gate).
 	 */
 	private int xDest = 0;
@@ -214,6 +228,11 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	 * The Z coordinate of the destination (another gate).
 	 */
 	private int zDest = 0;
+	
+	/**
+	 * Indicates if the other gate shield is activated.
+	 */
+	private boolean otherGateShieldActivated = false;
 	
 	/**
 	 * A map containing the list of recently teleported entities and counters indicating how long ago they were teleported.
@@ -311,6 +330,22 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	}
 	
 	/**
+	 * Returns the address of the destination (another gate).
+	 * @return the address of the destination (another gate).
+	 */
+	public String getAddressDest() {
+		return this.addressDest;
+	}
+	
+	/**
+	 * Returns the dimension of the destination (another gate).
+	 * @return the dimension of the destination (another gate).
+	 */
+	public int dimDest() {
+		return this.dimDest;
+	}
+	
+	/**
 	 * Returns the X coordinate of the destination (another gate).
 	 * @return the X coordinate of the destination (another gate).
 	 */
@@ -334,12 +369,19 @@ public class TileEntityStargateControl extends TileEntityStargate {
 		return this.zDest;
 	}
 	
+	/**
+	 * Returns the other gate shield state.
+	 * @return true if the other gate shield is activated, else false.
+	 */
+	public boolean getOtherGateShieldActivated() {
+		return this.otherGateShieldActivated;
+	}
+	
 	// Setters :
 	
 	private void setAddress(String address) {
 		this.address = address;
 		this.setChanged();
-		
 	}
 	
 	/**
@@ -356,8 +398,9 @@ public class TileEntityStargateControl extends TileEntityStargate {
 		}
 		else if(state == GateState.BROKEN) {
 			this.onShieldConsoleDestroyed();
-			StargateCoordinates stargate = new StargateCoordinates(this.address, this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord);
-			WorldStargateData.get(this.worldObj).deleteElement(stargate);
+			StargateCoordinates stargate = new StargateCoordinates(this.address, this.getDimension(), this.xCoord, this.yCoord, this.zCoord);
+			WorldStargateData.get(this.worldObj).removeElement(stargate);
+			this.setAddress("");
 		}
 		
 		this.update();
@@ -424,16 +467,29 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	 * @param shieldActivated - the new shield state.
 	 */
 	private void setShieldActivated(boolean shieldActivated) {
-		boolean needVortexUpdate = this.shieldActivated != shieldActivated;
+		boolean changed = this.shieldActivated != shieldActivated;
 		this.shieldActivated = shieldActivated;
-		this.setChanged();
 		
-		if(needVortexUpdate) {
+		if(changed) {
+			this.setChanged();
+			
 			// Plays the sound corresponding to a shield activation/deactivation.
 			this.playSoundEffect(this.shieldActivated ? StargateSounds.stargateShieldActivation : StargateSounds.stargateShieldDeactivation);
 			
 			// Updates the shield.
 			this.updateVortex();
+			
+			// Informs the otherGate of the change.
+			if(this.isActivated()) {
+				TileEntityStargateControl otherGate = this.getOtherGate();
+				
+				if(otherGate != null) {
+					otherGate.setOtherGateShieldActivated(shieldActivated);
+				}
+				else {
+					StargateMod.debug("Error : can't transmit the shield state to the other gate. This is a bug !", Level.SEVERE, true);
+				}
+			}
 		}
 		
 		this.update();
@@ -478,18 +534,121 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	}
 	
 	/**
+	 * Updates the other gate shield state.
+	 * @param otherGateShieldActivated - true if the other gate shield is activated, else false.
+	 */
+	private void setOtherGateShieldActivated(boolean otherGateShieldActivated) {
+		this.otherGateShieldActivated = otherGateShieldActivated;
+		this.setChanged();
+		this.update();
+	}
+	
+	/**
 	 * Registers the destination coordinates.
+	 * @param address - the address of the destination.
+	 * @param dim - the dimension of the destination.
 	 * @param x - the X coordinate of the destination.
 	 * @param y - the Y coordinate of the destination.
 	 * @param z - the Z coordinate of the destination.
 	 */
-	private void setDestination(int x, int y, int z) {
+	private void setDestination(String address, int dim, int x, int y, int z) {
+		this.addressDest = address;
+		this.dimDest = dim;
 		this.xDest = x;
 		this.yDest = y;
 		this.zDest = z;
+		this.setChanged();
 	}
 	
 	// Methods :
+	
+	/**
+	 * Returns the world containing the other gate.
+	 * @return the world containing the other gate.
+	 */
+	protected World getOtherWorld() {
+		return StargateMod.getServerWorldForDimension(this.dimDest);
+	}
+	
+	/**
+	 * Returns the tileEntity of the other gate.
+	 * @return the tileEntity of the other gate.
+	 */
+	protected TileEntityStargateControl getOtherGate() {
+		World world = this.getOtherWorld();
+		
+		if(world != null) {
+			TileEntity tileEntity = world.getBlockTileEntity(this.xDest, this.yDest, this.zDest);
+			
+			if(tileEntity != null && tileEntity instanceof TileEntityStargateControl) {
+				return (TileEntityStargateControl) tileEntity;
+			}
+		}
+		
+		return null;
+	}
+	
+	/**
+	 * Returns a StargateCoordinates object with the address and coordinates of this stargate.
+	 * @return a StargateCoordinates object with the address and coordinates of this stargate.
+	 */
+	private StargateCoordinates getStargateCoordinates() {
+		return this.getStargateCoordinates(this.address);
+	}
+	
+	/**
+	 * Returns a StargateCoordinates object with the specified address and the coordinates of this stargate.
+	 * @param address - a stargate address.
+	 * @return a StargateCoordinates object with the specified address and the coordinates of this stargate.
+	 */
+	private StargateCoordinates getStargateCoordinates(String address) {
+		return new StargateCoordinates(address, this.getDimension(), this.xCoord, this.yCoord, this.zCoord);
+	}
+	
+	/**
+	 * Checks if a stargate address is valid and available.
+	 * @param address - the address.
+	 * @return true if the stargate address is valid and available, else false.
+	 */
+	private boolean isAddressValidAndAvailable(String address) {
+		if(!GateAddress.isValidAddressForDimension(address, this.getDimension())) {
+			return false;
+		}
+		
+		if(!WorldStargateData.get(this.worldObj).isAvailable(this.getStargateCoordinates(address))) {
+			StargateMod.debug("The address \"" + address + "\" isn't available.", true);
+			return false;
+		}
+		
+		return true;
+	}
+	
+	/**
+	 * Registers this gate in the world.
+	 * @param address - the address of the gate.
+	 */
+	private void registerGate(String address) {
+		this.setAddress(address);
+		this.setState(GateState.OFF);
+		WorldStargateData.get(this.worldObj).addElement(this.getStargateCoordinates());
+	}
+	
+	/**
+	 * Checks if this gate is well registered in the world.
+	 * @return true if the gate is registered, else false.
+	 */
+	private boolean checkRegistered() {
+		return WorldStargateData.get(this.worldObj).checkRegistered(this.getStargateCoordinates());
+	}
+	
+	/**
+	 * Returns a stargate create command packet. This is used to create a new stargate with the given address.
+	 * @param address - the address of the gate.
+	 * @return a stargate create command packet.
+	 */
+	public Packet getStargateCreatePacket(String address) {
+		return this.getCommandPacket(STARGATE_CREATE, address);
+	}
 	
 	/**
 	 * Checks that the gate can be activated. <br />
@@ -500,17 +659,12 @@ public class TileEntityStargateControl extends TileEntityStargate {
 		return this.state == GateState.OFF;
 	}
 	
-	private static boolean isAddressValidAndAvailable(String address) {
-		// FIXME - verifier l'adresse.
-		StargateMod.debug("The address \"" + address + "\" isn't valid.", true);
-		return false;
-	}
-	
-	private void registerGate(String address) {
-		this.setState(GateState.OFF);
-		this.setAddress(address);
-		StargateCoordinates stargate = new StargateCoordinates(this.address, this.worldObj.provider.dimensionId, this.xCoord, this.yCoord, this.zCoord);
-		WorldStargateData.get(this.worldObj).addElement(stargate);
+	/**
+	 * Checks of the gate is activated.
+	 * @return true if the gate is activated, else false.
+	 */
+	public boolean isActivated() {
+		return this.state == GateState.INPUT || this.state == GateState.OUTPUT || this.state == GateState.ACTIVATING || this.state == GateState.KAWOOSH;
 	}
 	
 	/**
@@ -604,7 +758,7 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	 */
 	public boolean createGate(String address) {
 		// If the gate is not created yet, and the pattern is checked.
-		if(this.state == GateState.BROKEN && isAddressValidAndAvailable(address) && this.checkPattern()) {
+		if(this.state == GateState.BROKEN && this.checkPattern() && isAddressValidAndAvailable(address)) {
 			// Initialization.
 			StargateMod.debug("Creation of the gate...", true);
 			int x = this.xCoord;
@@ -903,43 +1057,87 @@ public class TileEntityStargateControl extends TileEntityStargate {
 			return;
 		}
 		
-		// Translate the address.
-		// FIXME - vrai instructions.
-		//int dim = 0;
-		int x = 42;
-		int y = 42;
-		int z = 42;
+		// Checks the gate is registered in the world.
+		if(!this.checkRegistered()) {
+			StargateMod.debug("The gate isn't register ! This is not normal. Can't activate.", Level.WARNING, true);
+			this.setBroken();
+			return;
+		}
+		
+		// Get the dimension of the world containing the other gate.
+		int otherDimension;
+		
+		try {
+			otherDimension = GateAddress.toCoordinates(address).dim;
+		}
+		catch(MalformedGateAddressException argh) {
+			StargateMod.debug("This address of the other gate is malformed ! This is not normal.", Level.WARNING, true);
+			StargateMod.debug(argh.getMessage(), Level.WARNING, true);
+			return;
+		}
+		
+		// Gets the world containing the other gate.
+		World otherWorld = StargateMod.getServerWorldForDimension(otherDimension);
+		
+		if(otherWorld == null) {
+			StargateMod.debug("Error : can't get other gate world.", Level.SEVERE, true);
+			return;
+		}
+		
+		// Translates the address.
+		StargateCoordinates coords = WorldStargateData.get(otherWorld).getCoordinates(address);
+		
+		if(coords == null) {
+			StargateMod.debug("No gate registered with the address \"" + address + "\".", true);
+			return;
+		}
 		
 		// If the given coordinates are those of that gate, exits.
-		if(x == this.xCoord && y == this.yCoord && z == this.zCoord) {
+		if(coords.dim == this.getDimension() && coords.x == this.xCoord && coords.y == this.yCoord && coords.z == this.zCoord) {
 			StargateMod.debug("The input gate can't be the output gate ! >.<", true);
 			return;
 		}
 		
-		// Choose an activation sequence.
-		// FIXME - vrai instructions.
-		GateActivationSequence activationSequence = GateActivationSequence.S7;
+		// Registers the destination.
+		this.setDestination(address, coords.dim, coords.x, coords.y, coords.z);
+		
+		// Chooses an activation sequence.
+		GateActivationSequence activationSequence;
+		
+		if(address.length() == 9) {
+			activationSequence = GateActivationSequence.S9;
+		}
+		else if(coords.dim != this.getDimension()) {
+			activationSequence = GateActivationSequence.S8;
+		}
+		else {
+			activationSequence = GateActivationSequence.S7;
+		}
 		
 		// If there is no gate at the given coordinates, launches a false activation.
-		if(this.worldObj.getBlockId(x, y, z) != StargateMod.block_stargateControl.blockID) {
+		if(otherWorld.getBlockId(coords.x, coords.y, coords.z) != StargateMod.block_stargateControl.blockID) {
 			StargateMod.debug("Wrong number ! try again ! XD", true);
 			this.setActivating(GateActivationType.FAILED, activationSequence);
 			return;
 		}
 		
 		// Gets the tile entity of the other gate control unit.
-		TileEntityStargateControl otherGate = (TileEntityStargateControl) this.worldObj.getBlockTileEntity(x, y, z);
+		TileEntityStargateControl otherGate = this.getOtherGate();
+		
+		if(otherGate == null) {
+			StargateMod.debug("Error : can't get other gate tileEntity. This is a bug !", Level.SEVERE, true);
+			return;
+		}
 		
 		// If the output gate can't be activated, launches a false activation.
 		if(!otherGate.isActivable()) {
-			StargateMod.debug("The gate you are trying to reach is currently busy, please try again later... XD", true);
+			StargateMod.debug("The gate you are trying to call is currently busy, please try again later... XD", true);
 			this.setActivating(GateActivationType.FAILED, activationSequence);
 			return;
 		}
 		
-		// Registers the destination.
-		this.setDestination(x, y, z);
-		otherGate.setDestination(this.xCoord, this.yCoord, this.zCoord);
+		// Registers the destination in the otherGate.
+		otherGate.setDestination(this.getAddress(), this.getDimension(), this.xCoord, this.yCoord, this.zCoord);
 		
 		// Activates the gates.
 		this.setActivating(GateActivationType.INPUT, activationSequence);
@@ -963,7 +1161,7 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	public void close() {
 		// If the gate was activated or activating.
 		if(this.state == GateState.INPUT || this.state == GateState.OUTPUT || this.state == GateState.ACTIVATING || this.state == GateState.KAWOOSH) {
-			TileEntityStargateControl otherGate = (TileEntityStargateControl) this.worldObj.getBlockTileEntity(this.xDest, this.yDest, this.zDest);
+			TileEntityStargateControl otherGate = this.getOtherGate();
 			
 			// Deactivates this gate.
 			this.deletePortal();
@@ -971,6 +1169,9 @@ public class TileEntityStargateControl extends TileEntityStargate {
 			// Deactivate the other gate, if it exists.
 			if(otherGate != null) {
 				otherGate.deletePortal();
+			}
+			else if(this.activationType != GateActivationType.FAILED) {
+				StargateMod.debug("Error : can't deactivate the other gate ! This is a bug !", Level.SEVERE, true);
 			}
 		}
 	}
@@ -1145,6 +1346,8 @@ public class TileEntityStargateControl extends TileEntityStargate {
 			// Depending on the state of the gate...
 			switch(this.state) {
 				case INPUT:
+					StargateMod.debug("Fermeture de la porte dans : " + this.count, true); // FIXME - delete.
+					
 					// If maximum activation duration was reached, closes the gate.
 					if(this.count <= 0) {
 						this.close();
@@ -1162,14 +1365,18 @@ public class TileEntityStargateControl extends TileEntityStargate {
 					break;
 				case OFF:
 					// Update shield.
-					if(this.count == 0 && this.isShieldActivated()) {
-						if(this.shieldWaitingDeativation) {
-							this.setShieldWaitingDeativation(false);
-							this.setShieldActivated(false);
+					if(this.count == 0) {
+						if(this.isShieldActivated()) {
+							if(this.shieldWaitingDeativation) {
+								this.setShieldWaitingDeativation(false);
+								this.setShieldActivated(false);
+							}
+							
+							this.updateVortex();
+							this.setCount(VORTEX_UPDATE_PERIOD);
 						}
 						
-						this.updateVortex();
-						this.setCount(VORTEX_UPDATE_PERIOD);
+						// FIXME - rendre le ticket de chunk loading ici.
 					}
 					break;
 				case ACTIVATING:
@@ -1619,7 +1826,13 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	 * @return the orientation of the other gate.
 	 */
 	private int getOtherAngle() {
-		return getAngleFromMetadata(this.worldObj.getBlockMetadata(this.xDest, this.yDest, this.zDest));
+		World otherWorld = this.getOtherWorld();
+		
+		if(otherWorld != null) {
+			return getAngleFromMetadata(otherWorld.getBlockMetadata(this.xDest, this.yDest, this.zDest));
+		}
+		
+		return -1;
 	}
 	
 	/**
@@ -1792,7 +2005,7 @@ public class TileEntityStargateControl extends TileEntityStargate {
 			zTP = (this.zDest + 0.5) + zTP;
 			
 			// Plays the sound corresponding to an entity entering the vortex.
-			this.playSoundEffect(entity, StargateSounds.stargateEnterVortex);
+			this.playSoundEffect(StargateSounds.stargateEnterVortex, entity);
 			
 			// If the entity is a minecart, the position and the velocity must be adjusted.
 			if(entity instanceof EntityMinecart) {
@@ -1819,7 +2032,7 @@ public class TileEntityStargateControl extends TileEntityStargate {
 				}
 			}
 			
-			// FIXME - The orientation/velocity of minecarts do not seem to to be correctly controlled...
+			// FIXME - The orientation/velocity of minecarts do not seem to to be correctly controlable...
 			//
 			//			if(entity instanceof EntityMinecart) {
 			//				int otherAngle = this.getOtherAngle();
@@ -1894,10 +2107,14 @@ public class TileEntityStargateControl extends TileEntityStargate {
 				else {
 					entity.setDead();
 				}
+				
+				// Plays the sound corresponding to an entity crashing on the shield.
+				this.playSoundEffect(StargateSounds.stargateShieldHit, entity);
 			}
-			
-			// Plays the sound corresponding to an entity exiting the vortex.
-			this.playSoundEffect(entity, StargateSounds.stargateEnterVortex);
+			else {
+				// Plays the sound corresponding to an entity exiting the vortex.
+				this.playSoundEffect(StargateSounds.stargateEnterVortex, entity);
+			}
 		}
 	}
 	
@@ -1908,7 +2125,12 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	 */
 	private boolean isEntityInsideIris(Entity entity) {
 		// Gets the other gate tile entity.
-		TileEntityStargateControl otherGate = (TileEntityStargateControl) this.worldObj.getBlockTileEntity(this.xDest, this.yDest, this.zDest);
+		TileEntityStargateControl otherGate = this.getOtherGate();
+		
+		if(otherGate == null) {
+			StargateMod.debug("Error can't get the other gate ! This is a bug !", Level.SEVERE, true);
+			return false;
+		}
 		
 		// If the shield is activated, the entity can't pass.
 		if(otherGate.isShieldActivated()) {
@@ -1940,59 +2162,65 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	
 	/**
 	 * Plays a sound at the center of the gate.
-	 * @param sound - the name of the sound.
+	 * @param sound - the sound.
 	 */
-	private void playSoundEffect(Sound sound) {
-		this.worldObj.playSoundEffect(this.xCoord + 0.5D, this.yCoord - 5.5D, this.zCoord + 0.5D, sound.toString(), 1.0F, 1.0F);
-	}
-	
-	/**
-	 * Plays a sound at the coordinates of the given entity.
-	 * @param entity - the entity where the sound must be played.
-	 * @param sound - the name of the sound.
-	 */
-	private void playSoundEffect(Entity entity, Sound sound) {
-		this.worldObj.playSoundAtEntity(entity, sound.toString(), this.worldObj.rand.nextFloat() * 0.2F + 0.8F, this.worldObj.rand.nextFloat() * 0.2F + 0.8F);
+	@Override
+	public void playSoundEffect(Sound sound) {
+		super.playSoundEffect(sound, this.xCoord + 0.5D, this.yCoord - 5.5D, this.zCoord + 0.5D);
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
-		super.readFromNBT(par1NBTTagCompound);
-		this.state = GateState.valueOf(par1NBTTagCompound.getInteger("state"));
-		this.activationType = GateActivationType.valueOf(par1NBTTagCompound.getInteger("activationType"));
-		this.activationSequence = GateActivationSequence.valueOf(par1NBTTagCompound.getInteger("activationSequence"));
-		this.activationState = GateActivationState.valueOf(par1NBTTagCompound.getInteger("activationState"));
-		this.kawooshState = GateKawooshState.valueOf(par1NBTTagCompound.getInteger("kawooshState"));
-		this.shieldActivated = par1NBTTagCompound.getBoolean("shieldActivated");
-		this.shieldAutomated = par1NBTTagCompound.getBoolean("shieldAutomated");
-		this.code = par1NBTTagCompound.getInteger("code");
-		this.count = par1NBTTagCompound.getInteger("count");
-		this.xDest = par1NBTTagCompound.getInteger("xDest");
-		this.yDest = par1NBTTagCompound.getInteger("yDest");
-		this.zDest = par1NBTTagCompound.getInteger("zDest");
+	public void playSoundEffect(Sound sound, Entity entity) {
+		this.playSoundEffect(sound, entity, this.worldObj.rand.nextFloat() * 0.2F + 0.8F, this.worldObj.rand.nextFloat() * 0.2F + 0.8F);
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
-		super.writeToNBT(par1NBTTagCompound);
-		par1NBTTagCompound.setInteger("state", this.state.getValue());
-		par1NBTTagCompound.setInteger("activationType", this.activationType.getValue());
-		par1NBTTagCompound.setInteger("activationSequence", this.activationSequence.getValue());
-		par1NBTTagCompound.setInteger("activationState", this.activationState.getValue());
-		par1NBTTagCompound.setInteger("kawooshState", this.kawooshState.getValue());
-		par1NBTTagCompound.setBoolean("shieldActivated", this.shieldActivated);
-		par1NBTTagCompound.setBoolean("shieldAutomated", this.shieldAutomated);
-		par1NBTTagCompound.setInteger("code", this.code);
-		par1NBTTagCompound.setInteger("count", this.count);
-		par1NBTTagCompound.setInteger("xDest", this.xDest);
-		par1NBTTagCompound.setInteger("yDest", this.yDest);
-		par1NBTTagCompound.setInteger("zDest", this.zDest);
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		this.address = compound.getString("address");
+		this.state = GateState.valueOf(compound.getInteger("state"));
+		this.activationType = GateActivationType.valueOf(compound.getInteger("activationType"));
+		this.activationSequence = GateActivationSequence.valueOf(compound.getInteger("activationSequence"));
+		this.activationState = GateActivationState.valueOf(compound.getInteger("activationState"));
+		this.kawooshState = GateKawooshState.valueOf(compound.getInteger("kawooshState"));
+		this.shieldActivated = compound.getBoolean("shieldActivated");
+		this.shieldAutomated = compound.getBoolean("shieldAutomated");
+		this.code = compound.getInteger("code");
+		this.count = compound.getInteger("count");
+		this.addressDest = compound.getString("addressDest");
+		this.dimDest = compound.getInteger("dimDest");
+		this.xDest = compound.getInteger("xDest");
+		this.yDest = compound.getInteger("yDest");
+		this.zDest = compound.getInteger("zDest");
+		this.otherGateShieldActivated = compound.getBoolean("otherGateShieldActivated");
+	}
+	
+	@Override
+	public void writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		compound.setString("address", this.address);
+		compound.setInteger("state", this.state.getValue());
+		compound.setInteger("activationType", this.activationType.getValue());
+		compound.setInteger("activationSequence", this.activationSequence.getValue());
+		compound.setInteger("activationState", this.activationState.getValue());
+		compound.setInteger("kawooshState", this.kawooshState.getValue());
+		compound.setBoolean("shieldActivated", this.shieldActivated);
+		compound.setBoolean("shieldAutomated", this.shieldAutomated);
+		compound.setInteger("code", this.code);
+		compound.setInteger("count", this.count);
+		compound.setString("addressDest", this.addressDest);
+		compound.setInteger("dimDest", this.dimDest);
+		compound.setInteger("xDest", this.xDest);
+		compound.setInteger("yDest", this.yDest);
+		compound.setInteger("zDest", this.zDest);
+		compound.setBoolean("otherGateShieldActivated", this.otherGateShieldActivated);
 	}
 	
 	@Override
 	protected void getEntityData(DataOutputStream output) throws IOException {
 		super.getEntityData(output);
 		
+		output.writeUTF(this.address);
 		output.writeInt(this.state.getValue());
 		output.writeInt(this.activationType.getValue());
 		output.writeInt(this.activationSequence.getValue());
@@ -2002,15 +2230,19 @@ public class TileEntityStargateControl extends TileEntityStargate {
 		output.writeBoolean(this.shieldAutomated);
 		output.writeInt(this.code);
 		output.writeInt(this.count);
+		output.writeUTF(this.addressDest);
+		output.writeInt(this.dimDest);
 		output.writeInt(this.xDest);
 		output.writeInt(this.yDest);
 		output.writeInt(this.zDest);
+		output.writeBoolean(this.otherGateShieldActivated);
 	}
 	
 	@Override
 	protected void loadEntityData(DataInputStream input) throws IOException {
 		super.loadEntityData(input);
 		
+		this.address = input.readUTF();
 		this.state = GateState.valueOf(input.readInt());
 		this.activationType = GateActivationType.valueOf(input.readInt());
 		this.activationSequence = GateActivationSequence.valueOf(input.readInt());
@@ -2020,9 +2252,12 @@ public class TileEntityStargateControl extends TileEntityStargate {
 		this.shieldAutomated = input.readBoolean();
 		this.code = input.readInt();
 		this.count = input.readInt();
+		this.addressDest = input.readUTF();
+		this.dimDest = input.readInt();
 		this.xDest = input.readInt();
 		this.yDest = input.readInt();
 		this.zDest = input.readInt();
+		this.otherGateShieldActivated = input.readBoolean();
 	}
 	
 }

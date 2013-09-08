@@ -4,6 +4,9 @@ import net.minecraft.entity.Entity;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.entity.EntityCustomExplosiveFireBall;
 
+/**
+ * @author Seigneur Necron
+ */
 public class DispenserBehaviorCustomExplosiveFireBall extends DispenserBehaviorCustomFireBall {
 	
 	@Override

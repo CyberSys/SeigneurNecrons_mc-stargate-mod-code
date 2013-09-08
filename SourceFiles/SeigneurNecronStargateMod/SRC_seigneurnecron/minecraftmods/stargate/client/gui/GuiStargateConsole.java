@@ -6,6 +6,9 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateContro
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+/**
+ * @author Seigneur Necron
+ */
 @SideOnly(Side.CLIENT)
 public abstract class GuiStargateConsole<T extends TileEntityBaseStargateConsole> extends GuiBase<T> {
 	
@@ -40,6 +43,12 @@ public abstract class GuiStargateConsole<T extends TileEntityBaseStargateConsole
 		this.updateConnectedStargate();
 	}
 	
+	@Override
+	protected void onGuiInitialized() {
+		super.onGuiInitialized();
+		this.updateStargateInterface();
+	}
+	
 	// ####################################################################################################
 	// Utility :
 	// ####################################################################################################
@@ -50,11 +59,14 @@ public abstract class GuiStargateConsole<T extends TileEntityBaseStargateConsole
 		
 		if(this.stargateConnected != stargateConnected) {
 			this.stargateConnected = stargateConnected;
-			this.updateInterface();
+			
+			if(this.isInitialized()) {
+				this.updateStargateInterface();
+			}
 		}
 	}
 	
-	protected void updateInterface() {
+	protected void updateStargateInterface() {
 		// Nothing here.
 	}
 	

@@ -2,6 +2,9 @@ package seigneurnecron.minecraftmods.stargate.tools.enums;
 
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
 
+/**
+ * @author Seigneur Necron
+ */
 public enum GateKawooshState {
 	
 	K0(0, new int[] {}),

@@ -5,16 +5,21 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.reflect.Field;
 import java.util.logging.Level;
 
-import seigneurnecron.minecraftmods.stargate.StargateMod;
-
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraftforge.common.Configuration;
+import seigneurnecron.minecraftmods.stargate.StargateMod;
 
 /**
  * @author Seigneur Necron
  */
-public class StargateModConfig {
+public final class StargateModConfig {
+	
+	// Construtors :
+	
+	private StargateModConfig() {
+		// This class don't have to be instanciated, it only contains static methods.
+	}
 	
 	// Field anotations :
 	

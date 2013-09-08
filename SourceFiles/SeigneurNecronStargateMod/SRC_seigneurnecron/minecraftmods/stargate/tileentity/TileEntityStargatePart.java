@@ -124,21 +124,21 @@ public class TileEntityStargatePart extends TileEntityStargate {
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
-		super.readFromNBT(par1NBTTagCompound);
-		this.xGate = par1NBTTagCompound.getInteger("xGate");
-		this.yGate = par1NBTTagCompound.getInteger("yGate");
-		this.zGate = par1NBTTagCompound.getInteger("zGate");
-		this.partOfGate = par1NBTTagCompound.getBoolean("partOfGate");
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		this.xGate = compound.getInteger("xGate");
+		this.yGate = compound.getInteger("yGate");
+		this.zGate = compound.getInteger("zGate");
+		this.partOfGate = compound.getBoolean("partOfGate");
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
-		super.writeToNBT(par1NBTTagCompound);
-		par1NBTTagCompound.setInteger("xGate", this.xGate);
-		par1NBTTagCompound.setInteger("yGate", this.yGate);
-		par1NBTTagCompound.setInteger("zGate", this.zGate);
-		par1NBTTagCompound.setBoolean("partOfGate", this.partOfGate);
+	public void writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		compound.setInteger("xGate", this.xGate);
+		compound.setInteger("yGate", this.yGate);
+		compound.setInteger("zGate", this.zGate);
+		compound.setBoolean("partOfGate", this.partOfGate);
 	}
 	
 	@Override
