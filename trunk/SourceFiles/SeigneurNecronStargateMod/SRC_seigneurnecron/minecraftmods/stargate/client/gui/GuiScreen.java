@@ -5,6 +5,9 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityGuiScreen;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+/**
+ * @author Seigneur Necron
+ */
 @SideOnly(Side.CLIENT)
 public abstract class GuiScreen<T extends TileEntityGuiScreen> extends Screen {
 	
@@ -35,7 +38,6 @@ public abstract class GuiScreen<T extends TileEntityGuiScreen> extends Screen {
 	@Override
 	public void onGuiClosed() {
 		super.onGuiClosed();
-		
 		this.tileEntity.setEditable(true);
 	}
 	

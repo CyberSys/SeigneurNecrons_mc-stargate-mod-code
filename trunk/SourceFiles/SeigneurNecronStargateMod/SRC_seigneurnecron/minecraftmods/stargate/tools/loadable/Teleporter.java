@@ -6,6 +6,9 @@ import java.io.IOException;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+/**
+ * @author Seigneur Necron
+ */
 public class Teleporter extends Coordinates<Teleporter> {
 	
 	// NBTTags names :
@@ -16,7 +19,7 @@ public class Teleporter extends Coordinates<Teleporter> {
 	
 	public String name;
 	
-	// Builders :
+	// Constructors :
 	
 	public Teleporter(int dim, int x, int y, int z, String name) {
 		super(dim, x, y, z);

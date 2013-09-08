@@ -6,6 +6,9 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+/**
+ * @author Seigneur Necron
+ */
 @SideOnly(Side.CLIENT)
 public abstract class GuiBase<T extends TileEntityBase> extends GuiScreen<T> {
 	
@@ -48,6 +51,15 @@ public abstract class GuiBase<T extends TileEntityBase> extends GuiScreen<T> {
 		}
 		
 		super.drawScreen(par1, par2, par3);
+	}
+	
+	// ####################################################################################################
+	// User input :
+	// ####################################################################################################
+	
+	@Override
+	protected boolean closeLikeInventory() {
+		return false;
 	}
 	
 }

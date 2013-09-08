@@ -5,7 +5,11 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import net.minecraft.nbt.NBTTagCompound;
+import seigneurnecron.minecraftmods.stargate.StargateMod;
 
+/**
+ * @author Seigneur Necron
+ */
 public class StargateCoordinates extends Coordinates<StargateCoordinates> {
 	
 	// NBTTags names :
@@ -16,7 +20,7 @@ public class StargateCoordinates extends Coordinates<StargateCoordinates> {
 	
 	public String address;
 	
-	// Builders :
+	// Constructors :
 	
 	public StargateCoordinates(String address, int dim, int x, int y, int z) {
 		super(dim, x, y, z);
@@ -70,12 +74,14 @@ public class StargateCoordinates extends Coordinates<StargateCoordinates> {
 	public void saveNBTData(NBTTagCompound tag) {
 		super.saveNBTData(tag);
 		tag.setString(ADDRESS, this.address);
+		StargateMod.debug("Save StargateCoordinates to NBT : " + this.address + " ####################", true); // FIXME - delete.
 	}
 	
 	@Override
 	public void loadNBTData(NBTTagCompound tag) {
 		super.loadNBTData(tag);
 		this.address = tag.getString(ADDRESS);
+		StargateMod.debug("Load StargateCoordinates from NBT : " + this.address, true); // FIXME - delete.
 	}
 	
 	@Override

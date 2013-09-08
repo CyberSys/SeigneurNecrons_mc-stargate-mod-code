@@ -6,6 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.entity.EntityNuke;
 
+/**
+ * @author Seigneur Necron
+ */
 public class ItemNukeStaff extends ItemFireStaff {
 	
 	public ItemNukeStaff(String name) {

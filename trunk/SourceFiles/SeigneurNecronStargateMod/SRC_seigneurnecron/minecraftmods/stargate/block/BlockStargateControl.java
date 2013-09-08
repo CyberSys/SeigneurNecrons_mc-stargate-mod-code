@@ -1,6 +1,6 @@
 package seigneurnecron.minecraftmods.stargate.block;
 
-import net.minecraft.block.material.Material;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,6 +11,8 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
+import seigneurnecron.minecraftmods.stargate.client.gui.GuiStargateControl;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityGuiScreen;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateState;
 import cpw.mods.fml.relauncher.Side;
@@ -19,32 +21,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 /**
  * @author Seigneur Necron
  */
-public class BlockStargateControl extends BlockStargateContainer {
-	
-	// FIXME - extends BlockGuiScreen.
+public class BlockStargateControl extends BlockGuiScreen {
 	
 	protected Icon naquadaIcon;
 	
 	public BlockStargateControl(String name) {
-		super(name, Material.rock);
-		this.setHardness(StargateMod.RESISTANT_BLOCKS_HARDNESS);
-		this.setResistance(StargateMod.RESISTANT_BLOCKS_RESISTANCE);
-		this.setStepSound(soundStoneFootstep);
-	}
-	
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer entityPlayer, int par6, float par7, float par8, float par9) {
-		TileEntityStargateControl gate = ((TileEntityStargateControl) world.getBlockTileEntity(x, y, z));
-		
-		if(gate != null && gate.getState() == GateState.BROKEN) {
-			if(!world.isRemote) {
-				gate.createGate("abcABCv0@"); // FIXME - faire une interface pour entrer l'adresse.
-			}
-			
-			return true;
-		}
-		
-		return false;
+		super(name);
 	}
 	
 	@Override
@@ -73,9 +55,11 @@ public class BlockStargateControl extends BlockStargateContainer {
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6) {
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		
 		if(tileEntity != null && tileEntity instanceof TileEntityStargateControl) {
 			((TileEntityStargateControl) tileEntity).setBroken();
 		}
+		
 		super.breakBlock(world, x, y, z, par5, par6);
 	}
 	
@@ -104,6 +88,22 @@ public class BlockStargateControl extends BlockStargateContainer {
 		}
 		
 		return this.naquadaIcon;
+	}
+	
+	@Override
+	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
+		return this.openGui(world, x, y, z, player);
+	}
+	
+	@Override
+	protected boolean tileEntityOk(TileEntity tileEntity) {
+		return (tileEntity instanceof TileEntityStargateControl) && ((TileEntityStargateControl) tileEntity).getState() == GateState.BROKEN;
+	}
+	
+	@Override
+	@SideOnly(Side.CLIENT)
+	protected GuiScreen getGuiScreen(TileEntityGuiScreen tileEntity, EntityPlayer player) {
+		return new GuiStargateControl((TileEntityStargateControl) tileEntity);
 	}
 	
 }

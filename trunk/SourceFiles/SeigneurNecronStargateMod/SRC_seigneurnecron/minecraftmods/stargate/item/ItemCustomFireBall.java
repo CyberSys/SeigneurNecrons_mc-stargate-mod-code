@@ -9,6 +9,9 @@ import seigneurnecron.minecraftmods.stargate.entity.EntityCustomFireBall;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
+/**
+ * @author Seigneur Necron
+ */
 public class ItemCustomFireBall extends ItemStargate {
 	
 	public ItemCustomFireBall(String name) {

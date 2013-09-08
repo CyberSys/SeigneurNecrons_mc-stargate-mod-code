@@ -131,19 +131,19 @@ public class TileEntityDetector extends TileEntityGuiScreen {
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
-		super.readFromNBT(par1NBTTagCompound);
-		this.range = par1NBTTagCompound.getInteger("range");
-		this.inverted = par1NBTTagCompound.getBoolean("inverted");
-		this.providingPower = par1NBTTagCompound.getBoolean("providingPower");
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		this.range = compound.getInteger("range");
+		this.inverted = compound.getBoolean("inverted");
+		this.providingPower = compound.getBoolean("providingPower");
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
-		super.writeToNBT(par1NBTTagCompound);
-		par1NBTTagCompound.setInteger("range", this.range);
-		par1NBTTagCompound.setBoolean("inverted", this.inverted);
-		par1NBTTagCompound.setBoolean("providingPower", this.providingPower);
+	public void writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		compound.setInteger("range", this.range);
+		compound.setBoolean("inverted", this.inverted);
+		compound.setBoolean("providingPower", this.providingPower);
 	}
 	
 	@Override

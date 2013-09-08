@@ -1,5 +1,8 @@
 package seigneurnecron.minecraftmods.stargate.tools.address;
 
+/**
+ * @author Seigneur Necron
+ */
 public class MalformedCoordinatesException extends Exception {
 	
 	private static final long serialVersionUID = 1L;

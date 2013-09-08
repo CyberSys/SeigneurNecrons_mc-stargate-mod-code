@@ -72,7 +72,7 @@ public class GuiShieldConsole extends GuiStargateConsole<TileEntityBaseShieldCon
 	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
 		
-		this.panel_main.drawBorder(GRAY);
+		this.panel_main.drawBox(GRAY);
 		
 		String code;
 		String shieldMessage;
@@ -146,26 +146,24 @@ public class GuiShieldConsole extends GuiStargateConsole<TileEntityBaseShieldCon
 		
 		// Component sizes :
 		
-		int fieldSize = (this.panel_main.getWidth() - (3 * MARGIN)) / 2;
-		int buttonSize = this.panel_main.getWidth() - (2 * MARGIN);
+		int fieldSize = (this.panel_main.getComponentWidth() - (3 * MARGIN)) / 2;
+		int buttonSize = this.panel_main.getComponentWidth() - (2 * MARGIN);
 		
 		// Fields and buttons :
 		
-		this.nextYPos = (2 * FIELD_HEIGHT) + (3 * MARGIN) + FIELD_OFFSET;
-		this.field_code = this.addField(new IntegerField(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, fieldSize, FIELD_HEIGHT, code), false);
+		this.nextYPos = (2 * FIELD_HEIGHT) + (3 * MARGIN);
+		this.field_code = this.addComponent(new IntegerField(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, fieldSize, code), false);
 		this.nextYPos -= MARGIN;
-		this.button_code = this.addButton(new Button(this.panel_main, this.getNextButtonId(), fieldSize + (2 * MARGIN), this.nextYPos, fieldSize, I18n.func_135053_a(CHANGE_CODE)));
+		this.button_code = this.addComponent(new Button(this.panel_main, this.getNextButtonId(), fieldSize + (2 * MARGIN), this.nextYPos, fieldSize, I18n.func_135053_a(CHANGE_CODE)));
 		
 		this.nextYPos += FIELD_HEIGHT + MARGIN + BONUS_MARGIN;
-		this.button_autoShield = this.addButton(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(AUTO_SHIELD_SWITCH)));
+		this.button_autoShield = this.addComponent(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(AUTO_SHIELD_SWITCH)));
 		
 		this.nextYPos += FIELD_HEIGHT + MARGIN + BONUS_MARGIN;
-		this.button_shield = this.addButton(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(SHIELD_SWITCH)));
+		this.button_shield = this.addComponent(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(SHIELD_SWITCH)));
 		
 		this.nextYPos += BONUS_MARGIN;
-		this.button_done = this.addButton(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.done")));
-		
-		this.updateInterface();
+		this.button_done = this.addComponent(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.done")));
 	}
 	
 	// ####################################################################################################
@@ -229,7 +227,7 @@ public class GuiShieldConsole extends GuiStargateConsole<TileEntityBaseShieldCon
 	// ####################################################################################################
 	
 	@Override
-	protected void updateInterface() {
+	protected void updateStargateInterface() {
 		this.button_shield.enabled = this.stargateConnected;
 		this.button_autoShield.enabled = this.stargateConnected;
 		this.button_code.enabled = this.stargateConnected;

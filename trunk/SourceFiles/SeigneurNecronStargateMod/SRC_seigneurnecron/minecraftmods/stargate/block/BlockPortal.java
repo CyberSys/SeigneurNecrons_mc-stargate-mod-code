@@ -9,6 +9,9 @@ import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargatePart;
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateOrientation;
 
+/**
+ * @author Seigneur Necron
+ */
 public class BlockPortal extends BlockStargatePart {
 	
 	private static final float WIDTH = 0.5F;

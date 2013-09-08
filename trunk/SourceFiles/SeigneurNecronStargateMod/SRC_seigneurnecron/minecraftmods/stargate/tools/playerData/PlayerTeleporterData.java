@@ -49,13 +49,18 @@ public final class PlayerTeleporterData extends PlayerDataList<Teleporter> {
 		playerData.syncProperties();
 	}
 	
-	// Builders :
+	// Constructors :
 	
 	public PlayerTeleporterData(EntityPlayer player) {
 		super(player);
 	}
 	
 	// Methods :
+	
+	@Override
+	protected String getIdentifier() {
+		return IDENTIFIER;
+	}
 	
 	@Override
 	protected Teleporter getElement(NBTTagCompound tag) {

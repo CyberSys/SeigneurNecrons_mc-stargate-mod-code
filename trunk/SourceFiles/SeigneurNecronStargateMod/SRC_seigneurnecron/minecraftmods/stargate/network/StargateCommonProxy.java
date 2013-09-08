@@ -3,8 +3,7 @@ package seigneurnecron.minecraftmods.stargate.network;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.client.entity.EntityClientPlayerMP;
-import net.minecraft.client.multiplayer.WorldClient;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
@@ -63,11 +62,7 @@ public class StargateCommonProxy implements IGuiHandler {
 		return 0;
 	}
 	
-	public WorldClient getClientWorld() {
-		return null;
-	}
-	
-	public EntityClientPlayerMP getClientPlayer() {
+	public FontRenderer getStargateFontRender() {
 		return null;
 	}
 	

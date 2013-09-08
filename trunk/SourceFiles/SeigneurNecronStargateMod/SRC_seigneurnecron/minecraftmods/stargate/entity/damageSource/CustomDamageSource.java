@@ -3,6 +3,9 @@ package seigneurnecron.minecraftmods.stargate.entity.damageSource;
 import net.minecraft.util.DamageSource;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 
+/**
+ * @author Seigneur Necron
+ */
 public class CustomDamageSource extends DamageSource {
 	
 	public static DamageSource kawoosh = (new CustomDamageSource(StargateMod.MOD_ID + ".kawoosh")).setDamageBypassesArmor();

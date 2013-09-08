@@ -12,6 +12,9 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.entity.EntityCustomFireBall;
 
+/**
+ * @author Seigneur Necron
+ */
 public class DispenserBehaviorCustomFireBall extends BehaviorDefaultDispenseItem {
 	
 	@Override

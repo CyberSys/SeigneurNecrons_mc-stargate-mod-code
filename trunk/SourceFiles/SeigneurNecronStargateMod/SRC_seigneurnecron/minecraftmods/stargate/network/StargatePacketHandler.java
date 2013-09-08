@@ -45,6 +45,9 @@ public class StargatePacketHandler implements IPacketHandler {
 	public static final String STARGATE_CLOSE = "stargateClose";
 	
 	@CommandName
+	public static final String STARGATE_CREATE = "stargateCreate";
+	
+	@CommandName
 	public static final String SHIELD = "shield";
 	
 	@CommandName
@@ -351,8 +354,8 @@ public class StargatePacketHandler implements IPacketHandler {
 	 * @param dim - the dimension id.
 	 * @return the world corresponding to the dimension id if it exists, else null.
 	 */
-	protected World getWorldForDimension(int dim) {
-		// True result in client/server version. This class can't be abstract.
+	public World getWorldForDimension(int dim) {
+		// True return on server/client side. This class can't be abstract.
 		return null;
 	}
 	

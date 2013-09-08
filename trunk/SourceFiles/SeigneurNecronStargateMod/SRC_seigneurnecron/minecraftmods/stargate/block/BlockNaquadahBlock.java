@@ -2,6 +2,9 @@ package seigneurnecron.minecraftmods.stargate.block;
 
 import net.minecraft.world.World;
 
+/**
+ * @author Seigneur Necron
+ */
 public class BlockNaquadahBlock extends BlockNaquadahMade {
 	
 	public BlockNaquadahBlock(String name) {

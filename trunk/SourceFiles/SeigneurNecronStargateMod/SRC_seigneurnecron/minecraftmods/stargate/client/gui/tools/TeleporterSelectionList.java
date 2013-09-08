@@ -4,6 +4,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.Teleporter;
 
+/**
+ * @author Seigneur Necron
+ */
 @SideOnly(Side.CLIENT)
 public class TeleporterSelectionList extends SelectionList<Teleporter> {
 	

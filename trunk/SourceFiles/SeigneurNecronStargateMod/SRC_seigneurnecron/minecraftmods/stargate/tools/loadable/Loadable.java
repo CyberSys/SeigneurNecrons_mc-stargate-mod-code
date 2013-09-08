@@ -6,6 +6,9 @@ import java.io.IOException;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+/**
+ * @author Seigneur Necron
+ */
 public interface Loadable<T> extends Comparable<T> {
 	
 	public void saveNBTData(NBTTagCompound compound);

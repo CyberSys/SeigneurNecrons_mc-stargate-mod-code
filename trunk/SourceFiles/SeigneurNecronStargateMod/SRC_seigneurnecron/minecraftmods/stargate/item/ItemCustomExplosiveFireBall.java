@@ -6,6 +6,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.entity.EntityCustomExplosiveFireBall;
 
+/**
+ * @author Seigneur Necron
+ */
 public class ItemCustomExplosiveFireBall extends ItemCustomFireBall {
 	
 	public ItemCustomExplosiveFireBall(String name) {

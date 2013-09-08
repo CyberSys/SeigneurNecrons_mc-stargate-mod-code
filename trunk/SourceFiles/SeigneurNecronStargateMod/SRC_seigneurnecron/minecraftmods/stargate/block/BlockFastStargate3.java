@@ -4,6 +4,9 @@ import seigneurnecron.minecraftmods.stargate.StargateMod;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
 
+/**
+ * @author Seigneur Necron
+ */
 public class BlockFastStargate3 extends BlockFastStargate2 {
 	
 	public BlockFastStargate3(String name) {

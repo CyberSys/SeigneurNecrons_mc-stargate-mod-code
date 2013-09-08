@@ -1,44 +1,73 @@
 package seigneurnecron.minecraftmods.stargate.client.gui.tools;
 
-import java.lang.reflect.Field;
+import static seigneurnecron.minecraftmods.stargate.client.gui.tools.Screen.FIELD_HEIGHT;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
+import java.util.logging.Level;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.util.ChatAllowedCharacters;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
+import seigneurnecron.minecraftmods.stargate.tools.reflection.Reflection;
+import seigneurnecron.minecraftmods.stargate.tools.reflection.ReflectionException;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
+/**
+ * @author Seigneur Necron
+ */
 @SideOnly(Side.CLIENT)
-public class TextField extends GuiTextField {
+public class TextField extends GuiTextField implements Component {
 	
 	// Fields obfuscated names :
 	
 	private static String IS_ENABLED = StargateMod.obfuscated ? "field_73819_m" : "isEnabled";
 	
-	// Builders :
+	// Field copies :
 	
-	public TextField(Container container, FontRenderer par1FontRenderer, int xPos, int yPos, int width, int height) {
-		super(par1FontRenderer, container.getXPosInScreen(xPos), container.getYPosInScreen(yPos), width, height);
-		this.setMaxStringLength(25);
-	}
+	protected final int width;
+	protected final int height;
+	
+	// Constructors :
 	
 	public TextField(Container container, FontRenderer par1FontRenderer, int xPos, int yPos, int width, int height, String text) {
-		this(container, par1FontRenderer, xPos, yPos, width, height);
+		super(par1FontRenderer, container.getXPosInScreen(xPos), container.getYPosInScreen(yPos), width, height);
+		this.setMaxStringLength(25);
 		this.setText(text);
+		this.width = width;
+		this.height = height;
+	}
+	
+	public TextField(Container container, FontRenderer par1FontRenderer, int xPos, int yPos, int width, int height) {
+		this(container, par1FontRenderer, xPos, yPos, width, height, "");
+	}
+	
+	public TextField(Container container, FontRenderer par1FontRenderer, int xPos, int yPos, int width, String text) {
+		this(container, par1FontRenderer, xPos, yPos, width, FIELD_HEIGHT, text);
+	}
+	
+	public TextField(Container container, FontRenderer par1FontRenderer, int xPos, int yPos, int width) {
+		this(container, par1FontRenderer, xPos, yPos, width, FIELD_HEIGHT, "");
 	}
 	
 	// Getters - use reflexion to get super class private fields :
 	
-	protected boolean getIsEnabled() throws NoSuchFieldException, SecurityException, IllegalArgumentException, IllegalAccessException {
-		Field field = GuiTextField.class.getDeclaredField(IS_ENABLED);
-		field.setAccessible(true);
-		return field.getBoolean(this);
+	protected boolean getIsEnabled() throws ReflectionException {
+		return Reflection.getBoolean(GuiTextField.class, this, IS_ENABLED);
 	}
 	
 	// Methods :
+	
+	@Override
+	public int getComponentWidth() {
+		return this.width;
+	}
+	
+	@Override
+	public int getComponentHeight() {
+		return this.height;
+	}
 	
 	@Override
 	public boolean textboxKeyTyped(char character, int key) {
@@ -140,17 +169,8 @@ public class TextField extends GuiTextField {
 				return false;
 			}
 		}
-		catch(NoSuchFieldException argh) {
-			argh.printStackTrace();
-		}
-		catch(SecurityException argh) {
-			argh.printStackTrace();
-		}
-		catch(IllegalArgumentException argh) {
-			argh.printStackTrace();
-		}
-		catch(IllegalAccessException argh) {
-			argh.printStackTrace();
+		catch(ReflectionException argh) {
+			StargateMod.debug(argh.getMessage(), Level.SEVERE, true);
 		}
 		
 		return false;

@@ -3,6 +3,9 @@ package seigneurnecron.minecraftmods.stargate.entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 
+/**
+ * @author Seigneur Necron
+ */
 public class EntityNuke extends EntityCustomExplosiveFireBall {
 	
 	public EntityNuke(World world) {

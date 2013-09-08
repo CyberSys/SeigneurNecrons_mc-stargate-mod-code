@@ -5,6 +5,9 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
 
+/**
+ * @author Seigneur Necron
+ */
 public class EntityCustomExplosiveFireBall extends EntityCustomFireBall {
 	
 	public EntityCustomExplosiveFireBall(World world) {

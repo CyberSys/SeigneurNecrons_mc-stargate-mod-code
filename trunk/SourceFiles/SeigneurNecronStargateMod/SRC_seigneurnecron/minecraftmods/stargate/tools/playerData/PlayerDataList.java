@@ -23,6 +23,9 @@ import seigneurnecron.minecraftmods.stargate.tools.loadable.Loadable;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 
+/**
+ * @author Seigneur Necron
+ */
 public abstract class PlayerDataList<T extends Loadable> implements IExtendedEntityProperties {
 	
 	// NBTTags names :
@@ -41,7 +44,7 @@ public abstract class PlayerDataList<T extends Loadable> implements IExtendedEnt
 	 */
 	protected List<T> dataList;
 	
-	// Builders :
+	// Constructors :
 	
 	protected PlayerDataList(EntityPlayer player) {
 		this.initList();
@@ -61,13 +64,13 @@ public abstract class PlayerDataList<T extends Loadable> implements IExtendedEnt
 		this.syncProperties();
 	}
 	
-	public void deleteElementAndSync(T element) {
-		this.deleteElement(element);
+	public void removeElementAndSync(T element) {
+		this.removeElement(element);
 		this.syncProperties();
 	}
 	
 	public void overwriteElementAndSync(T oldElement, T newElement) {
-		this.deleteElement(oldElement);
+		this.removeElement(oldElement);
 		this.addElement(newElement);
 		this.syncProperties();
 	}
@@ -89,7 +92,7 @@ public abstract class PlayerDataList<T extends Loadable> implements IExtendedEnt
 		this.dataList.add(i, element);
 	}
 	
-	private void deleteElement(T element) {
+	private void removeElement(T element) {
 		this.dataList.remove(element);
 	}
 	
@@ -128,8 +131,6 @@ public abstract class PlayerDataList<T extends Loadable> implements IExtendedEnt
 		
 		Side side = FMLCommonHandler.instance().getEffectiveSide();
 		
-		StargateMod.debug((FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER ? "Server" : "Client") + " - " + this.getClass().getSimpleName() + " - Player data packet sent.", Level.WARNING, true); // FIXME - delete.
-		
 		if(side == Side.SERVER) {
 			EntityPlayerMP player = (EntityPlayerMP) this.player;
 			StargateMod.sendPacketToPlayer(packet, player);
@@ -148,8 +149,6 @@ public abstract class PlayerDataList<T extends Loadable> implements IExtendedEnt
 		}
 		
 		this.dataList = list;
-		
-		StargateMod.debug((FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER ? "Server" : "Client") + " - " + this.getClass().getSimpleName() + " - Player data packet received.", Level.WARNING, true); // FIXME - delete.
 	}
 	
 	protected abstract T getElement(DataInputStream input) throws IOException;
@@ -162,33 +161,40 @@ public abstract class PlayerDataList<T extends Loadable> implements IExtendedEnt
 	}
 	
 	@Override
-	public void saveNBTData(NBTTagCompound compound) {
+	public void saveNBTData(NBTTagCompound entityTag) {
+		// The tag you get here is not specific to your property, it is the entity global tagCompound !
+		// To avoid problems with other property setting a tag with the same name, be sure to create a subtag with a unique name, for exemple the identifier of your property.
+		NBTTagCompound thisTag = new NBTTagCompound();
+		entityTag.setTag(this.getIdentifier(), thisTag);
+		
 		NBTTagList list = new NBTTagList();
-		compound.setTag(LIST, list);
+		thisTag.setTag(LIST, list);
 		
 		for(T element : this.dataList) {
 			NBTTagCompound tag = new NBTTagCompound();
 			element.saveNBTData(tag);
 			list.appendTag(tag);
 		}
-		
-		StargateMod.debug((FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER ? "Server" : "Client") + " - " + this.getClass().getSimpleName() + " - Player data saved to NBT.", Level.WARNING, true); // FIXME - delete.
 	}
 	
 	@Override
-	public void loadNBTData(NBTTagCompound compound) {
+	public void loadNBTData(NBTTagCompound entityTag) {
+		// The tag you get here is not specific to your property, it is the entity global tagCompound !
+		// To avoid problems with other property setting a tag with the same name, be sure to create a subtag with a unique name, for exemple the identifier of your property.
+		NBTTagCompound thisTag = entityTag.getCompoundTag(this.getIdentifier());
+		
+		NBTTagList list = thisTag.getTagList(LIST);
 		this.initList();
-		NBTTagList list = compound.getTagList(LIST);
 		
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = (NBTTagCompound) list.tagAt(i);
 			T element = this.getElement(tag);
 			this.dataList.add(element);
 		}
-		
-		StargateMod.debug((FMLCommonHandler.instance().getEffectiveSide() == Side.SERVER ? "Server" : "Client") + " - " + this.getClass().getSimpleName() + " - Player data loaded from NBT.", Level.WARNING, true); // FIXME - delete.
 	}
 	
 	protected abstract T getElement(NBTTagCompound tag);
+	
+	protected abstract String getIdentifier();
 	
 }

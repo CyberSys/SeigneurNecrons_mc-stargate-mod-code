@@ -69,10 +69,10 @@ public abstract class TileEntityGuiContainer extends TileEntityStargate implemen
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
-		super.readFromNBT(par1NBTTagCompound);
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
 		
-		NBTTagList itemListTag = par1NBTTagCompound.getTagList("Items");
+		NBTTagList itemListTag = compound.getTagList("Items");
 		
 		for(int i = 0; i < itemListTag.tagCount(); ++i) {
 			NBTTagCompound itemTag = (NBTTagCompound) itemListTag.tagAt(i);
@@ -82,8 +82,8 @@ public abstract class TileEntityGuiContainer extends TileEntityStargate implemen
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
-		super.writeToNBT(par1NBTTagCompound);
+	public void writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
 		
 		NBTTagList itemListTag = new NBTTagList();
 		
@@ -97,7 +97,7 @@ public abstract class TileEntityGuiContainer extends TileEntityStargate implemen
 			}
 		}
 		
-		par1NBTTagCompound.setTag("Items", itemListTag);
+		compound.setTag("Items", itemListTag);
 	}
 	
 }

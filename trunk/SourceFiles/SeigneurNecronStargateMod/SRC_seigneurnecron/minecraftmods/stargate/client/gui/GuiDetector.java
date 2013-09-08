@@ -60,7 +60,7 @@ public class GuiDetector extends GuiScreen<TileEntityDetector> {
 	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
 		
-		this.panel_main.drawBorder(GRAY);
+		this.panel_main.drawBox(GRAY);
 		
 		this.nextYPos = MARGIN;
 		this.panel_main.drawCenteredText(this.fontRenderer, this.string_invName, this.nextYPos, WHITE);
@@ -94,17 +94,17 @@ public class GuiDetector extends GuiScreen<TileEntityDetector> {
 		
 		int stringSize = this.fontRenderer.getStringWidth(this.string_range);
 		int fieldOffset = stringSize + MARGIN;
-		int fieldSize = this.panel_main.getWidth() - (fieldOffset + MARGIN);
-		int buttonSize = this.panel_main.getWidth() - (2 * MARGIN);
+		int fieldSize = this.panel_main.getComponentWidth() - (fieldOffset + MARGIN);
+		int buttonSize = this.panel_main.getComponentWidth() - (2 * MARGIN);
 		
 		// Fields and buttons :
 		
-		this.nextYPos = FIELD_HEIGHT + (2 * MARGIN) + FIELD_OFFSET;
-		this.field_range = this.addField(new IntegerField(this.panel_main, this.fontRenderer, fieldOffset, this.nextYPos, fieldSize, FIELD_HEIGHT, this.tileEntity.getRange()));
+		this.nextYPos = FIELD_HEIGHT + (2 * MARGIN);
+		this.field_range = this.addComponent(new IntegerField(this.panel_main, this.fontRenderer, fieldOffset, this.nextYPos, fieldSize, this.tileEntity.getRange()));
 		
-		this.nextYPos += (FIELD_HEIGHT + MARGIN) * 2 - FIELD_OFFSET;
-		this.button_invert = this.addButton(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(INVERT_BUTTON)));
-		this.button_done = this.addButton(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.done")));
+		this.nextYPos += (FIELD_HEIGHT + MARGIN) * 2;
+		this.button_invert = this.addComponent(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(INVERT_BUTTON)));
+		this.button_done = this.addComponent(new Button(this.panel_main, this.getNextButtonId(), MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.done")));
 	}
 	
 	// ####################################################################################################

@@ -4,6 +4,9 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.Stargate;
 
+/**
+ * @author Seigneur Necron
+ */
 @SideOnly(Side.CLIENT)
 public class StargateSelectionList extends SelectionList<Stargate> {
 	

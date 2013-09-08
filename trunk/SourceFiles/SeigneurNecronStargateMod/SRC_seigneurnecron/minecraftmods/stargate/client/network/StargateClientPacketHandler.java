@@ -1,8 +1,7 @@
 package seigneurnecron.minecraftmods.stargate.client.network;
 
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.src.ModLoader;
 import net.minecraft.world.World;
+import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -14,14 +13,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class StargateClientPacketHandler extends StargatePacketHandler {
 	
 	@Override
-	protected World getWorldForDimension(int dim) {
-		WorldClient world = ModLoader.getMinecraftInstance().theWorld;
-		
-		if(world != null && world.provider.dimensionId != dim) {
-			return null;
-		}
-		
-		return world;
+	public World getWorldForDimension(int dim) {
+		return StargateMod.getClientWorldForDimension(dim);
 	}
 	
 }

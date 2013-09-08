@@ -147,17 +147,6 @@ public abstract class TileEntityBaseStargateConsole extends TileEntityBase {
 	}
 	
 	/**
-	 * Returns the squared distance between this DHD and the block at the given coordinates.
-	 * @param x - the X coordinate of the block that we want to know the distance.
-	 * @param y - the Y coordinate of the block that we want to know the distance.
-	 * @param z - the Z coordinate of the block that we want to know the distance.
-	 * @return the squared distance between the DHD and the block.
-	 */
-	private double squaredDistance(int x, int y, int z) {
-		return Math.pow(this.xCoord - x, 2) + Math.pow(this.yCoord - y, 2) + Math.pow(this.zCoord - z, 2);
-	}
-	
-	/**
 	 * Return the tile entity of the stargate linked to this console.
 	 * @return the tile entity of the stargate linked to this console if it exists, else null.
 	 */
@@ -207,21 +196,21 @@ public abstract class TileEntityBaseStargateConsole extends TileEntityBase {
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
-		super.readFromNBT(par1NBTTagCompound);
-		this.linkedToGate = par1NBTTagCompound.getBoolean("linkedToGate");
-		this.xGate = par1NBTTagCompound.getInteger("xGate");
-		this.yGate = par1NBTTagCompound.getInteger("yGate");
-		this.zGate = par1NBTTagCompound.getInteger("zGate");
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		this.linkedToGate = compound.getBoolean("linkedToGate");
+		this.xGate = compound.getInteger("xGate");
+		this.yGate = compound.getInteger("yGate");
+		this.zGate = compound.getInteger("zGate");
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
-		super.writeToNBT(par1NBTTagCompound);
-		par1NBTTagCompound.setBoolean("linkedToGate", this.linkedToGate);
-		par1NBTTagCompound.setInteger("xGate", this.xGate);
-		par1NBTTagCompound.setInteger("yGate", this.yGate);
-		par1NBTTagCompound.setInteger("zGate", this.zGate);
+	public void writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		compound.setBoolean("linkedToGate", this.linkedToGate);
+		compound.setInteger("xGate", this.xGate);
+		compound.setInteger("yGate", this.yGate);
+		compound.setInteger("zGate", this.zGate);
 	}
 	
 	@Override

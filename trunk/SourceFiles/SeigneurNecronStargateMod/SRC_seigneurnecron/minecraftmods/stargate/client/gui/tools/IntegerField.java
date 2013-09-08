@@ -1,5 +1,6 @@
 package seigneurnecron.minecraftmods.stargate.client.gui.tools;
 
+import static seigneurnecron.minecraftmods.stargate.client.gui.tools.Screen.FIELD_HEIGHT;
 import net.minecraft.client.gui.FontRenderer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -10,12 +11,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class IntegerField extends TextField {
 	
-	public IntegerField(Container container, FontRenderer par1FontRenderer, int xPos, int yPos, int width, int height) {
-		this(container, par1FontRenderer, xPos, yPos, width, height, 0);
-	}
-	
 	public IntegerField(Container container, FontRenderer par1FontRenderer, int xPos, int yPos, int width, int height, int value) {
 		super(container, par1FontRenderer, xPos, yPos, width, height, String.valueOf(value));
+	}
+	
+	public IntegerField(Container container, FontRenderer par1FontRenderer, int xPos, int yPos, int width, int value) {
+		this(container, par1FontRenderer, xPos, yPos, width, FIELD_HEIGHT, value);
+	}
+	
+	public IntegerField(Container container, FontRenderer par1FontRenderer, int xPos, int yPos, int width) {
+		this(container, par1FontRenderer, xPos, yPos, width, FIELD_HEIGHT, 0);
 	}
 	
 	@Override

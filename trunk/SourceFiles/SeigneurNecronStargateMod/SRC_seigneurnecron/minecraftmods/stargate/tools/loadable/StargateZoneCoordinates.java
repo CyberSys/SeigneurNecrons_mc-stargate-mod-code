@@ -5,9 +5,12 @@ import java.io.IOException;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+/**
+ * @author Seigneur Necron
+ */
 public class StargateZoneCoordinates extends Coordinates<StargateZoneCoordinates> {
 	
-	// Builders :
+	// Constructors :
 	
 	public StargateZoneCoordinates(int dim, int x, int y, int z) {
 		super(dim, x, y, z);

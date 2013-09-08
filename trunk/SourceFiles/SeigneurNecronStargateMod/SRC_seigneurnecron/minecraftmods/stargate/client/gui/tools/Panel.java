@@ -1,21 +1,25 @@
 package seigneurnecron.minecraftmods.stargate.client.gui.tools;
 
+import static seigneurnecron.minecraftmods.stargate.client.gui.tools.Screen.TRANSPARENT;
+import net.minecraft.client.gui.FontRenderer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import net.minecraft.client.gui.FontRenderer;
 
+/**
+ * @author Seigneur Necron
+ */
 @SideOnly(Side.CLIENT)
 public class Panel implements Container {
 	
 	// Fields :
 	
-	protected Container parent;
-	protected int xPos;
-	protected int yPos;
-	protected int width;
-	protected int height;
+	protected final Container parent;
+	protected final int xPos;
+	protected final int yPos;
+	protected final int width;
+	protected final int height;
 	
-	// Builders :
+	// Constructors :
 	
 	public Panel(Container parent, int xPos, int yPos, int width, int height) {
 		this.parent = parent;
@@ -26,6 +30,16 @@ public class Panel implements Container {
 	}
 	
 	// Getters :
+	
+	@Override
+	public int getComponentWidth() {
+		return this.width;
+	}
+	
+	@Override
+	public int getComponentHeight() {
+		return this.height;
+	}
 	
 	public int getxPos() {
 		return this.xPos;
@@ -43,16 +57,6 @@ public class Panel implements Container {
 	@Override
 	public int getYPosInScreen(int yPos) {
 		return this.parent.getYPosInScreen(yPos + this.yPos);
-	}
-	
-	@Override
-	public int getWidth() {
-		return this.width;
-	}
-	
-	@Override
-	public int getHeight() {
-		return this.height;
 	}
 	
 	// Methods :
@@ -73,13 +77,43 @@ public class Panel implements Container {
 	}
 	
 	@Override
-	public void drawBorder(int color) {
-		this.drawBorder(0, 0, this.width, this.height, color);
+	public void drawBox(int borderColor) {
+		this.drawBox(0, 0, this.width, this.height, borderColor, TRANSPARENT, false);
 	}
 	
 	@Override
-	public void drawBorder(int xPos, int yPos, int width, int height, int color) {
-		this.parent.drawBorder(xPos + this.xPos, yPos + this.yPos, width, height, color);
+	public void drawBox(int borderColor, int boxColor) {
+		this.drawBox(0, 0, this.width, this.height, borderColor, boxColor, false);
+	}
+	
+	@Override
+	public void drawBox(int borderColor, boolean extendedLikeFields) {
+		this.drawBox(0, 0, this.width, this.height, borderColor, TRANSPARENT, extendedLikeFields);
+	}
+	
+	@Override
+	public void drawBox(int borderColor, int boxColor, boolean extendedLikeFields) {
+		this.drawBox(0, 0, this.width, this.height, borderColor, boxColor, extendedLikeFields);
+	}
+	
+	@Override
+	public void drawBox(int xPos, int yPos, int width, int height, int borderColor) {
+		this.drawBox(xPos, yPos, width, height, borderColor, TRANSPARENT, false);
+	}
+	
+	@Override
+	public void drawBox(int xPos, int yPos, int width, int height, int borderColor, int boxColor) {
+		this.drawBox(xPos, yPos, width, height, borderColor, boxColor, false);
+	}
+	
+	@Override
+	public void drawBox(int xPos, int yPos, int width, int height, int borderColor, boolean extendedLikeFields) {
+		this.drawBox(xPos, yPos, width, height, borderColor, TRANSPARENT, extendedLikeFields);
+	}
+	
+	@Override
+	public void drawBox(int xPos, int yPos, int width, int height, int borderColor, int boxColor, boolean extendedLikeFields) {
+		this.parent.drawBox(xPos + this.xPos, yPos + this.yPos, width, height, borderColor, boxColor, extendedLikeFields);
 	}
 	
 	public int getBottom() {

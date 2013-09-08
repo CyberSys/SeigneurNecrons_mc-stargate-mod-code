@@ -14,7 +14,7 @@ public class Sound {
 	private String ext;
 	private boolean dependsOnGateType;
 	
-	// Builders :
+	// Constructors :
 	
 	public Sound(String name) {
 		this(name, "wav", false);

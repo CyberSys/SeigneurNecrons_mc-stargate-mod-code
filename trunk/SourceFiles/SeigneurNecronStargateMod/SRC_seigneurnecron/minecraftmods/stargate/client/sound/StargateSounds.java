@@ -21,6 +21,9 @@ public class StargateSounds {
 	public static final Sound stargateEventHorizon = new Sound("stargateEventHorizon");
 	public static final Sound stargateShieldActivation = new Sound("stargateShieldActivation");
 	public static final Sound stargateShieldDeactivation = new Sound("stargateShieldDeactivation");
+	public static final Sound stargateShieldHit = new Sound("stargateShieldHit");
+	public static final Sound teleportation = new Sound("teleportation");
+	public static final Sound button = new Sound("button");
 	
 	@ForgeSubscribe
 	public void loadCustomSounds(SoundLoadEvent event) {

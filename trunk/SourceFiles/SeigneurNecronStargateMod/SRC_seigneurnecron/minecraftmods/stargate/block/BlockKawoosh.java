@@ -10,6 +10,9 @@ import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.entity.damageSource.CustomDamageSource;
 
+/**
+ * @author Seigneur Necron
+ */
 public class BlockKawoosh extends BlockStargate {
 	
 	public BlockKawoosh(String name) {

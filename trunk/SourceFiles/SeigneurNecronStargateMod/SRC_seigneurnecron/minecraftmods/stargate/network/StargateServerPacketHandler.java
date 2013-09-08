@@ -8,7 +8,6 @@ import java.util.logging.Level;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.packet.Packet250CustomPayload;
-import net.minecraft.src.ModLoader;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
@@ -16,16 +15,12 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseDhd;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseShieldConsole;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseTeleporter;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargate;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
 
 /**
  * @author Seigneur Necron
  */
 public class StargateServerPacketHandler extends StargatePacketHandler {
-	
-	@Override
-	protected World getWorldForDimension(int dim) {
-		return ModLoader.getMinecraftServerInstance().worldServerForDimension(dim);
-	}
 	
 	@Override
 	protected void handleCommandPacket(Packet250CustomPayload packet, EntityPlayer player) {
@@ -59,6 +54,10 @@ public class StargateServerPacketHandler extends StargatePacketHandler {
 					else if(commandName == STARGATE_CLOSE && tileEntity instanceof TileEntityBaseDhd) {
 						((TileEntityBaseDhd) tileEntity).closeStargate();
 					}
+					else if(commandName == STARGATE_CREATE && tileEntity instanceof TileEntityStargateControl) {
+						String address = input.readUTF();
+						((TileEntityStargateControl) tileEntity).createGate(address);
+					}
 					else if(commandName == SHIELD && tileEntity instanceof TileEntityBaseShieldConsole) {
 						boolean activate = input.readBoolean();
 						((TileEntityBaseShieldConsole) tileEntity).activateShield(activate);
@@ -83,6 +82,11 @@ public class StargateServerPacketHandler extends StargatePacketHandler {
 			StargateMod.debug("Error while reading in a DataInputStream. Couldn't read a command packet.", Level.SEVERE, true);
 			argh.printStackTrace();
 		}
+	}
+	
+	@Override
+	public World getWorldForDimension(int dim) {
+		return StargateMod.getServerWorldForDimension(dim);
 	}
 	
 }

@@ -6,6 +6,9 @@ import java.io.IOException;
 
 import net.minecraft.nbt.NBTTagCompound;
 
+/**
+ * @author Seigneur Necron
+ */
 public class Stargate implements Comparable<Stargate>, Loadable<Stargate> {
 	
 	// NBTTags names :
@@ -20,7 +23,7 @@ public class Stargate implements Comparable<Stargate>, Loadable<Stargate> {
 	public String name;
 	public int code;
 	
-	// Builders :
+	// Constructors :
 	
 	public Stargate(String address, String name, int code) {
 		this.address = address;

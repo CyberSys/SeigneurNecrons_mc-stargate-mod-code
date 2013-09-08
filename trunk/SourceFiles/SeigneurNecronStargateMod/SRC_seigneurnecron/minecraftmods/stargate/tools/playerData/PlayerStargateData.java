@@ -49,13 +49,18 @@ public final class PlayerStargateData extends PlayerDataList<Stargate> {
 		playerData.syncProperties();
 	}
 	
-	// Builders :
+	// Constructors :
 	
 	public PlayerStargateData(EntityPlayer player) {
 		super(player);
 	}
 	
 	// Methods :
+	
+	@Override
+	protected String getIdentifier() {
+		return IDENTIFIER;
+	}
 	
 	@Override
 	protected Stargate getElement(NBTTagCompound tag) {

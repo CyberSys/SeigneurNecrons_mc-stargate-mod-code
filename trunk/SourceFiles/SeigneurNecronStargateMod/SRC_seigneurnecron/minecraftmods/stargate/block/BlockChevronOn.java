@@ -7,6 +7,9 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 
+/**
+ * @author Seigneur Necron
+ */
 public class BlockChevronOn extends BlockChevron {
 	
 	public BlockChevronOn(String name) {

@@ -1,5 +1,8 @@
 package seigneurnecron.minecraftmods.stargate.tools.enums;
 
+/**
+ * @author Seigneur Necron
+ */
 public enum Dimension {
 	
 	EARTH(0, '0', "Earth"),

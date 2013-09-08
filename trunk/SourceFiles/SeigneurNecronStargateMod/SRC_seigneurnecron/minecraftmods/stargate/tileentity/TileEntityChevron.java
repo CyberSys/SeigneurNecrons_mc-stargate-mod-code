@@ -56,17 +56,17 @@ public class TileEntityChevron extends TileEntityStargatePart {
 	}
 	
 	@Override
-	public void readFromNBT(NBTTagCompound par1NBTTagCompound) {
-		super.readFromNBT(par1NBTTagCompound);
-		this.no = par1NBTTagCompound.getInteger("no");
-		this.activating = par1NBTTagCompound.getBoolean("activating");
+	public void readFromNBT(NBTTagCompound compound) {
+		super.readFromNBT(compound);
+		this.no = compound.getInteger("no");
+		this.activating = compound.getBoolean("activating");
 	}
 	
 	@Override
-	public void writeToNBT(NBTTagCompound par1NBTTagCompound) {
-		super.writeToNBT(par1NBTTagCompound);
-		par1NBTTagCompound.setInteger("no", this.no);
-		par1NBTTagCompound.setBoolean("activating", this.activating);
+	public void writeToNBT(NBTTagCompound compound) {
+		super.writeToNBT(compound);
+		compound.setInteger("no", this.no);
+		compound.setBoolean("activating", this.activating);
 	}
 	
 	@Override
