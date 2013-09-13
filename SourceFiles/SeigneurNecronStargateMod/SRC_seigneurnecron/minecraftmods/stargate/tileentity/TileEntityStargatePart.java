@@ -142,8 +142,8 @@ public class TileEntityStargatePart extends TileEntityStargate {
 	}
 	
 	@Override
-	protected void getEntityData(DataOutputStream output) throws IOException {
-		super.getEntityData(output);
+	protected void getTileEntityData(DataOutputStream output) throws IOException {
+		super.getTileEntityData(output);
 		
 		output.writeInt(this.xGate);
 		output.writeInt(this.yGate);

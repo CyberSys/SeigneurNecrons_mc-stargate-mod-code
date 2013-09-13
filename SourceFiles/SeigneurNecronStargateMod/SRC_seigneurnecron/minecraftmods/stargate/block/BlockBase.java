@@ -73,11 +73,11 @@ public abstract class BlockBase extends BlockGuiScreen {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		this.naquadaIcon = iconRegister.registerIcon(StargateMod.ASSETS_PREFIX + StargateMod.blockName_naquadahAlloy);
+		this.naquadaIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + StargateMod.blockName_naquadahAlloy);
 		
 		for(int i = 0; i < 4; i++) {
-			this.baseIcons[0][i] = iconRegister.registerIcon(StargateMod.ASSETS_PREFIX + this.func_111023_E() + "_off" + i);
-			this.baseIcons[1][i] = iconRegister.registerIcon(StargateMod.ASSETS_PREFIX + this.func_111023_E() + "_on" + i);
+			this.baseIcons[0][i] = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111023_E() + "_off" + i);
+			this.baseIcons[1][i] = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111023_E() + "_on" + i);
 		}
 		
 		this.blockIcon = this.baseIcons[1][0];

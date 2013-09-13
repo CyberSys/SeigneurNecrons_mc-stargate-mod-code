@@ -2,15 +2,13 @@ package seigneurnecron.minecraftmods.stargate.block;
 
 import java.util.Random;
 
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-
 import net.minecraft.block.BlockOre;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Seigneur Necron
@@ -18,14 +16,14 @@ import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
 public class BlockNaquadahOre extends BlockOre {
 	
 	public BlockNaquadahOre(String name) {
-		super(StargateModConfig.getBlockId(name));
+		super(StargateMod.instance.getConfig().getBlockId(name));
 		this.setHardness(StargateMod.RESISTANT_BLOCKS_HARDNESS);
 		this.setResistance(StargateMod.RESISTANT_BLOCKS_RESISTANCE);
 		this.setStepSound(soundStoneFootstep);
 		this.setUnlocalizedName(name);
 		this.func_111022_d(name); // setIconName()
 		this.setCreativeTab(StargateMod.stargateBlocksTab);
-		StargateMod.registerBlock(this);
+		StargateMod.instance.registerBlock(this);
 	}
 	
 	@Override
@@ -51,7 +49,7 @@ public class BlockNaquadahOre extends BlockOre {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		this.blockIcon = iconRegister.registerIcon(StargateMod.ASSETS_PREFIX + this.func_111023_E()); // getIconName()
+		this.blockIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111023_E()); // getIconName()
 	}
 	
 }

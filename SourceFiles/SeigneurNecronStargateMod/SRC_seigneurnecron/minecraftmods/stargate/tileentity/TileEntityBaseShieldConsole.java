@@ -1,11 +1,9 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.SHIELD;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.SHIELD_AUTOMATED;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.SHIELD_CODE;
 import net.minecraft.block.Block;
 import net.minecraft.network.packet.Packet;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
+import seigneurnecron.minecraftmods.stargate.network.packetmapping.StargateCommandPacketMapping;
 
 /**
  * @author Seigneur Necron
@@ -62,7 +60,7 @@ public class TileEntityBaseShieldConsole extends TileEntityBaseStargateConsole {
 	 * @return a shield command packet.
 	 */
 	public Packet getShieldPacket(boolean activate) {
-		return this.getCommandPacket(SHIELD, activate);
+		return this.getCommandPacket(StargateCommandPacketMapping.getInstance().SHIELD, activate);
 	}
 	
 	/**
@@ -71,16 +69,16 @@ public class TileEntityBaseShieldConsole extends TileEntityBaseStargateConsole {
 	 * @return a shield automated command packet.
 	 */
 	public Packet getShieldAutomatedPacket(boolean shieldAutomated) {
-		return this.getCommandPacket(SHIELD_AUTOMATED, shieldAutomated);
+		return this.getCommandPacket(StargateCommandPacketMapping.getInstance().SHIELD_AUTOMATED, shieldAutomated);
 	}
 	
 	/**
-	 * Returns a shield command packet. This is used to change the code which deactivates the shield of the stargate connected to this console.
+	 * Returns a shield code command packet. This is used to change the code which deactivates the shield of the stargate connected to this console.
 	 * @param code - the code which deactivates the shield.
 	 * @return a shield code command packet.
 	 */
 	public Packet getShieldCodePacket(int code) {
-		return this.getCommandPacket(SHIELD_CODE, code);
+		return this.getCommandPacket(StargateCommandPacketMapping.getInstance().SHIELD_CODE, code);
 	}
 	
 	@Override

@@ -1,4 +1,4 @@
-package seigneurnecron.minecraftmods.stargate.entity.dispenserBehavior;
+package seigneurnecron.minecraftmods.stargate.entity.dispenserbehavior;
 
 import java.util.Random;
 

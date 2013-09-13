@@ -4,6 +4,7 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import net.minecraft.nbt.NBTTagCompound;
+import seigneurnecron.minecraftmods.core.loadable.Coordinates;
 
 /**
  * @author Seigneur Necron

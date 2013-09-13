@@ -54,11 +54,11 @@ public class BlockStuffLevelUpTable extends BlockGuiContainer {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		this.naquadaIcon = iconRegister.registerIcon(StargateMod.ASSETS_PREFIX + StargateMod.blockName_naquadahAlloy);
+		this.naquadaIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + StargateMod.blockName_naquadahAlloy);
 		
 		for(int i = 0; i < 4; i++) {
-			this.blockIcons[0][i] = iconRegister.registerIcon(StargateMod.ASSETS_PREFIX + this.func_111023_E() + "_base" + i);
-			this.blockIcons[1][i] = iconRegister.registerIcon(StargateMod.ASSETS_PREFIX + this.func_111023_E() + "_panel" + i);
+			this.blockIcons[0][i] = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111023_E() + "_base" + i);
+			this.blockIcons[1][i] = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111023_E() + "_panel" + i);
 		}
 		
 		this.blockIcon = this.blockIcons[1][0];

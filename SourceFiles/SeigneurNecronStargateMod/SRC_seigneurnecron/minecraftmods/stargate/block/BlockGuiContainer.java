@@ -5,7 +5,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityGuiContainer;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateGuiContainer;
 
 /**
  * @author Seigneur Necron
@@ -23,7 +23,7 @@ public abstract class BlockGuiContainer extends BlockStargateContainer {
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		
-		if(tileEntity == null || !(tileEntity instanceof TileEntityGuiContainer)) {
+		if(tileEntity == null || !(tileEntity instanceof TileEntityStargateGuiContainer)) {
 			return false;
 		}
 		

@@ -83,8 +83,8 @@ public class BlockMobGenerator extends BlockGuiContainer {
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
 		super.registerIcons(iconRegister);
-		this.crystalInsertedIcon = iconRegister.registerIcon(StargateMod.ASSETS_PREFIX + StargateMod.blockName_mobGenerator + "_crystal");
-		this.blockActiveIcon = iconRegister.registerIcon(StargateMod.ASSETS_PREFIX + StargateMod.blockName_mobGenerator + "_active");
+		this.crystalInsertedIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + StargateMod.blockName_mobGenerator + "_crystal");
+		this.blockActiveIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + StargateMod.blockName_mobGenerator + "_active");
 	}
 	
 	@Override

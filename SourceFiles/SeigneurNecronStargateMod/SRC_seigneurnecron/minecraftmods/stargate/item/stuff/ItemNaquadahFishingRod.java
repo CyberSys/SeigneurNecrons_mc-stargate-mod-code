@@ -6,9 +6,8 @@ import net.minecraft.item.EnumRarity;
 import net.minecraft.item.ItemFishingRod;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
+import seigneurnecron.minecraftmods.core.entity.EntityCustomFishHook;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.entity.EntityCustomFishHook;
-import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -18,7 +17,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemNaquadahFishingRod extends ItemFishingRod {
 	
 	public ItemNaquadahFishingRod(String name) {
-		super(StargateModConfig.getItemId(name));
+		super(StargateMod.instance.getConfig().getItemId(name));
 		this.setUnlocalizedName(name);
 		this.func_111206_d(name); // setIconName(name)
 		this.setMaxDamage(0);
@@ -28,7 +27,7 @@ public class ItemNaquadahFishingRod extends ItemFishingRod {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		this.itemIcon = iconRegister.registerIcon(StargateMod.ASSETS_PREFIX + this.func_111208_A()); // getIconName()
+		this.itemIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111208_A()); // getIconName()
 	}
 	
 	@Override

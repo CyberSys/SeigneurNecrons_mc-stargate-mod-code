@@ -4,7 +4,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import seigneurnecron.minecraftmods.stargate.client.gui.GuiTeleporter;
+import seigneurnecron.minecraftmods.stargate.gui.GuiTeleporter;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseTeleporter;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityGuiScreen;
 import cpw.mods.fml.relauncher.Side;

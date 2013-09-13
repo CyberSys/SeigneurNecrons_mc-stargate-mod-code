@@ -9,6 +9,8 @@ import java.io.IOException;
  */
 public abstract class TileEntityGuiScreen extends TileEntityStargate {
 	
+	public static final String INV_NAME = "container.screen";
+	
 	/**
 	 * Indicates whether someone is currently editing the tile entity.
 	 */
@@ -27,14 +29,16 @@ public abstract class TileEntityGuiScreen extends TileEntityStargate {
 	 * @param editable - true if this tile entity must be editable, else false.
 	 */
 	public void setEditable(boolean editable) {
-		this.editable = editable;
-		this.setChanged();
-		this.update();
+		if(this.editable != editable) {
+			this.editable = editable;
+			this.setChanged();
+			this.update();
+		}
 	}
 	
 	@Override
-	protected void getEntityData(DataOutputStream output) throws IOException {
-		super.getEntityData(output);
+	protected void getTileEntityData(DataOutputStream output) throws IOException {
+		super.getTileEntityData(output);
 		
 		output.writeBoolean(this.editable);
 	}

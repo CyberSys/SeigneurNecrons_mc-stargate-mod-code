@@ -13,6 +13,8 @@ import net.minecraft.world.World;
  */
 public class ItemEmptySoulCrystal extends ItemStargate {
 	
+	private static final int MAX_HEALTH = 10;
+	
 	public ItemEmptySoulCrystal(String name) {
 		super(name);
 	}
@@ -22,7 +24,7 @@ public class ItemEmptySoulCrystal extends ItemStargate {
 	public boolean func_111207_a(ItemStack itemstack, EntityPlayer player, EntityLivingBase entity) {
 		World world = entity.worldObj;
 		if(!world.isRemote) {
-			if(entity.func_110143_aJ() <= 20) { // getHealth()
+			if(entity.func_110143_aJ() <= MAX_HEALTH) { // getHealth()
 				int monsterId = EntityList.getEntityID(entity);
 				ItemSoulCrystal crystal = ItemSoulCrystal.getCrystalFromMonsterId(monsterId);
 				
@@ -31,7 +33,7 @@ public class ItemEmptySoulCrystal extends ItemStargate {
 					EntityItem drop = new EntityItem(world, entity.posX, entity.posY, entity.posZ, stack);
 					drop.delayBeforeCanPickup = 10;
 					world.spawnEntityInWorld(drop);
-					entity.attackEntityFrom(DamageSource.causePlayerDamage(null), 25);
+					entity.attackEntityFrom(DamageSource.causePlayerDamage(null), MAX_HEALTH);
 					itemstack.stackSize--;
 				}
 			}

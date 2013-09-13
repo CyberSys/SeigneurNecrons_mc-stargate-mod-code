@@ -16,7 +16,7 @@ import seigneurnecron.minecraftmods.stargate.item.ItemSoulCrystal;
 /**
  * @author Seigneur Necron
  */
-public class TileEntityMobGenerator extends TileEntityGuiContainer {
+public class TileEntityMobGenerator extends TileEntityStargateGuiContainer {
 	
 	public static final String INV_NAME = "container.mobGenerator";
 	
@@ -178,8 +178,8 @@ public class TileEntityMobGenerator extends TileEntityGuiContainer {
 	}
 	
 	@Override
-	protected void getEntityData(DataOutputStream output) throws IOException {
-		super.getEntityData(output);
+	protected void getTileEntityData(DataOutputStream output) throws IOException {
+		super.getTileEntityData(output);
 		
 		output.writeBoolean(this.powered);
 		output.writeInt(this.delay);

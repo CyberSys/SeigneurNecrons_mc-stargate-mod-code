@@ -30,6 +30,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
 import net.minecraft.world.World;
+import seigneurnecron.minecraftmods.core.inventory.BasicContainer;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStuffLevelUpTable;
 import cpw.mods.fml.relauncher.Side;
@@ -38,7 +39,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 /**
  * @author Seigneur Necron
  */
-public class ContainerStuffLevelUpTable extends ContainerStargate<TileEntityStuffLevelUpTable> {
+public class ContainerStuffLevelUpTable extends BasicContainer<TileEntityStuffLevelUpTable> {
 	
 	/**
 	 * The number of bookcases required to use the enchantment table.
@@ -407,7 +408,6 @@ public class ContainerStuffLevelUpTable extends ContainerStargate<TileEntityStuf
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public int getCurrentItemEnchantLevelSum() {
 		int sum = 0;
 		

@@ -1,22 +1,22 @@
-package seigneurnecron.minecraftmods.stargate.tools.playerData;
+package seigneurnecron.minecraftmods.stargate.tools.playerdata;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import seigneurnecron.minecraftmods.stargate.network.StargateCommonProxy;
+import seigneurnecron.minecraftmods.stargate.proxy.StargateCommonProxy;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.Teleporter;
 
 /**
  * @author Seigneur Necron
  */
-public final class PlayerTeleporterData extends PlayerDataList<Teleporter> {
+public final class PlayerTeleporterData extends StargatePlayerDataList<Teleporter> {
 	
 	/**
 	 * Property indentifier.
 	 */
-	private static final String IDENTIFIER = "playerTeleporterData";
+	public static final String IDENTIFIER = "playerTeleporterData";
 	
 	private static String getSaveKey(EntityPlayer player) {
 		return player.username + ":" + IDENTIFIER;

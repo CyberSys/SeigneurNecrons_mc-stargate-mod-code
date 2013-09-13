@@ -8,7 +8,6 @@ import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -18,7 +17,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class ItemNaquadahPickaxe extends ItemPickaxe {
 	
 	public ItemNaquadahPickaxe(String name) {
-		super(StargateModConfig.getItemId(name), StargateMod.naquadahToolMaterial);
+		super(StargateMod.instance.getConfig().getItemId(name), StargateMod.naquadahToolMaterial);
 		this.setUnlocalizedName(name);
 		this.func_111206_d(name); // setIconName(name)
 		this.setCreativeTab(StargateMod.stargateItemsTab);
@@ -26,7 +25,7 @@ public class ItemNaquadahPickaxe extends ItemPickaxe {
 	
 	@Override
 	public boolean onItemUse(ItemStack stack, EntityPlayer player, World world, int x, int y, int z, int side, float hitX, float hitY, float hitZ) {
-		if(StargateModConfig.canNaquadahPickaxeMineBedrock && y != 0 && world.getBlockId(x, y, z) == Block.bedrock.blockID) {
+		if(StargateMod.instance.getConfig().canNaquadahPickaxeMineBedrock && y != 0 && world.getBlockId(x, y, z) == Block.bedrock.blockID) {
 			world.destroyBlock(x, y, z, false);
 			return true;
 		}
@@ -42,7 +41,7 @@ public class ItemNaquadahPickaxe extends ItemPickaxe {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		this.itemIcon = iconRegister.registerIcon(StargateMod.ASSETS_PREFIX + this.func_111208_A()); // getIconName()
+		this.itemIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111208_A()); // getIconName()
 	}
 	
 	@Override

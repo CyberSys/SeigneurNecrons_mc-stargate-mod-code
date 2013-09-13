@@ -1,11 +1,10 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.TELEPORT;
 import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.packet.Packet;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.client.sound.StargateSounds;
+import seigneurnecron.minecraftmods.stargate.network.packetmapping.StargateCommandPacketMapping;
 
 /**
  * @author Seigneur Necron
@@ -89,9 +88,9 @@ public class TileEntityBaseTeleporter extends TileEntityBase {
 				
 				// Checks that there is enough space at the destination.
 				if(!(this.worldObj.isBlockNormalCube(xTp, yTp, zTp) || this.worldObj.isBlockNormalCube(xTp, yTp + 1, zTp))) {
-					this.playSoundEffect(StargateSounds.teleportation, player);
+					this.playSoundEffect(StargateMod.getSounds().teleportation, player);
 					player.playerNetServerHandler.setPlayerLocation(xTp + 0.5, yTp, zTp + 0.5, rotationYaw, rotationPitch);
-					this.playSoundEffect(StargateSounds.teleportation, player);
+					this.playSoundEffect(StargateMod.getSounds().teleportation, player);
 				}
 			}
 		}
@@ -105,7 +104,7 @@ public class TileEntityBaseTeleporter extends TileEntityBase {
 	 * @return a teleport command packet.
 	 */
 	public Packet getTeleportPacket(int x, int y, int z) {
-		return this.getCommandPacket(TELEPORT, x, y, z);
+		return this.getCommandPacket(StargateCommandPacketMapping.getInstance().TELEPORT, x, y, z);
 	}
 	
 	@Override

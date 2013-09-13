@@ -182,6 +182,10 @@ public final class GateAddress {
 		return isValidAddress(address, 0, false, false);
 	}
 	
+	public static boolean isValidAddress(String address, boolean displayError) {
+		return isValidAddress(address, 0, false, displayError);
+	}
+	
 	public static boolean isValidAddressForDimension(String address, int dimension) {
 		return isValidAddress(address, dimension, true, true);
 	}
@@ -191,7 +195,7 @@ public final class GateAddress {
 			StargateZoneCoordinates coords = toCoordinates(address);
 			
 			if(checkDimension && coords.dim != dimension) {
-				StargateMod.debug("The address \"" + address + "\" isn't valid for the dimension.", true);
+				StargateMod.instance.log("The address \"" + address + "\" isn't valid for the dimension.");
 				return false;
 			}
 			
@@ -199,7 +203,7 @@ public final class GateAddress {
 		}
 		catch(MalformedGateAddressException argh) {
 			if(displayError) {
-				StargateMod.debug(argh.getMessage(), true);
+				StargateMod.instance.log(argh.getMessage());
 			}
 			return false;
 		}

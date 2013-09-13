@@ -1,4 +1,4 @@
-package seigneurnecron.minecraftmods.stargate.entity.damageSource;
+package seigneurnecron.minecraftmods.stargate.entity.damagesource;
 
 import net.minecraft.util.DamageSource;
 import seigneurnecron.minecraftmods.stargate.StargateMod;

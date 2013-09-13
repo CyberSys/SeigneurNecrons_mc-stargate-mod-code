@@ -185,7 +185,7 @@ public abstract class TileEntityBaseStargateConsole extends TileEntityBase {
 		TileEntityStargateControl stargate = this.getStargateControl();
 		
 		if(stargate != null) {
-			onStargateConsoleDestroyed(stargate);
+			this.onStargateConsoleDestroyed(stargate);
 			this.setLinkedToGate(false);
 		}
 	}
@@ -214,8 +214,8 @@ public abstract class TileEntityBaseStargateConsole extends TileEntityBase {
 	}
 	
 	@Override
-	protected void getEntityData(DataOutputStream output) throws IOException {
-		super.getEntityData(output);
+	protected void getTileEntityData(DataOutputStream output) throws IOException {
+		super.getTileEntityData(output);
 		
 		output.writeBoolean(this.linkedToGate);
 		output.writeInt(this.xGate);
