@@ -1,4 +1,4 @@
-package seigneurnecron.minecraftmods.stargate.tools.worldData;
+package seigneurnecron.minecraftmods.stargate.tools.worlddata;
 
 import java.util.logging.Level;
 
@@ -6,8 +6,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.storage.MapStorage;
+import seigneurnecron.minecraftmods.core.mod.ModBase;
+import seigneurnecron.minecraftmods.core.worlddata.WorldDataList;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
+import seigneurnecron.minecraftmods.stargate.tools.enums.GateState;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.StargateCoordinates;
 
 /**
@@ -16,17 +19,27 @@ import seigneurnecron.minecraftmods.stargate.tools.loadable.StargateCoordinates;
 public final class WorldStargateData extends WorldDataList<StargateCoordinates> {
 	
 	private static final String IDENTIFIER = "worldStargateData";
+	protected static WorldStargateData instance;
 	
-	public static WorldStargateData get(World world) {
-		MapStorage storage = world.perWorldStorage;
-		WorldStargateData worldData = (WorldStargateData) storage.loadData(WorldStargateData.class, IDENTIFIER);
+	private static World getWorld() {
+		return ModBase.getServerWorldForDimension(0);
+	}
+	
+	public static WorldStargateData getInstance() {
+		WorldStargateData worldData = instance;
 		
 		if(worldData == null) {
-			worldData = new WorldStargateData();
-			storage.setData(IDENTIFIER, worldData);
+			MapStorage storage = getWorld().perWorldStorage;
+			worldData = (WorldStargateData) storage.loadData(WorldStargateData.class, IDENTIFIER);
+			
+			if(worldData == null) {
+				worldData = new WorldStargateData();
+				storage.setData(IDENTIFIER, worldData);
+			}
+			
+			instance = worldData;
 		}
 		
-		worldData.world = world;
 		return worldData;
 	}
 	
@@ -54,14 +67,18 @@ public final class WorldStargateData extends WorldDataList<StargateCoordinates> 
 			StargateCoordinates stargate = this.dataList.get(index);
 			
 			if(stargate != null) {
-				TileEntity tileEntity = this.world.getBlockTileEntity(stargate.x, stargate.y, stargate.z);
+				World world = ModBase.getServerWorldForDimension(stargate.dim);
 				
-				if(tileEntity != null && tileEntity instanceof TileEntityStargateControl) {
-					return stargate;
+				if(world != null) {
+					TileEntity tileEntity = world.getBlockTileEntity(stargate.x, stargate.y, stargate.z);
+					
+					if(tileEntity != null && tileEntity instanceof TileEntityStargateControl && ((TileEntityStargateControl) tileEntity).getState() != GateState.BROKEN) {
+						return stargate;
+					}
 				}
 			}
 			
-			StargateMod.debug("An invalid stargate was registered in the world. This is not normal.", Level.WARNING, true);
+			StargateMod.instance.log("An invalid stargate was registered in the world. This is not normal.", Level.WARNING);
 			this.removeElement(stargate);
 		}
 		
@@ -69,21 +86,25 @@ public final class WorldStargateData extends WorldDataList<StargateCoordinates> 
 	}
 	
 	public boolean isAvailable(StargateCoordinates address) {
-		return getElementLike(address) == null;
+		return this.getElementLike(address) == null;
 	}
 	
-	public boolean checkRegistered(StargateCoordinates address) {
-		StargateMod.debug("World ok : " + (this.world == StargateMod.getServerWorldForDimension(this.world.provider.dimensionId)), true); // FIXME - delete.
-		
+	public StargateCoordinates checkRegistered(StargateCoordinates address) {
 		StargateCoordinates stargate = this.getElementLike(address);
 		
 		if(stargate == null) {
-			StargateMod.debug("A valid stargate wasn't registered in the world. This is not normal.", Level.WARNING, true);
+			StargateMod.instance.log("A valid stargate wasn't registered in the world. This is not normal.", Level.WARNING);
 			this.addElement(address);
-			return true;
+			
+			stargate = this.getElementLike(address);
+			return stargate;
 		}
-		
-		return (stargate.x == address.x) && (stargate.y == address.y) && (stargate.z == address.z);
+		else if((stargate.dim == address.dim) && (stargate.x == address.x) && (stargate.y == address.y) && (stargate.z == address.z)) {
+			return stargate;
+		}
+		else {
+			return null;
+		}
 	}
 	
 	public StargateCoordinates getCoordinates(String address) {

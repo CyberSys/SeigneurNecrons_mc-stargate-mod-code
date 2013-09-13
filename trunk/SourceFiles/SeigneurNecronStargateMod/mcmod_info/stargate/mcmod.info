@@ -1,0 +1,17 @@
+[
+{
+"modid": "seigneur_necron_stargate_mod",
+"name": "SeigneurNecron's Stargate Mod",
+"description": "A mod which adds Naquadah in the word, with which you can build Stargates, teleporters, detectors, mobs generators...",
+"version": "v3.1.2",
+"credits": "Thanks to my friends ArkanEx and Loki Sanada",
+"logoFile": "/assets/seigneur_necron_stargate_mod/textures/gui/mod_logo.png",
+"mcversion": "1.6.2",
+"url": "http://sourceforge.net/projects/mc-stargate-mod/",
+"updateUrl": "",
+"authors": [ "Seigneur Necron" ],
+"parent":"",
+"screenshots": [],
+"dependencies": ["seigneur_necron_mod_core"]
+}
+]

@@ -1,8 +1,8 @@
 package seigneurnecron.minecraftmods.stargate.block;
 
-import seigneurnecron.minecraftmods.stargate.StargateMod;
 import net.minecraft.block.Block;
 import net.minecraft.world.World;
+import seigneurnecron.minecraftmods.stargate.StargateMod;
 
 /**
  * @author Seigneur Necron

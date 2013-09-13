@@ -1,0 +1,17 @@
+[
+{
+"modid": "seigneur_necron_mod_core",
+"name": "SeigneurNecron's Mod Core",
+"description": "A mod which adds no content but a lot of modding tools.",
+"version": "v1.0.0",
+"credits": "Thanks to my friends ArkanEx and Loki Sanada",
+"logoFile": "/assets/seigneur_necron_mod_core/textures/gui/mod_logo.png",
+"mcversion": "1.6.2",
+"url": "http://sourceforge.net/projects/mc-stargate-mod/",
+"updateUrl": "",
+"authors": [ "Seigneur Necron" ],
+"parent":"",
+"screenshots": [],
+"dependencies": ["Forge"]
+}
+]

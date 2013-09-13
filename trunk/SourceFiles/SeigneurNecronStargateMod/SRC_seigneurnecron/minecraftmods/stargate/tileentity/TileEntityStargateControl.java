@@ -1,7 +1,5 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.STARGATE_CREATE;
-
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -16,15 +14,15 @@ import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityMinecart;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.network.packet.Packet28EntityVelocity;
-import net.minecraft.network.packet.Packet34EntityTeleport;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.ChunkPosition;
 import net.minecraft.world.World;
+import seigneurnecron.minecraftmods.core.mod.ModBase;
+import seigneurnecron.minecraftmods.core.sound.Sound;
+import seigneurnecron.minecraftmods.core.teleportation.Teleporter;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.block.BlockBaseStargateConsole;
 import seigneurnecron.minecraftmods.stargate.block.BlockChevron;
@@ -34,11 +32,9 @@ import seigneurnecron.minecraftmods.stargate.block.BlockPanelStargateConsole;
 import seigneurnecron.minecraftmods.stargate.block.BlockPortal;
 import seigneurnecron.minecraftmods.stargate.block.BlockStargateControl;
 import seigneurnecron.minecraftmods.stargate.block.BlockStargatePart;
-import seigneurnecron.minecraftmods.stargate.client.sound.Sound;
-import seigneurnecron.minecraftmods.stargate.client.sound.StargateSounds;
-import seigneurnecron.minecraftmods.stargate.entity.damageSource.CustomDamageSource;
+import seigneurnecron.minecraftmods.stargate.entity.damagesource.CustomDamageSource;
+import seigneurnecron.minecraftmods.stargate.network.packetmapping.StargateCommandPacketMapping;
 import seigneurnecron.minecraftmods.stargate.tools.address.GateAddress;
-import seigneurnecron.minecraftmods.stargate.tools.address.MalformedGateAddressException;
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateActivationSequence;
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateActivationState;
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateActivationType;
@@ -46,7 +42,8 @@ import seigneurnecron.minecraftmods.stargate.tools.enums.GateKawooshState;
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateOrientation;
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateState;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.StargateCoordinates;
-import seigneurnecron.minecraftmods.stargate.tools.worldData.WorldStargateData;
+import seigneurnecron.minecraftmods.stargate.tools.worlddata.StargateChunkLoader;
+import seigneurnecron.minecraftmods.stargate.tools.worlddata.WorldStargateData;
 
 /**
  * @author Seigneur Necron
@@ -205,34 +202,14 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	private int count = 0;
 	
 	/**
-	 * The address of the destination (another gate).
-	 */
-	private String addressDest = "";
-	
-	/**
-	 * The dimension of the destination (another gate).
-	 */
-	private int dimDest = 0;
-	
-	/**
-	 * The X coordinate of the destination (another gate).
-	 */
-	private int xDest = 0;
-	
-	/**
-	 * The Y coordinate of the destination (another gate).
-	 */
-	private int yDest = 0;
-	
-	/**
-	 * The Z coordinate of the destination (another gate).
-	 */
-	private int zDest = 0;
-	
-	/**
 	 * Indicates if the other gate shield is activated.
 	 */
 	private boolean otherGateShieldActivated = false;
+	
+	/**
+	 * The destination (the coordiantes of the gate connected to this one).
+	 */
+	private StargateCoordinates destination = new StargateCoordinates("", 0, 0, 0, 0);
 	
 	/**
 	 * A map containing the list of recently teleported entities and counters indicating how long ago they were teleported.
@@ -330,51 +307,19 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	}
 	
 	/**
-	 * Returns the address of the destination (another gate).
-	 * @return the address of the destination (another gate).
-	 */
-	public String getAddressDest() {
-		return this.addressDest;
-	}
-	
-	/**
-	 * Returns the dimension of the destination (another gate).
-	 * @return the dimension of the destination (another gate).
-	 */
-	public int dimDest() {
-		return this.dimDest;
-	}
-	
-	/**
-	 * Returns the X coordinate of the destination (another gate).
-	 * @return the X coordinate of the destination (another gate).
-	 */
-	public int getXDest() {
-		return this.xDest;
-	}
-	
-	/**
-	 * Returns the Y coordinate of the destination (another gate).
-	 * @return the Y coordinate of the destination (another gate).
-	 */
-	public int getYDest() {
-		return this.yDest;
-	}
-	
-	/**
-	 * Returns the Z coordinate of the destination (another gate).
-	 * @return the Z coordinate of the destination (another gate).
-	 */
-	public int getZDest() {
-		return this.zDest;
-	}
-	
-	/**
 	 * Returns the other gate shield state.
 	 * @return true if the other gate shield is activated, else false.
 	 */
-	public boolean getOtherGateShieldActivated() {
+	public boolean isOtherGateShieldActivated() {
 		return this.otherGateShieldActivated;
+	}
+	
+	/**
+	 * Returns the destination (the coordiantes of the gate connected to this one).
+	 * @return the destination (the coordiantes of the gate connected to this one).
+	 */
+	public StargateCoordinates getDestination() {
+		return this.destination;
 	}
 	
 	// Setters :
@@ -389,21 +334,28 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	 * @param state - the new gate state.
 	 */
 	private void setState(GateState state) {
-		this.state = state;
-		this.setChanged();
+		boolean changed = this.state != state;
 		
-		if(state == GateState.OFF) {
-			this.setKawooshState(GateKawooshState.K0);
-			this.setActivationState(GateActivationState.E0);
+		if(changed) {
+			this.state = state;
+			this.setChanged();
+			
+			if(state == GateState.ACTIVATING) {
+				StargateChunkLoader.getInstance().registerGate(this.getStargateCoordinates());
+			}
+			else if(state == GateState.OFF) {
+				this.setKawooshState(GateKawooshState.K0);
+				this.setActivationState(GateActivationState.E0);
+				StargateChunkLoader.getInstance().unregisterGate(this.getStargateCoordinates());
+			}
+			else if(state == GateState.BROKEN) {
+				this.onShieldConsoleDestroyed();
+				WorldStargateData.getInstance().removeElement(this.getStargateCoordinates());
+				this.setAddress("");
+			}
+			
+			this.update();
 		}
-		else if(state == GateState.BROKEN) {
-			this.onShieldConsoleDestroyed();
-			StargateCoordinates stargate = new StargateCoordinates(this.address, this.getDimension(), this.xCoord, this.yCoord, this.zCoord);
-			WorldStargateData.get(this.worldObj).removeElement(stargate);
-			this.setAddress("");
-		}
-		
-		this.update();
 	}
 	
 	/**
@@ -468,13 +420,13 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	 */
 	private void setShieldActivated(boolean shieldActivated) {
 		boolean changed = this.shieldActivated != shieldActivated;
-		this.shieldActivated = shieldActivated;
 		
 		if(changed) {
+			this.shieldActivated = shieldActivated;
 			this.setChanged();
 			
 			// Plays the sound corresponding to a shield activation/deactivation.
-			this.playSoundEffect(this.shieldActivated ? StargateSounds.stargateShieldActivation : StargateSounds.stargateShieldDeactivation);
+			this.playSoundEffect(this.shieldActivated ? StargateMod.getSounds().stargateShieldActivation : StargateMod.getSounds().stargateShieldDeactivation);
 			
 			// Updates the shield.
 			this.updateVortex();
@@ -487,12 +439,12 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 					otherGate.setOtherGateShieldActivated(shieldActivated);
 				}
 				else {
-					StargateMod.debug("Error : can't transmit the shield state to the other gate. This is a bug !", Level.SEVERE, true);
+					StargateMod.instance.log("Error : can't transmit the shield state to the other gate. This is a bug !", Level.SEVERE);
 				}
 			}
+			
+			this.update();
 		}
-		
-		this.update();
 	}
 	
 	/**
@@ -544,19 +496,11 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	}
 	
 	/**
-	 * Registers the destination coordinates.
-	 * @param address - the address of the destination.
-	 * @param dim - the dimension of the destination.
-	 * @param x - the X coordinate of the destination.
-	 * @param y - the Y coordinate of the destination.
-	 * @param z - the Z coordinate of the destination.
+	 * Registers the destination.
+	 * @param destination - the coordiantes of the gate connected to this one.
 	 */
-	private void setDestination(String address, int dim, int x, int y, int z) {
-		this.addressDest = address;
-		this.dimDest = dim;
-		this.xDest = x;
-		this.yDest = y;
-		this.zDest = z;
+	private void setDestination(StargateCoordinates destination) {
+		this.destination = destination;
 		this.setChanged();
 	}
 	
@@ -567,7 +511,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	 * @return the world containing the other gate.
 	 */
 	protected World getOtherWorld() {
-		return StargateMod.getServerWorldForDimension(this.dimDest);
+		return ModBase.getServerWorldForDimension(this.destination.dim);
 	}
 	
 	/**
@@ -578,11 +522,14 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		World world = this.getOtherWorld();
 		
 		if(world != null) {
-			TileEntity tileEntity = world.getBlockTileEntity(this.xDest, this.yDest, this.zDest);
+			TileEntity tileEntity = world.getBlockTileEntity(this.destination.x, this.destination.y, this.destination.z);
 			
 			if(tileEntity != null && tileEntity instanceof TileEntityStargateControl) {
 				return (TileEntityStargateControl) tileEntity;
 			}
+		}
+		else {
+			StargateMod.instance.log("Error : can't get other gate world.", Level.SEVERE);
 		}
 		
 		return null;
@@ -615,8 +562,8 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 			return false;
 		}
 		
-		if(!WorldStargateData.get(this.worldObj).isAvailable(this.getStargateCoordinates(address))) {
-			StargateMod.debug("The address \"" + address + "\" isn't available.", true);
+		if(!WorldStargateData.getInstance().isAvailable(this.getStargateCoordinates(address))) {
+			StargateMod.instance.log("The address \"" + address + "\" isn't available.");
 			return false;
 		}
 		
@@ -630,15 +577,15 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	private void registerGate(String address) {
 		this.setAddress(address);
 		this.setState(GateState.OFF);
-		WorldStargateData.get(this.worldObj).addElement(this.getStargateCoordinates());
+		WorldStargateData.getInstance().addElement(this.getStargateCoordinates());
 	}
 	
 	/**
 	 * Checks if this gate is well registered in the world.
-	 * @return true if the gate is registered, else false.
+	 * @return true StargateCoordinates registered object if it extists, else null.
 	 */
-	private boolean checkRegistered() {
-		return WorldStargateData.get(this.worldObj).checkRegistered(this.getStargateCoordinates());
+	private StargateCoordinates checkRegistered() {
+		return WorldStargateData.getInstance().checkRegistered(this.getStargateCoordinates());
 	}
 	
 	/**
@@ -647,7 +594,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	 * @return a stargate create command packet.
 	 */
 	public Packet getStargateCreatePacket(String address) {
-		return this.getCommandPacket(STARGATE_CREATE, address);
+		return this.getCommandPacket(StargateCommandPacketMapping.getInstance().STARGATE_CREATE, address);
 	}
 	
 	/**
@@ -674,7 +621,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	 */
 	public boolean checkPattern() {
 		// Initialization.
-		StargateMod.debug("Checking gate pattern...", true);
+		StargateMod.instance.log("Checking gate pattern...");
 		int x = this.xCoord;
 		int y = this.yCoord;
 		int z = this.zCoord;
@@ -682,7 +629,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		// If the gate is situated too low on the Y axis.
 		if(y < PATTERN_BLOCKS.length) {
 			// The pattern can't be matched.
-			StargateMod.debug("The gate is situated too low on the Y axis !\n", true);
+			StargateMod.instance.log("The gate is situated too low on the Y axis !");
 			return false;
 		}
 		
@@ -696,7 +643,6 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 			int nbAirBlocks = PATTERN_AIR[i];
 			int borderWidth = PATTERN_BLOCKS[i].length;
 			int halfedWidth = nbAirBlocks + borderWidth;
-			StargateMod.debug("     ", false, 9 - halfedWidth);
 			
 			// Goes through the line (X ou Z axis).
 			for(int j = -halfedWidth + 1; j < halfedWidth; ++j) {
@@ -710,13 +656,11 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 					if(j != 0 || i != PATTERN_OFFSET) {
 						int blockId = this.worldObj.getBlockId(x, y, z);
 						int blockIndex = Math.abs(j) - nbAirBlocks;
-						StargateMod.debug(blockId + " ", false);
 						
 						// If the block doesn't match the pattern.
 						if(!isBlockIdMatchingPattern(blockId, i, blockIndex)) {
 							// The gate is broken.
-							StargateMod.debug("", true);
-							StargateMod.debug("Error in gate pattern !\n", true);
+							StargateMod.instance.log("Error in gate pattern !");
 							this.setBroken();
 							return false;
 						}
@@ -726,27 +670,21 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 							// If the block already belongs to another gate.
 							if(tileEntity != null && tileEntity.isPartOfGate()) {
 								// It can't belong to this gate.
-								StargateMod.debug("", true);
-								StargateMod.debug("This block already belongs to another gate !\n", true);
+								StargateMod.instance.log("One of the blocks already belongs to another gate !");
 								return false;
 							}
 						}
 					}
-					else {
-						StargateMod.debug("---- ", false);
-					}
 				}
 				else {
 					// Else, goes to the other side of the gate.
-					StargateMod.debug("     ", false, nbAirBlocks * 2 - 1);
 					j = nbAirBlocks - 1;
 				}
 			}
-			StargateMod.debug("", true);
 		}
 		
 		// The pattern is checked.
-		StargateMod.debug("Gate pattern OK !\n", true);
+		StargateMod.instance.log("Gate pattern OK.");
 		return true;
 	}
 	
@@ -758,9 +696,9 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	 */
 	public boolean createGate(String address) {
 		// If the gate is not created yet, and the pattern is checked.
-		if(this.state == GateState.BROKEN && this.checkPattern() && isAddressValidAndAvailable(address)) {
+		if(this.state == GateState.BROKEN && this.checkPattern() && this.isAddressValidAndAvailable(address)) {
 			// Initialization.
-			StargateMod.debug("Creation of the gate...", true);
+			StargateMod.instance.log("Creation of the gate...");
 			int x = this.xCoord;
 			int y = this.yCoord;
 			int z = this.zCoord;
@@ -775,7 +713,6 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 				int nbAirBlocks = PATTERN_AIR[i];
 				int borderWidth = PATTERN_BLOCKS[i].length;
 				int halfedWidth = nbAirBlocks + borderWidth;
-				StargateMod.debug("    ", false, 9 - halfedWidth);
 				
 				// Goes through the line (X ou Z axis).
 				for(int j = -halfedWidth + 1; j < halfedWidth; ++j) {
@@ -788,20 +725,14 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 						// If not on the position of the control unit.
 						if(j != 0 || i != PATTERN_OFFSET) {
 							// Links the block to the gate.
-							StargateMod.debug("OOO ", false);
 							((TileEntityStargatePart) this.worldObj.getBlockTileEntity(x, y, z)).setGate(this.xCoord, this.yCoord, this.zCoord);
-						}
-						else {
-							StargateMod.debug("--- ", false);
 						}
 					}
 					else {
 						// Else, goes to the other side of the gate.
-						StargateMod.debug("    ", false, nbAirBlocks * 2 - 1);
 						j = nbAirBlocks - 1;
 					}
 				}
-				StargateMod.debug("", true);
 			}
 			
 			// Gives a number to each chevron.
@@ -813,7 +744,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 			}
 			
 			// Updates the gate state.
-			StargateMod.debug("Creation complete.\n", true);
+			StargateMod.instance.log("Creation complete.");
 			this.registerGate(address);
 			return true;
 		}
@@ -832,7 +763,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		// If the gate is already broken, there is nothing to do.
 		if(this.state != GateState.BROKEN) {
 			// Initialization.
-			StargateMod.debug("Deactivating the gate...", true);
+			StargateMod.instance.log("Deactivating the gate...");
 			int x = this.xCoord;
 			int y = this.yCoord;
 			int z = this.zCoord;
@@ -847,7 +778,6 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 				int nbAirBlocks = PATTERN_AIR[i];
 				int borderWidth = PATTERN_BLOCKS[i].length;
 				int halfedWidth = nbAirBlocks + borderWidth;
-				StargateMod.debug("    ", false, 9 - halfedWidth);
 				
 				// Goes through the line (X ou Z axis).
 				for(int j = -halfedWidth + 1; j < halfedWidth; ++j) {
@@ -864,28 +794,19 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 							// If the block is still there.
 							if(tileEntity != null && tileEntity instanceof TileEntityStargatePart) {
 								// Breaks the link with the gate.
-								StargateMod.debug("XXX ", false);
 								((TileEntityStargatePart) tileEntity).breakGate();
 							}
-							else {
-								StargateMod.debug("--- ", false);
-							}
-						}
-						else {
-							StargateMod.debug("--- ", false);
 						}
 					}
 					else {
 						// Else, goes to the other side of the gate.
-						StargateMod.debug("    ", false, nbAirBlocks * 2 - 1);
 						j = nbAirBlocks - 1;
 					}
 				}
-				StargateMod.debug("", true);
 			}
 			
 			// Updates the gate state.
-			StargateMod.debug("Deactivation complete.\n", true);
+			StargateMod.instance.log("Deactivation complete.");
 			this.setState(GateState.BROKEN);
 			
 			// Deactivates all stargate consoles connected to that gate.
@@ -904,19 +825,19 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	 */
 	public static boolean constructGate(World world, int xCoord, int yCoord, int zCoord, int side) {
 		// Initialization.
-		StargateMod.debug("Building a gate for testing...", true);
+		StargateMod.instance.log("Building a gate for testing...");
 		
 		// If the gate is situated too low on the Y axis.
 		if(yCoord < PATTERN_BLOCKS.length) {
 			// The pattern can't be matched.
-			StargateMod.debug("The gate is situated too low on the Y axis !\n", true);
+			StargateMod.instance.log("The gate is situated too low on the Y axis !");
 			return false;
 		}
 		
 		// If the gate orientation is impossible.
 		if(side < 2 && side > 5) {
 			// The pattern can't be matched.
-			StargateMod.debug("This gate orientation is impossible !\n", true);
+			StargateMod.instance.log("This gate orientation is impossible !");
 			return false;
 		}
 		
@@ -929,7 +850,6 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 			int nbAirBlocks = PATTERN_AIR[i];
 			int borderWidth = PATTERN_BLOCKS[i].length;
 			int halfedWidth = nbAirBlocks + borderWidth;
-			StargateMod.debug("     ", false, 9 - halfedWidth);
 			
 			// Goes through the line (X ou Z axis).
 			for(int j = -halfedWidth + 1; j < halfedWidth; ++j) {
@@ -943,22 +863,19 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 					
 					// Builds the gate.
 					world.setBlock(x, y, z, blockId);
-					StargateMod.debug(blockId + " ", false);
 				}
 				else {
 					// Else, goes to the other side of the gate.
-					StargateMod.debug("     ", false, nbAirBlocks * 2 - 1);
 					j = nbAirBlocks - 1;
 				}
 			}
-			StargateMod.debug("", true);
 		}
 		
 		// Sets the control unit in the right direction.
 		world.setBlockMetadataWithNotify(xCoord, yCoord, zCoord, side, 3);
 		
 		// The construction is complete.
-		StargateMod.debug("Construction complete !\n", true);
+		StargateMod.instance.log("Construction complete !");
 		return true;
 	}
 	
@@ -1047,59 +964,70 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	}
 	
 	/**
+	 * This method is called when a shield remote is used. It deactivates the shield if the code is correct.
+	 * @param code - the code sent by the shield remote.
+	 */
+	public void onShieldRemoteUsed(int code) {
+		TileEntityStargateControl otherGate = this.getOtherGate();
+		
+		if(otherGate != null && code == otherGate.getCode()) {
+			otherGate.setShieldActivated(false);
+		}
+	}
+	
+	/**
+	 * Returns a shield remote command packet. This is used to try deactivating the shield of the other stargate using the given code.
+	 * @param code - the code.
+	 * @return a shield remote command packet.
+	 */
+	public Packet getShieldRemotePacket(int code) {
+		return this.getCommandPacket(StargateCommandPacketMapping.getInstance().SHIELD_REMOTE, code);
+	}
+	
+	/**
+	 * Returns a remote close command packet. This is used to close the gate with the shield remote.
+	 * @return a remote close command packet.
+	 */
+	public Packet getRemoteClosePacket() {
+		return this.getCommandPacket(StargateCommandPacketMapping.getInstance().REMOTE_CLOSE);
+	}
+	
+	/**
 	 * Activates the gate, creating a vortex to the other gate at the given address, if possible.
 	 * @param address - the address of the destination.
 	 */
 	public void activate(String address) {
 		// If the input gate can't be activated, exits.
 		if(!this.isActivable()) {
-			StargateMod.debug("The gate couldn't be activated !", true);
+			StargateMod.instance.log("The gate couldn't be activated !");
 			return;
 		}
 		
 		// Checks the gate is registered in the world.
-		if(!this.checkRegistered()) {
-			StargateMod.debug("The gate isn't register ! This is not normal. Can't activate.", Level.WARNING, true);
+		StargateCoordinates thisCoordinates = this.checkRegistered();
+		
+		if(thisCoordinates == null) {
+			StargateMod.instance.log("The gate isn't register ! This is not normal. Can't activate.", Level.WARNING);
 			this.setBroken();
 			return;
 		}
 		
-		// Get the dimension of the world containing the other gate.
-		int otherDimension;
-		
-		try {
-			otherDimension = GateAddress.toCoordinates(address).dim;
-		}
-		catch(MalformedGateAddressException argh) {
-			StargateMod.debug("This address of the other gate is malformed ! This is not normal.", Level.WARNING, true);
-			StargateMod.debug(argh.getMessage(), Level.WARNING, true);
-			return;
-		}
-		
-		// Gets the world containing the other gate.
-		World otherWorld = StargateMod.getServerWorldForDimension(otherDimension);
-		
-		if(otherWorld == null) {
-			StargateMod.debug("Error : can't get other gate world.", Level.SEVERE, true);
-			return;
-		}
-		
 		// Translates the address.
-		StargateCoordinates coords = WorldStargateData.get(otherWorld).getCoordinates(address);
+		StargateCoordinates destination = WorldStargateData.getInstance().getCoordinates(address);
 		
-		if(coords == null) {
-			StargateMod.debug("No gate registered with the address \"" + address + "\".", true);
-			return;
-		}
-		
-		// If the given coordinates are those of that gate, exits.
-		if(coords.dim == this.getDimension() && coords.x == this.xCoord && coords.y == this.yCoord && coords.z == this.zCoord) {
-			StargateMod.debug("The input gate can't be the output gate ! >.<", true);
+		if(destination == null) {
+			StargateMod.instance.log("No gate registered with the address \"" + address + "\".");
 			return;
 		}
 		
 		// Registers the destination.
-		this.setDestination(address, coords.dim, coords.x, coords.y, coords.z);
+		this.setDestination(destination);
+		
+		// If the given coordinates are those of that gate, exits.
+		if(destination.dim == this.getDimension() && destination.x == this.xCoord && destination.y == this.yCoord && destination.z == this.zCoord) {
+			StargateMod.instance.log("The input gate can't be the output gate ! >.<");
+			return;
+		}
 		
 		// Chooses an activation sequence.
 		GateActivationSequence activationSequence;
@@ -1107,37 +1035,31 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		if(address.length() == 9) {
 			activationSequence = GateActivationSequence.S9;
 		}
-		else if(coords.dim != this.getDimension()) {
+		else if(destination.dim != this.getDimension()) {
 			activationSequence = GateActivationSequence.S8;
 		}
 		else {
 			activationSequence = GateActivationSequence.S7;
 		}
 		
-		// If there is no gate at the given coordinates, launches a false activation.
-		if(otherWorld.getBlockId(coords.x, coords.y, coords.z) != StargateMod.block_stargateControl.blockID) {
-			StargateMod.debug("Wrong number ! try again ! XD", true);
-			this.setActivating(GateActivationType.FAILED, activationSequence);
-			return;
-		}
-		
 		// Gets the tile entity of the other gate control unit.
 		TileEntityStargateControl otherGate = this.getOtherGate();
 		
 		if(otherGate == null) {
-			StargateMod.debug("Error : can't get other gate tileEntity. This is a bug !", Level.SEVERE, true);
+			StargateMod.instance.log("Wrong number ! try again ! XD");
+			this.setActivating(GateActivationType.FAILED, activationSequence);
 			return;
 		}
 		
 		// If the output gate can't be activated, launches a false activation.
 		if(!otherGate.isActivable()) {
-			StargateMod.debug("The gate you are trying to call is currently busy, please try again later... XD", true);
+			StargateMod.instance.log("The gate you are trying to call is currently busy, please try again later... XD");
 			this.setActivating(GateActivationType.FAILED, activationSequence);
 			return;
 		}
 		
 		// Registers the destination in the otherGate.
-		otherGate.setDestination(this.getAddress(), this.getDimension(), this.xCoord, this.yCoord, this.zCoord);
+		otherGate.setDestination(thisCoordinates);
 		
 		// Activates the gates.
 		this.setActivating(GateActivationType.INPUT, activationSequence);
@@ -1160,7 +1082,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	 */
 	public void close() {
 		// If the gate was activated or activating.
-		if(this.state == GateState.INPUT || this.state == GateState.OUTPUT || this.state == GateState.ACTIVATING || this.state == GateState.KAWOOSH) {
+		if(this.isActivated()) {
 			TileEntityStargateControl otherGate = this.getOtherGate();
 			
 			// Deactivates this gate.
@@ -1171,7 +1093,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 				otherGate.deletePortal();
 			}
 			else if(this.activationType != GateActivationType.FAILED) {
-				StargateMod.debug("Error : can't deactivate the other gate ! This is a bug !", Level.SEVERE, true);
+				StargateMod.instance.log("Error : can't deactivate the other gate ! This is a bug !", Level.SEVERE);
 			}
 		}
 	}
@@ -1237,7 +1159,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		// Creates the vortex blocks.
 		this.updateVortex();
 		
-		StargateMod.debug("Vortex created.", true);
+		StargateMod.instance.log("Vortex created.");
 	}
 	
 	/**
@@ -1252,7 +1174,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		// If the activation process wasn't completed, there is no block to delete.
 		if(oldState == GateState.ACTIVATING) {
 			// Plays the sound corresponding to an interrupted activation.
-			this.playSoundEffect(StargateSounds.stargateFail);
+			this.playSoundEffect(StargateMod.getSounds().stargateFail);
 		}
 		// If the kawoosh wasn't finished.
 		else if(oldState == GateState.KAWOOSH) {
@@ -1263,13 +1185,13 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		else {
 			this.updateVortex();
 			
-			StargateMod.debug("Vortex deleted.", true);
+			StargateMod.instance.log("Vortex deleted.");
 			
 			// Clears the list of recently teleported entities.
 			this.teleportedEntities.clear();
 			
 			// Plays the sound corresponding to a closed gate.
-			this.playSoundEffect(StargateSounds.stargateClose);
+			this.playSoundEffect(StargateMod.getSounds().stargateClose);
 		}
 		
 		// Counter for shield automatic deactivation.
@@ -1328,7 +1250,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 			}
 		}
 		
-		StargateMod.debug("Kawoosh deleted.", true);
+		StargateMod.instance.log("Kawoosh deleted.");
 	}
 	
 	/**
@@ -1346,15 +1268,14 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 			// Depending on the state of the gate...
 			switch(this.state) {
 				case INPUT:
-					StargateMod.debug("Fermeture de la porte dans : " + this.count, true); // FIXME - delete.
+					// Updates the list of recently teleported entities.
+					this.updateTeleportedEntityList();
 					
 					// If maximum activation duration was reached, closes the gate.
 					if(this.count <= 0) {
 						this.close();
 						break;
 					}
-					// Updates the list of recently teleported entities.
-					this.updateTeleportedEntityList();
 					
 					// No "break", this is normal.
 				case OUTPUT:
@@ -1375,8 +1296,6 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 							this.updateVortex();
 							this.setCount(VORTEX_UPDATE_PERIOD);
 						}
-						
-						// FIXME - rendre le ticket de chunk loading ici.
 					}
 					break;
 				case ACTIVATING:
@@ -1401,13 +1320,13 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 								// If the activation was a fail.
 								if(this.activationType == GateActivationType.FAILED) {
 									// Plays the sound corresponding to a failed activation.
-									this.playSoundEffect(StargateSounds.stargateFail);
+									this.playSoundEffect(StargateMod.getSounds().stargateFail);
 									// Updates the gate state and exits.
 									this.setState(GateState.OFF);
 								}
 								else {
 									// Plays the sound corresponding to a successfull activation.
-									this.playSoundEffect(StargateSounds.stargateOpen);
+									this.playSoundEffect(StargateMod.getSounds().stargateOpen);
 									
 									// Activates the gate.
 									if(this.shieldActivated) {
@@ -1607,7 +1526,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		
 		if(updated) {
 			this.setCount(no == 7 ? DELAY_BEFORE_KAWOOSH : DELAY_BETWEEN_CHEVRON_ACTIVATIONS);
-			this.playSoundEffect(no == 7 ? StargateSounds.stargateMasterChevron : StargateSounds.stargateChevron);
+			this.playSoundEffect(no == 7 ? StargateMod.getSounds().stargateMasterChevron : StargateMod.getSounds().stargateChevron);
 		}
 	}
 	
@@ -1645,11 +1564,11 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 				chevron.setGate(this.xCoord, this.yCoord, this.zCoord);
 				chevron.setNo(no);
 				
-				StargateMod.debug("Chevron " + no + " updated.", true);
+				StargateMod.instance.log("Chevron " + no + " updated.");
 				return true;
 			}
 			else {
-				StargateMod.debug("Chevron " + no + " : no update needed.", true);
+				StargateMod.instance.log("Chevron " + no + " : no update needed.");
 			}
 		}
 		
@@ -1829,7 +1748,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		World otherWorld = this.getOtherWorld();
 		
 		if(otherWorld != null) {
-			return getAngleFromMetadata(otherWorld.getBlockMetadata(this.xDest, this.yDest, this.zDest));
+			return getAngleFromMetadata(otherWorld.getBlockMetadata(this.destination.x, this.destination.y, this.destination.z));
 		}
 		
 		return -1;
@@ -1912,13 +1831,13 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 			float rotationYaw = entity.rotationYaw;
 			float rotationPitch = entity.rotationPitch;
 			
-			StargateMod.debug("Input (orientation = " + this.getThisAngle() + ") :", true);
-			StargateMod.debug("xDiff = " + xTP + "; yDiff = " + yTP + "; zDiff = " + zTP, true);
-			StargateMod.debug("xMotion = " + xMotion + "; yMotion = " + yMotion + "; zMotion = " + zMotion, true);
-			StargateMod.debug("rotationYaw = " + entity.rotationYaw + "; rotationPitch = " + entity.rotationPitch, true);
-			StargateMod.debug("", true);
-			StargateMod.debug("rotation = " + rotation + " (" + angleRotation + ")", true);
-			StargateMod.debug("", true);
+			StargateMod.instance.log("Input (orientation = " + this.getThisAngle() + ") :");
+			StargateMod.instance.log("xDiff = " + xTP + "; yDiff = " + yTP + "; zDiff = " + zTP);
+			StargateMod.instance.log("xMotion = " + xMotion + "; yMotion = " + yMotion + "; zMotion = " + zMotion);
+			StargateMod.instance.log("rotationYaw = " + entity.rotationYaw + "; rotationPitch = " + entity.rotationPitch);
+			StargateMod.instance.log("");
+			StargateMod.instance.log("rotation = " + rotation + " (" + angleRotation + ")");
+			StargateMod.instance.log("");
 			
 			switch(rotation) {
 				case 0:
@@ -1990,22 +1909,22 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 					rotationYaw = (entity.rotationYaw + 90) % 360;
 					break;
 				default:
-					StargateMod.debug("A gate returned a strange orientation value !", true);
+					StargateMod.instance.log("A gate returned a strange orientation value !", Level.SEVERE);
 					return;
 			}
 			
-			StargateMod.debug("Output (orientation = " + this.getOtherAngle() + ") :", true);
-			StargateMod.debug("xDiff = " + xTP + "; yDiff = " + yTP + "; zDiff = " + zTP, true);
-			StargateMod.debug("xMotion = " + xMotion + "; yMotion = " + yMotion + "; zMotion = " + zMotion, true);
-			StargateMod.debug("rotationYaw = " + rotationYaw + "; rotationPitch = " + rotationPitch + "\n\n", true);
+			StargateMod.instance.log("Output (orientation = " + this.getOtherAngle() + ") :");
+			StargateMod.instance.log("xDiff = " + xTP + "; yDiff = " + yTP + "; zDiff = " + zTP);
+			StargateMod.instance.log("xMotion = " + xMotion + "; yMotion = " + yMotion + "; zMotion = " + zMotion);
+			StargateMod.instance.log("rotationYaw = " + rotationYaw + "; rotationPitch = " + rotationPitch);
 			
 			// Calculates the final teleportation coordinates.
-			xTP = (this.xDest + 0.5) + xTP;
-			yTP = (this.yDest + 0.5) + yTP;
-			zTP = (this.zDest + 0.5) + zTP;
+			xTP = (this.destination.x + 0.5) + xTP;
+			yTP = (this.destination.y + 0.5) + yTP;
+			zTP = (this.destination.z + 0.5) + zTP;
 			
 			// Plays the sound corresponding to an entity entering the vortex.
-			this.playSoundEffect(StargateSounds.stargateEnterVortex, entity);
+			this.playSoundEffect(StargateMod.getSounds().stargateEnterVortex, entity);
 			
 			// If the entity is a minecart, the position and the velocity must be adjusted.
 			if(entity instanceof EntityMinecart) {
@@ -2041,32 +1960,32 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 			//				
 			//				yTP += 0.125;
 			//				
-			//				StargateMod.debug("Minecart ", false);
+			//				StargateMod.instance.debug("Minecart ", false);
 			//				
 			//				switch(otherAngle) {
 			//					case 0:
-			//						StargateMod.debug("(0) :", true);
+			//						StargateMod.instance.debug("(0) :", true);
 			//						zTP -= offset;
 			//						rotationYaw = 180;
 			//						xMotion = 0;
 			//						zMotion = defaultSpeed;
 			//						break;
 			//					case 1:
-			//						StargateMod.debug("(1) :", true);
+			//						StargateMod.instance.debug("(1) :", true);
 			//						xTP += offset;
 			//						rotationYaw = 270;
 			//						xMotion = -defaultSpeed;
 			//						zMotion = 0;
 			//						break;
 			//					case 2:
-			//						StargateMod.debug("(2) :", true);
+			//						StargateMod.instance.debug("(2) :", true);
 			//						zTP += offset;
 			//						rotationYaw = 0;
 			//						xMotion = 0;
 			//						zMotion = defaultSpeed;
 			//						break;
 			//					case 3:
-			//						StargateMod.debug("(3) :", true);
+			//						StargateMod.instance.debug("(3) :", true);
 			//						xTP -= offset;
 			//						rotationYaw = 90;
 			//						xMotion = defaultSpeed;
@@ -2074,30 +1993,17 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 			//						break;
 			//				}
 			//				
-			//				StargateMod.debug("xDiff = " + xTP + "; yDiff = " + yTP + "; zDiff = " + zTP, true);
-			//				StargateMod.debug("xMotion = " + xMotion + "; yMotion = " + yMotion + "; zMotion = " + zMotion, true);
-			//				StargateMod.debug("rotationYaw = " + rotationYaw + "; rotationPitch = " + rotationPitch + "\n\n", true);
+			//				StargateMod.instance.log("");
+			//				StargateMod.instance.log("xDiff = " + xTP + "; yDiff = " + yTP + "; zDiff = " + zTP);
+			//				StargateMod.instance.log("xMotion = " + xMotion + "; yMotion = " + yMotion + "; zMotion = " + zMotion);
+			//				StargateMod.instance.log("rotationYaw = " + rotationYaw + "; rotationPitch = " + rotationPitch);
 			//			}
 			
-			// Updates the entity velocity.
-			entity.motionX = xMotion;
-			entity.motionY = yMotion;
-			entity.motionZ = zMotion;
+			entity = Teleporter.teleportEntity(entity, this.destination.dim, xTP, yTP, zTP, rotationYaw, rotationPitch, xMotion, yMotion, zMotion);
 			
-			StargateMod.sendPacketToAllPlayers(new Packet28EntityVelocity(entity));
-			
-			// Teleports the entity.
-			if(entity instanceof EntityPlayerMP) {
-				EntityPlayerMP player = (EntityPlayerMP) entity;
-				player.playerNetServerHandler.setPlayerLocation(xTP, yTP, zTP, rotationYaw, rotationPitch);
+			if(entity == null) {
+				return;
 			}
-			else {
-				entity.setLocationAndAngles(xTP, yTP, zTP, rotationYaw, rotationPitch);
-				StargateMod.sendPacketToAllPlayers(new Packet34EntityTeleport(entity));
-			}
-			
-			// Updates the entity velocity, again.
-			StargateMod.sendPacketToAllPlayers(new Packet28EntityVelocity(entity));
 			
 			// Kills the entity if it is in a wall or a shield.
 			if(this.isEntityInsideIris(entity)) {
@@ -2109,11 +2015,11 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 				}
 				
 				// Plays the sound corresponding to an entity crashing on the shield.
-				this.playSoundEffect(StargateSounds.stargateShieldHit, entity);
+				this.playSoundEffect(StargateMod.getSounds().stargateShieldHit, entity);
 			}
 			else {
 				// Plays the sound corresponding to an entity exiting the vortex.
-				this.playSoundEffect(StargateSounds.stargateEnterVortex, entity);
+				this.playSoundEffect(StargateMod.getSounds().stargateEnterVortex, entity);
 			}
 		}
 	}
@@ -2128,7 +2034,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		TileEntityStargateControl otherGate = this.getOtherGate();
 		
 		if(otherGate == null) {
-			StargateMod.debug("Error can't get the other gate ! This is a bug !", Level.SEVERE, true);
+			StargateMod.instance.log("Error can't get the other gate ! This is a bug !", Level.SEVERE);
 			return false;
 		}
 		
@@ -2146,13 +2052,13 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 			float f2 = ((i >> 1) % 2 - 0.5F) * 0.1F;
 			float f3 = ((i >> 2) % 2 - 0.5F) * entity.width * 0.8F;
 			
-			int x = (otherGateOrientation == GateOrientation.Z_AXIS) ? this.xDest : MathHelper.floor_double(entity.posX + f1);
+			int x = (otherGateOrientation == GateOrientation.Z_AXIS) ? this.destination.x : MathHelper.floor_double(entity.posX + f1);
 			int y = MathHelper.floor_double(entity.posY + entity.getEyeHeight() + f2);
-			int z = (otherGateOrientation == GateOrientation.X_AXIS) ? this.zDest : MathHelper.floor_double(entity.posZ + f3);
+			int z = (otherGateOrientation == GateOrientation.X_AXIS) ? this.destination.z : MathHelper.floor_double(entity.posZ + f3);
 			
-			Block block = Block.blocksList[this.worldObj.getBlockId(x, y, z)];
+			Block block = Block.blocksList[otherGate.worldObj.getBlockId(x, y, z)];
 			
-			if(block != null && block.getCollisionBoundingBoxFromPool(this.worldObj, x, y, z) != null) {
+			if(block != null && block.getCollisionBoundingBoxFromPool(otherGate.worldObj, x, y, z) != null) {
 				return true;
 			}
 		}
@@ -2177,6 +2083,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
+		
 		this.address = compound.getString("address");
 		this.state = GateState.valueOf(compound.getInteger("state"));
 		this.activationType = GateActivationType.valueOf(compound.getInteger("activationType"));
@@ -2187,17 +2094,15 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		this.shieldAutomated = compound.getBoolean("shieldAutomated");
 		this.code = compound.getInteger("code");
 		this.count = compound.getInteger("count");
-		this.addressDest = compound.getString("addressDest");
-		this.dimDest = compound.getInteger("dimDest");
-		this.xDest = compound.getInteger("xDest");
-		this.yDest = compound.getInteger("yDest");
-		this.zDest = compound.getInteger("zDest");
 		this.otherGateShieldActivated = compound.getBoolean("otherGateShieldActivated");
+		
+		this.destination = new StargateCoordinates(compound.getCompoundTag("destination"));
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
+		
 		compound.setString("address", this.address);
 		compound.setInteger("state", this.state.getValue());
 		compound.setInteger("activationType", this.activationType.getValue());
@@ -2208,17 +2113,14 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		compound.setBoolean("shieldAutomated", this.shieldAutomated);
 		compound.setInteger("code", this.code);
 		compound.setInteger("count", this.count);
-		compound.setString("addressDest", this.addressDest);
-		compound.setInteger("dimDest", this.dimDest);
-		compound.setInteger("xDest", this.xDest);
-		compound.setInteger("yDest", this.yDest);
-		compound.setInteger("zDest", this.zDest);
 		compound.setBoolean("otherGateShieldActivated", this.otherGateShieldActivated);
+		
+		compound.setCompoundTag("destination", this.destination.getCompound());
 	}
 	
 	@Override
-	protected void getEntityData(DataOutputStream output) throws IOException {
-		super.getEntityData(output);
+	protected void getTileEntityData(DataOutputStream output) throws IOException {
+		super.getTileEntityData(output);
 		
 		output.writeUTF(this.address);
 		output.writeInt(this.state.getValue());
@@ -2230,12 +2132,9 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		output.writeBoolean(this.shieldAutomated);
 		output.writeInt(this.code);
 		output.writeInt(this.count);
-		output.writeUTF(this.addressDest);
-		output.writeInt(this.dimDest);
-		output.writeInt(this.xDest);
-		output.writeInt(this.yDest);
-		output.writeInt(this.zDest);
 		output.writeBoolean(this.otherGateShieldActivated);
+		
+		this.destination.writeData(output);
 	}
 	
 	@Override
@@ -2252,12 +2151,9 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		this.shieldAutomated = input.readBoolean();
 		this.code = input.readInt();
 		this.count = input.readInt();
-		this.addressDest = input.readUTF();
-		this.dimDest = input.readInt();
-		this.xDest = input.readInt();
-		this.yDest = input.readInt();
-		this.zDest = input.readInt();
 		this.otherGateShieldActivated = input.readBoolean();
+		
+		this.destination.readData(input);
 	}
 	
 }

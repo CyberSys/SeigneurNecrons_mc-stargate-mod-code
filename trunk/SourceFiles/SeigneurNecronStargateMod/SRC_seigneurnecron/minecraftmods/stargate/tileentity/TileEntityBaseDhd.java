@@ -1,10 +1,9 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.STARGATE_CLOSE;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.STARGATE_OPEN;
 import net.minecraft.block.Block;
 import net.minecraft.network.packet.Packet;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
+import seigneurnecron.minecraftmods.stargate.network.packetmapping.StargateCommandPacketMapping;
 
 /**
  * @author Seigneur Necron
@@ -46,7 +45,7 @@ public class TileEntityBaseDhd extends TileEntityBaseStargateConsole {
 	 * @return a stargate open command packet.
 	 */
 	public Packet getStargateOpenPacket(String address) {
-		return this.getCommandPacket(STARGATE_OPEN, address);
+		return this.getCommandPacket(StargateCommandPacketMapping.getInstance().STARGATE_OPEN, address);
 	}
 	
 	/**
@@ -54,7 +53,7 @@ public class TileEntityBaseDhd extends TileEntityBaseStargateConsole {
 	 * @return a stargate open command packet.
 	 */
 	public Packet getStargateClosePacket() {
-		return this.getCommandPacket(STARGATE_CLOSE);
+		return this.getCommandPacket(StargateCommandPacketMapping.getInstance().STARGATE_CLOSE);
 	}
 	
 	@Override

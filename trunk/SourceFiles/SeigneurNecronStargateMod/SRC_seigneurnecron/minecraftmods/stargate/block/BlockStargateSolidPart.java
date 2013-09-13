@@ -22,7 +22,7 @@ public abstract class BlockStargateSolidPart extends BlockStargatePart {
 	 */
 	@Override
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6) {
-		if(!world.isRemote && breakGate(world, x, y, z)) {
+		if(!world.isRemote && this.breakGate(world, x, y, z)) {
 			TileEntityStargateControl gate = this.getControlUnit(world, x, y, z);
 			if(gate != null) {
 				gate.setBroken();

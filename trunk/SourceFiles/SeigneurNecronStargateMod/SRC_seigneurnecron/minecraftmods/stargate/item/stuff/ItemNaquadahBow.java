@@ -7,7 +7,6 @@ import net.minecraft.item.ItemBow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -19,7 +18,7 @@ public class ItemNaquadahBow extends ItemBow {
 	private Icon[] bowIcons = new Icon[3];
 	
 	public ItemNaquadahBow(String name) {
-		super(StargateModConfig.getItemId(name));
+		super(StargateMod.instance.getConfig().getItemId(name));
 		this.setUnlocalizedName(name);
 		this.func_111206_d(name); // setIconName(name)
 		this.setMaxDamage(0);
@@ -29,10 +28,10 @@ public class ItemNaquadahBow extends ItemBow {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		this.itemIcon = iconRegister.registerIcon(StargateMod.ASSETS_PREFIX + this.func_111208_A()); // getIconName()
+		this.itemIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111208_A()); // getIconName()
 		
 		for(int i = 0; i < this.bowIcons.length; ++i) {
-			this.bowIcons[i] = iconRegister.registerIcon(StargateMod.ASSETS_PREFIX + this.func_111208_A() + "_pulling" + i);
+			this.bowIcons[i] = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111208_A() + "_pulling" + i);
 		}
 	}
 	

@@ -4,12 +4,13 @@ import java.util.LinkedList;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.src.ModLoader;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
+import seigneurnecron.minecraftmods.stargate.gui.GuiShieldRemote;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseStargateConsole;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
-import seigneurnecron.minecraftmods.stargate.tools.enums.GateState;
 
 /**
  * @author Seigneur Necron
@@ -23,13 +24,10 @@ public class ItemShieldRemote extends ItemStargate {
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
 		if(world.isRemote) {
-			TileEntityStargateControl stargate = this.getNearestGate(world, (int) player.posX, (int) player.posY, (int) player.posZ);
+			TileEntityStargateControl stargate = this.getNearestActivatedGate(world, (int) player.posX, (int) player.posY, (int) player.posZ);
 			
 			if(stargate != null) {
-				// FIXME - ouvrir une interface si (il y a une porte a proximite) && ((on ne connait pas deja le code) || (le code n'est plus valide) || (shift click)).
-				// FIXME - dans l'interface, indiquer si le bouclier de la porte d'arrivee est actif et si le code est valide.
-				// FIXME - dans le champ, mettre comme valeur par defaut : 0;
-				//ModLoader.openGUI(player, this.getGuiShieldRemote(stargate, player));
+				ModLoader.openGUI(player, new GuiShieldRemote(stargate, player));
 			}
 		}
 		
@@ -39,7 +37,7 @@ public class ItemShieldRemote extends ItemStargate {
 	/**
 	 * Searches for stargates in the area and returns the nearest one.
 	 */
-	protected TileEntityStargateControl getNearestGate(World world, int xCoord, int yCoord, int zCoord) {
+	protected TileEntityStargateControl getNearestActivatedGate(World world, int xCoord, int yCoord, int zCoord) {
 		final int maxRange = TileEntityBaseStargateConsole.MAX_RANGE;
 		
 		// Searches all the control units within range.
@@ -60,7 +58,7 @@ public class ItemShieldRemote extends ItemStargate {
 						if(tileEntity != null && tileEntity instanceof TileEntityStargateControl) {
 							TileEntityStargateControl controlUnit = (TileEntityStargateControl) tileEntity;
 							
-							if(controlUnit.getState() != GateState.BROKEN) {
+							if(controlUnit.isActivated()) {
 								controlUnitsList.add(controlUnit);
 							}
 						}

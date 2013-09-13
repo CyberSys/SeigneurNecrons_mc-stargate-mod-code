@@ -1,4 +1,4 @@
-package seigneurnecron.minecraftmods.stargate.entity.dispenserBehavior;
+package seigneurnecron.minecraftmods.stargate.entity.dispenserbehavior;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.world.World;

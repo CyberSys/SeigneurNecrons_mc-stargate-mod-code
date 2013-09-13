@@ -147,8 +147,8 @@ public class TileEntityDetector extends TileEntityGuiScreen {
 	}
 	
 	@Override
-	protected void getEntityData(DataOutputStream output) throws IOException {
-		super.getEntityData(output);
+	protected void getTileEntityData(DataOutputStream output) throws IOException {
+		super.getTileEntityData(output);
 		
 		output.writeInt(this.range);
 		output.writeBoolean(this.inverted);

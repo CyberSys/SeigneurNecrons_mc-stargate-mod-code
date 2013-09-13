@@ -5,6 +5,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import net.minecraft.nbt.NBTTagCompound;
+import seigneurnecron.minecraftmods.core.loadable.Loadable;
 
 /**
  * @author Seigneur Necron
@@ -102,6 +103,13 @@ public class Stargate implements Comparable<Stargate>, Loadable<Stargate> {
 		this.address = input.readUTF();
 		this.name = input.readUTF();
 		this.code = input.readInt();
+	}
+	
+	@Override
+	public NBTTagCompound getCompound() {
+		NBTTagCompound compound = new NBTTagCompound();
+		this.saveNBTData(compound);
+		return compound;
 	}
 	
 }

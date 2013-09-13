@@ -1,22 +1,22 @@
-package seigneurnecron.minecraftmods.stargate.tools.playerData;
+package seigneurnecron.minecraftmods.stargate.tools.playerdata;
 
 import java.io.DataInputStream;
 import java.io.IOException;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import seigneurnecron.minecraftmods.stargate.network.StargateCommonProxy;
+import seigneurnecron.minecraftmods.stargate.proxy.StargateCommonProxy;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.Stargate;
 
 /**
  * @author Seigneur Necron
  */
-public final class PlayerStargateData extends PlayerDataList<Stargate> {
+public final class PlayerStargateData extends StargatePlayerDataList<Stargate> {
 	
 	/**
 	 * Property indentifier.
 	 */
-	private static final String IDENTIFIER = "playerStargateData";
+	public static final String IDENTIFIER = "playerStargateData";
 	
 	private static String getSaveKey(EntityPlayer player) {
 		return player.username + ":" + IDENTIFIER;

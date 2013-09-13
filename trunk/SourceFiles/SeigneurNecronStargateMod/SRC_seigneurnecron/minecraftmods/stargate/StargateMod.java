@@ -1,16 +1,7 @@
 package seigneurnecron.minecraftmods.stargate;
 
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.registerCommandPackets;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.registerPlayerDataPacket;
-import static seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler.registerTileEntityPacket;
-
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.boss.EntityDragon;
 import net.minecraft.entity.boss.EntityWither;
@@ -41,20 +32,16 @@ import net.minecraft.entity.passive.EntitySheep;
 import net.minecraft.entity.passive.EntitySquid;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.passive.EntityWolf;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumArmorMaterial;
 import net.minecraft.item.EnumToolMaterial;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.network.packet.Packet;
-import net.minecraft.src.ModLoader;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
-import net.minecraftforge.common.ForgeChunkManager.Ticket;
-import net.minecraftforge.common.MinecraftForge;
+import seigneurnecron.minecraftmods.core.SeigneurNecronMod;
+import seigneurnecron.minecraftmods.core.entity.EntityCustomFishHook;
+import seigneurnecron.minecraftmods.core.mod.ModBase;
 import seigneurnecron.minecraftmods.stargate.block.BlockBaseDhd;
 import seigneurnecron.minecraftmods.stargate.block.BlockBaseShieldConsole;
 import seigneurnecron.minecraftmods.stargate.block.BlockBaseTeleporter;
@@ -78,25 +65,24 @@ import seigneurnecron.minecraftmods.stargate.block.BlockStargateControl;
 import seigneurnecron.minecraftmods.stargate.block.BlockStuffLevelUpTable;
 import seigneurnecron.minecraftmods.stargate.block.BlockVortex;
 import seigneurnecron.minecraftmods.stargate.block.material.VortexMaterial;
-import seigneurnecron.minecraftmods.stargate.block.replace.BlockGlassDropable;
-import seigneurnecron.minecraftmods.stargate.block.replace.BlockGlassPaneDropable;
-import seigneurnecron.minecraftmods.stargate.client.gui.GuiBase;
-import seigneurnecron.minecraftmods.stargate.client.gui.GuiDetector;
-import seigneurnecron.minecraftmods.stargate.client.gui.GuiDhd;
-import seigneurnecron.minecraftmods.stargate.client.gui.GuiShieldConsole;
-import seigneurnecron.minecraftmods.stargate.client.gui.GuiStargateControl;
-import seigneurnecron.minecraftmods.stargate.client.gui.GuiStuffLevelUpTable;
-import seigneurnecron.minecraftmods.stargate.client.gui.GuiTeleporter;
-import seigneurnecron.minecraftmods.stargate.client.gui.tools.DhdPanel;
-import seigneurnecron.minecraftmods.stargate.client.network.StargateClientPacketHandler;
 import seigneurnecron.minecraftmods.stargate.entity.EntityCustomExplosiveFireBall;
 import seigneurnecron.minecraftmods.stargate.entity.EntityCustomFireBall;
-import seigneurnecron.minecraftmods.stargate.entity.EntityCustomFishHook;
 import seigneurnecron.minecraftmods.stargate.entity.EntityNapalm;
 import seigneurnecron.minecraftmods.stargate.entity.EntityNuke;
-import seigneurnecron.minecraftmods.stargate.entity.damageSource.CustomDamageSource;
-import seigneurnecron.minecraftmods.stargate.entity.dispenserBehavior.DispenserBehaviorCustomExplosiveFireBall;
-import seigneurnecron.minecraftmods.stargate.entity.dispenserBehavior.DispenserBehaviorCustomFireBall;
+import seigneurnecron.minecraftmods.stargate.entity.damagesource.CustomDamageSource;
+import seigneurnecron.minecraftmods.stargate.entity.dispenserbehavior.DispenserBehaviorCustomExplosiveFireBall;
+import seigneurnecron.minecraftmods.stargate.entity.dispenserbehavior.DispenserBehaviorCustomFireBall;
+import seigneurnecron.minecraftmods.stargate.event.StargateEventHandler;
+import seigneurnecron.minecraftmods.stargate.gui.GuiBase;
+import seigneurnecron.minecraftmods.stargate.gui.GuiDetector;
+import seigneurnecron.minecraftmods.stargate.gui.GuiDhd;
+import seigneurnecron.minecraftmods.stargate.gui.GuiScreen;
+import seigneurnecron.minecraftmods.stargate.gui.GuiShieldConsole;
+import seigneurnecron.minecraftmods.stargate.gui.GuiShieldRemote;
+import seigneurnecron.minecraftmods.stargate.gui.GuiStargateControl;
+import seigneurnecron.minecraftmods.stargate.gui.GuiStuffLevelUpTable;
+import seigneurnecron.minecraftmods.stargate.gui.GuiTeleporter;
+import seigneurnecron.minecraftmods.stargate.gui.components.DhdPanel;
 import seigneurnecron.minecraftmods.stargate.item.ItemCustomExplosiveFireBall;
 import seigneurnecron.minecraftmods.stargate.item.ItemCustomFireBall;
 import seigneurnecron.minecraftmods.stargate.item.ItemEmptySoulCrystal;
@@ -120,10 +106,10 @@ import seigneurnecron.minecraftmods.stargate.item.stuff.ItemNaquadahPlate;
 import seigneurnecron.minecraftmods.stargate.item.stuff.ItemNaquadahShears;
 import seigneurnecron.minecraftmods.stargate.item.stuff.ItemNaquadahShovel;
 import seigneurnecron.minecraftmods.stargate.item.stuff.ItemNaquadahSword;
-import seigneurnecron.minecraftmods.stargate.network.StargateCommonProxy;
-import seigneurnecron.minecraftmods.stargate.network.StargateEventHandler;
-import seigneurnecron.minecraftmods.stargate.network.StargatePacketHandler;
+import seigneurnecron.minecraftmods.stargate.network.StargateCommonPacketHandler;
 import seigneurnecron.minecraftmods.stargate.network.StargateServerPacketHandler;
+import seigneurnecron.minecraftmods.stargate.proxy.StargateCommonProxy;
+import seigneurnecron.minecraftmods.stargate.sound.StargateSounds;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseDhd;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseShieldConsole;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseTeleporter;
@@ -133,11 +119,8 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityMobGenerator;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargatePart;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStuffLevelUpTable;
-import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
-import seigneurnecron.minecraftmods.stargate.tools.playerData.PlayerStargateData;
-import seigneurnecron.minecraftmods.stargate.tools.playerData.PlayerTeleporterData;
+import seigneurnecron.minecraftmods.stargate.tools.worlddata.StargateChunkLoader;
 import seigneurnecron.minecraftmods.stargate.world.NaquadahGenerator;
-import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -147,64 +130,63 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
-import cpw.mods.fml.common.network.NetworkRegistry;
-import cpw.mods.fml.common.network.PacketDispatcher;
-import cpw.mods.fml.common.network.Player;
-import cpw.mods.fml.common.registry.EntityRegistry;
-import cpw.mods.fml.common.registry.GameRegistry;
-import cpw.mods.fml.common.registry.LanguageRegistry;
-
-// #### TODOs ############################################################################################### //
-//                                                                                                            //
-// TODO - Find a way to get the list of the texture files in the "sign" folder.                               //
-// This would make very easy to add new custom textures for sign.                                             //
-// The list of textures must be updated when the user changes the texture pack.                               //
-//                                                                                                            //
-// ########################################################################################################## //
-
-// FIXME - Faire l'interface de la telecommande.
-
-// FIXME - La porte ne teleporte plus les entites.
-
-// FIXME - Travel between dimensions.
 
 // FIXME - Font renderer
 
-// FIXME - remettre obfuscated a true.
+// FIXME - Sign texture : it's a trap !
+
+// FIXME - Faire des textures pour les icons de la StuffLevelUpTable.
 
 /**
  * SeigneurNecron's Stargate Mod main class.
  * @author Seigneur Necron
  */
-@Mod(modid = StargateMod.MOD_ID, name = StargateMod.MOD_NAME, version = StargateMod.VERSION)
-@NetworkMod(channels = {StargateMod.CHANEL_TILE_ENTITY, StargateMod.CHANEL_COMMANDS, StargateMod.CHANEL_PLAYER_DATA}, clientSideRequired = true, serverSideRequired = true, packetHandler = StargatePacketHandler.class, clientPacketHandlerSpec = @SidedPacketHandler(channels = {StargateMod.CHANEL_TILE_ENTITY, StargateMod.CHANEL_COMMANDS, StargateMod.CHANEL_PLAYER_DATA}, packetHandler = StargateClientPacketHandler.class), serverPacketHandlerSpec = @SidedPacketHandler(channels = {StargateMod.CHANEL_TILE_ENTITY, StargateMod.CHANEL_COMMANDS, StargateMod.CHANEL_PLAYER_DATA}, packetHandler = StargateServerPacketHandler.class))
-public class StargateMod implements LoadingCallback {
+@Mod(modid = StargateMod.MOD_ID, name = StargateMod.MOD_NAME, version = StargateMod.VERSION, dependencies = "required-after:" + SeigneurNecronMod.MOD_ID)
+@NetworkMod(clientSideRequired = true, serverSideRequired = true, packetHandler = StargateCommonPacketHandler.class, channels = {StargateMod.CHANEL_TILE_ENTITY, StargateMod.CHANEL_PLAYER_DATA}, serverPacketHandlerSpec = @SidedPacketHandler(packetHandler = StargateServerPacketHandler.class, channels = {StargateMod.CHANEL_COMMANDS}))
+public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 	
 	// Stargate mod basic informations :
 	
 	public static final String MOD_ID = "seigneur_necron_stargate_mod";
 	public static final String MOD_NAME = "SeigneurNecron's Stargate Mod";
-	public static final String VERSION = "[1.6.2] v3.1.0";
+	public static final String VERSION = "[1.6.2] v3.1.2 [core v1.0.0]";
 	
 	public static final String CHANEL_TILE_ENTITY = "SNSM_TileEntity";
 	public static final String CHANEL_COMMANDS = "SNSM_Commands";
 	public static final String CHANEL_PLAYER_DATA = "SNSM_PlayerData";
 	
+	@Override
+	protected String getModId() {
+		return MOD_ID;
+	}
+	
+	// Instance :
+	
 	@Instance(StargateMod.MOD_ID)
 	public static StargateMod instance;
 	
-	@SidedProxy(clientSide = "seigneurnecron.minecraftmods.stargate.client.network.StargateClientProxy", serverSide = "seigneurnecron.minecraftmods.stargate.network.StargateCommonProxy")
+	@SidedProxy(clientSide = "seigneurnecron.minecraftmods.stargate.proxy.StargateClientProxy", serverSide = "seigneurnecron.minecraftmods.stargate.proxy.StargateCommonProxy")
 	public static StargateCommonProxy proxy;
 	
-	// Debug mod :
+	private static StargateSounds sounds;
 	
-	private static Logger logger;
-	private static final StringBuffer logBuffer = new StringBuffer();
-	public static final boolean obfuscated = false; // FIXME - remettre a true.
+	public static StargateSounds getSounds() {
+		return sounds;
+	}
 	
-	// Stargate assets :
+	// Configuration :
 	
-	public static final String ASSETS_PREFIX = MOD_ID.toLowerCase() + ":";
+	@Override
+	protected StargateModConfig createModConfig(FMLPreInitializationEvent event) {
+		return new StargateModConfig(this, new Configuration(event.getSuggestedConfigurationFile()));
+	}
+	
+	// Chunk loader :
+	
+	@Override
+	protected LoadingCallback createChunkManager() {
+		return StargateChunkLoader.getInstance();
+	}
 	
 	// Some constants :
 	
@@ -251,11 +233,6 @@ public class StargateMod implements LoadingCallback {
 	public static Block block_fastStargate;
 	public static Block block_fastStargate2;
 	public static Block block_fastStargate3;
-	
-	// Modified base blocks :
-	
-	public static Block block_glassDropable;
-	public static Block block_thinGlassDropable;
 	
 	// Items :
 	
@@ -408,60 +385,48 @@ public class StargateMod implements LoadingCallback {
 	
 	// Initialization :
 	
+	@Override
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		initLogger();
-		StargateModConfig.loadConfig(new Configuration(event.getSuggestedConfigurationFile()));
-		registerPackets();
+		super.preInit(event);
+		this.registerRenderers();
+		this.registerSounds();
+	}
+	
+	@Override
+	@EventHandler
+	public void init(FMLInitializationEvent event) {
+		super.init(event);
+		this.registerCreativeTabs();
+		this.registerBlocks();
+		this.registerItems();
+		this.registerRecipes();
+		this.registerDispenserBehaviors();
+		this.registerTileEntities();
+		this.registerEntities();
+		this.registerEventHandlers();
+		this.registerGuiHandler();
+		this.registerWorldGenerators();
+		this.setBlocksHarvestLevel();
+		this.registerNames();
+	}
+	
+	@Override
+	@EventHandler
+	public void postInit(FMLPostInitializationEvent event) {
+		super.postInit(event);
+	}
+	
+	protected void registerRenderers() {
 		proxy.registerRenderers();
+	}
+	
+	protected void registerSounds() {
+		sounds = new StargateSounds();
 		proxy.registerSounds();
 	}
 	
-	@EventHandler
-	public void init(FMLInitializationEvent evt) {
-		registerCreativeTabs();
-		registerBlocks();
-		registerItems();
-		registerRecipes();
-		registerDispenserBehaviors();
-		registerTileEntities();
-		this.registerEntities();
-		registerEventHandler();
-		registerGuiHandler();
-		registerWorldGenerator();
-		setBlocksHarvestLevel();
-		registerNames();
-		StargateModConfig.saveConfig();
-	}
-	
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent evt) {
-		// Post-Initialization code such as mod hooks
-	}
-	
-	private static void initLogger() {
-		logger = Logger.getLogger(MOD_ID);
-		logger.setParent(FMLLog.getLogger());
-		logger.setLevel(Level.ALL);
-	}
-	
-	private static void registerPackets() {
-		registerTileEntityPacket(TileEntityBaseDhd.class);
-		registerTileEntityPacket(TileEntityBaseTeleporter.class);
-		registerTileEntityPacket(TileEntityBaseShieldConsole.class);
-		registerTileEntityPacket(TileEntityChevron.class);
-		registerTileEntityPacket(TileEntityDetector.class);
-		registerTileEntityPacket(TileEntityMobGenerator.class);
-		registerTileEntityPacket(TileEntityStargateControl.class);
-		registerTileEntityPacket(TileEntityStargatePart.class);
-		
-		registerPlayerDataPacket(PlayerTeleporterData.class);
-		registerPlayerDataPacket(PlayerStargateData.class);
-		
-		registerCommandPackets();
-	}
-	
-	private static void registerCreativeTabs() {
+	protected void registerCreativeTabs() {
 		stargateBlocksTab = new CreativeTabs(stargateBlocksTabName) {
 			
 			@Override
@@ -481,7 +446,7 @@ public class StargateMod implements LoadingCallback {
 		};
 	}
 	
-	private static void registerBlocks() {
+	protected void registerBlocks() {
 		block_naquadahOre = new BlockNaquadahOre(blockName_naquadahOre);
 		block_naquadahBlock = new BlockNaquadahBlock(blockName_naquadahBlock);
 		block_naquadahAlloy = new BlockNaquadahAlloy(blockName_naquadahAlloy);
@@ -505,17 +470,9 @@ public class StargateMod implements LoadingCallback {
 		block_fastStargate = new BlockFastStargate(blockName_fastStargate);
 		block_fastStargate2 = new BlockFastStargate2(blockName_fastStargate2);
 		block_fastStargate3 = new BlockFastStargate3(blockName_fastStargate3);
-		
-		if(StargateModConfig.isGlassDropable) {
-			Block.blocksList[Block.glass.blockID] = null;
-			block_glassDropable = new BlockGlassDropable();
-			
-			Block.blocksList[Block.thinGlass.blockID] = null;
-			block_thinGlassDropable = new BlockGlassPaneDropable();
-		}
 	}
 	
-	private static void registerItems() {
+	protected void registerItems() {
 		int naquadaArmorRenderIndex = proxy.addArmor(StargateMod.naquadahMaterialName);
 		naquadahToolMaterial = EnumHelper.addToolMaterial(naquadahMaterialName, 4, 0, 10, 4, 25);
 		naquadahArmorMaterial = EnumHelper.addArmorMaterial(naquadahMaterialName, 0, new int[] {3, 8, 6, 3}, 25);
@@ -594,503 +551,362 @@ public class StargateMod implements LoadingCallback {
 		item_crystalSoulHorse = new ItemSoulCrystal(EntityHorse.class, 2);
 	}
 	
-	private static void registerRecipes() {
+	protected void registerRecipes() {
 		boolean canCraftCrystal = false;
 		boolean canCraftCreationCrystal = false;
 		
-		addSmelting(item_naquadahOre.itemID, new ItemStack(item_naquadahIngot));
-		addRecipe(new ItemStack(block_naquadahBlock), new Object[] {"NNN", "NNN", "NNN", 'N', item_naquadahIngot});
-		addRecipe(new ItemStack(item_crystal), new Object[] {"C", 'C', item_crystalStargate});
-		addRecipe(new ItemStack(item_crystal), new Object[] {"C", 'C', item_crystalDhd});
-		addRecipe(new ItemStack(item_crystal), new Object[] {"C", 'C', item_crystalTeleporter});
-		addRecipe(new ItemStack(item_crystal), new Object[] {"C", 'C', item_crystalScanner});
-		addRecipe(new ItemStack(item_crystal), new Object[] {"C", 'C', item_crystalSoulEmpty});
-		addRecipe(new ItemStack(item_crystal), new Object[] {"C", 'C', item_crystalCreation});
-		addRecipe(new ItemStack(block_dhdPanel), new Object[] {"P", 'P', block_shieldConsolePanel});
-		addRecipe(new ItemStack(Block.redstoneLampIdle), new Object[] {"L", 'L', block_selfPoweredRedstoneLight});
-		addRecipe(new ItemStack(item_customFireBall), new Object[] {"F", 'F', Item.fireballCharge});
-		addRecipe(new ItemStack(Item.fireballCharge), new Object[] {"F", 'F', item_customExplosiveFireBall});
+		this.addSmelting(new ItemStack(item_naquadahIngot), item_naquadahOre.itemID);
 		
-		if(StargateModConfig.canCraftNaquadahAlloy) {
-			addRecipe(new ItemStack(block_naquadahAlloy), new Object[] {"NFN", "FRF", "NFN", 'N', item_naquadahIngot, 'F', Item.ingotIron, 'R', Item.redstone});
+		this.addRecipe(new ItemStack(block_naquadahBlock), new Object[] {"NNN", "NNN", "NNN", 'N', item_naquadahIngot});
+		this.addRecipe(new ItemStack(item_crystal), new Object[] {"C", 'C', item_crystalStargate});
+		this.addRecipe(new ItemStack(item_crystal), new Object[] {"C", 'C', item_crystalDhd});
+		this.addRecipe(new ItemStack(item_crystal), new Object[] {"C", 'C', item_crystalTeleporter});
+		this.addRecipe(new ItemStack(item_crystal), new Object[] {"C", 'C', item_crystalScanner});
+		this.addRecipe(new ItemStack(item_crystal), new Object[] {"C", 'C', item_crystalSoulEmpty});
+		this.addRecipe(new ItemStack(item_crystal), new Object[] {"C", 'C', item_crystalCreation});
+		this.addRecipe(new ItemStack(block_dhdPanel), new Object[] {"P", 'P', block_shieldConsolePanel});
+		this.addRecipe(new ItemStack(Block.redstoneLampIdle), new Object[] {"L", 'L', block_selfPoweredRedstoneLight});
+		this.addRecipe(new ItemStack(item_customFireBall), new Object[] {"F", 'F', Item.fireballCharge});
+		this.addRecipe(new ItemStack(Item.fireballCharge), new Object[] {"F", 'F', item_customExplosiveFireBall});
+		
+		if(this.getConfig().canCraftNaquadahAlloy) {
+			this.addRecipe(new ItemStack(block_naquadahAlloy), new Object[] {"NFN", "FRF", "NFN", 'N', item_naquadahIngot, 'F', Item.ingotIron, 'R', Item.redstone});
 			
-			if(StargateModConfig.canCraftStargate) {
-				addRecipe(new ItemStack(item_crystalStargate), new Object[] {"CR_", "___", "___", 'C', item_crystal, 'R', Item.redstone});
-				addRecipe(new ItemStack(item_crystalDhd), new Object[] {"C_R", "___", "___", 'C', item_crystal, 'R', Item.redstone});
-				addRecipe(new ItemStack(item_chevronCompound), new Object[] {"NCN", "_N_", 'N', item_naquadahIngot, 'C', item_crystal});
-				addRecipe(new ItemStack(item_stargateControlUnit), new Object[] {"RRR", "RCR", "RRR", 'R', Item.redstone, 'C', item_crystalStargate});
-				addRecipe(new ItemStack(item_dhdControlUnit), new Object[] {"RRR", "RCR", "RRR", 'R', Item.redstone, 'C', item_crystalDhd});
-				addRecipe(new ItemStack(item_dhdPanel), new Object[] {"GGG", "NCN", 'G', Block.glass, 'N', item_naquadahIngot, 'C', item_crystal});
-				addRecipe(new ItemStack(block_chevronOff), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_chevronCompound});
-				addRecipe(new ItemStack(block_stargateControl), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_stargateControlUnit});
-				addRecipe(new ItemStack(block_dhdBase), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_dhdControlUnit});
-				addRecipe(new ItemStack(block_dhdPanel), new Object[] {"P", "N", 'N', block_naquadahAlloy, 'P', item_dhdPanel});
+			if(this.getConfig().canCraftStargate) {
+				this.addRecipe(new ItemStack(item_crystalStargate), new Object[] {"CR_", "___", "___", 'C', item_crystal, 'R', Item.redstone});
+				this.addRecipe(new ItemStack(item_crystalDhd), new Object[] {"C_R", "___", "___", 'C', item_crystal, 'R', Item.redstone});
+				this.addRecipe(new ItemStack(item_chevronCompound), new Object[] {"NCN", "_N_", 'N', item_naquadahIngot, 'C', item_crystal});
+				this.addRecipe(new ItemStack(item_stargateControlUnit), new Object[] {"RRR", "RCR", "RRR", 'R', Item.redstone, 'C', item_crystalStargate});
+				this.addRecipe(new ItemStack(item_dhdControlUnit), new Object[] {"RRR", "RCR", "RRR", 'R', Item.redstone, 'C', item_crystalDhd});
+				this.addRecipe(new ItemStack(item_dhdPanel), new Object[] {"GGG", "NCN", 'G', Block.glass, 'N', item_naquadahIngot, 'C', item_crystal});
+				this.addRecipe(new ItemStack(block_chevronOff), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_chevronCompound});
+				this.addRecipe(new ItemStack(block_stargateControl), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_stargateControlUnit});
+				this.addRecipe(new ItemStack(block_dhdBase), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_dhdControlUnit});
+				this.addRecipe(new ItemStack(block_dhdPanel), new Object[] {"P", "N", 'N', block_naquadahAlloy, 'P', item_dhdPanel});
 				
-				if(StargateModConfig.canCraftStargateShield) {
-					addRecipe(new ItemStack(item_crystalShield), new Object[] {"C__", "___", "_R_", 'C', item_crystal, 'R', Item.redstone});
-					addRecipe(new ItemStack(item_shieldControlUnit), new Object[] {"RRR", "RCR", "RRR", 'R', Item.redstone, 'C', item_crystalShield});
-					addRecipe(new ItemStack(block_shieldConsoleBase), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_shieldControlUnit});
-					addRecipe(new ItemStack(block_shieldConsolePanel), new Object[] {"P", 'P', block_dhdPanel});
+				if(this.getConfig().canCraftStargateShield) {
+					this.addRecipe(new ItemStack(item_crystalShield), new Object[] {"C__", "___", "_R_", 'C', item_crystal, 'R', Item.redstone});
+					this.addRecipe(new ItemStack(item_shieldControlUnit), new Object[] {"RRR", "RCR", "RRR", 'R', Item.redstone, 'C', item_crystalShield});
+					this.addRecipe(new ItemStack(block_shieldConsoleBase), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_shieldControlUnit});
+					this.addRecipe(new ItemStack(block_shieldConsolePanel), new Object[] {"P", 'P', block_dhdPanel});
 				}
 				
 				canCraftCrystal = true;
 			}
 			
-			if(StargateModConfig.canCraftTeleporter) {
-				addRecipe(new ItemStack(item_crystalTeleporter), new Object[] {"C__", "R__", "___", 'C', item_crystal, 'R', Item.redstone});
-				addRecipe(new ItemStack(item_teleporterControlUnit), new Object[] {"RRR", "RCR", "RRR", 'R', Item.redstone, 'C', item_crystalTeleporter});
-				addRecipe(new ItemStack(item_touchScreen), new Object[] {"GGG", "RCR", 'G', Block.glass, 'R', Item.redstone, 'C', item_crystal});
-				addRecipe(new ItemStack(block_teleporterBase), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_teleporterControlUnit});
-				addRecipe(new ItemStack(block_teleporterPanel), new Object[] {"S", "N", 'N', block_naquadahAlloy, 'S', item_touchScreen});
+			if(this.getConfig().canCraftTeleporter) {
+				this.addRecipe(new ItemStack(item_crystalTeleporter), new Object[] {"C__", "R__", "___", 'C', item_crystal, 'R', Item.redstone});
+				this.addRecipe(new ItemStack(item_teleporterControlUnit), new Object[] {"RRR", "RCR", "RRR", 'R', Item.redstone, 'C', item_crystalTeleporter});
+				this.addRecipe(new ItemStack(item_touchScreen), new Object[] {"GGG", "RCR", 'G', Block.glass, 'R', Item.redstone, 'C', item_crystal});
+				this.addRecipe(new ItemStack(block_teleporterBase), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_teleporterControlUnit});
+				this.addRecipe(new ItemStack(block_teleporterPanel), new Object[] {"S", "N", 'N', block_naquadahAlloy, 'S', item_touchScreen});
 				
 				canCraftCrystal = true;
 			}
 			
-			if(StargateModConfig.canCraftDetector) {
-				addRecipe(new ItemStack(item_crystalScanner), new Object[] {"C__", "_R_", "___", 'C', item_crystal, 'R', Item.redstone});
-				addRecipe(new ItemStack(item_detectorControlUnit), new Object[] {"RRR", "RCR", "RRR", 'R', Item.redstone, 'C', item_crystalScanner});
-				addRecipe(new ItemStack(block_detector), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_detectorControlUnit});
+			if(this.getConfig().canCraftDetector) {
+				this.addRecipe(new ItemStack(item_crystalScanner), new Object[] {"C__", "_R_", "___", 'C', item_crystal, 'R', Item.redstone});
+				this.addRecipe(new ItemStack(item_detectorControlUnit), new Object[] {"RRR", "RCR", "RRR", 'R', Item.redstone, 'C', item_crystalScanner});
+				this.addRecipe(new ItemStack(block_detector), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_detectorControlUnit});
 				
 				canCraftCrystal = true;
 			}
 			
-			if(StargateModConfig.canCraftMobGenerator) {
-				addRecipe(new ItemStack(item_crystalSoulEmpty), new Object[] {"C__", "__R", "___", 'C', item_crystal, 'R', Item.redstone});
-				addRecipe(new ItemStack(item_mobGeneratorControlUnit), new Object[] {"RRR", "RCR", "RRR", 'R', Item.redstone, 'C', item_crystalSoulEmpty});
-				addRecipe(new ItemStack(block_mobGenerator), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_mobGeneratorControlUnit});
+			if(this.getConfig().canCraftMobGenerator) {
+				this.addRecipe(new ItemStack(item_crystalSoulEmpty), new Object[] {"C__", "__R", "___", 'C', item_crystal, 'R', Item.redstone});
+				this.addRecipe(new ItemStack(item_mobGeneratorControlUnit), new Object[] {"RRR", "RCR", "RRR", 'R', Item.redstone, 'C', item_crystalSoulEmpty});
+				this.addRecipe(new ItemStack(block_mobGenerator), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_mobGeneratorControlUnit});
 				
 				canCraftCrystal = true;
 			}
 			
-			if(StargateModConfig.canCraftStuffLevelUpTable) {
-				addRecipe(new ItemStack(item_stuffLevelUpTableControlUnit), new Object[] {"RRR", "RCR", "RRR", 'R', Item.redstone, 'C', item_crystalCreation});
-				addRecipe(new ItemStack(block_stuffLevelUpTable), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_stuffLevelUpTableControlUnit});
+			if(this.getConfig().canCraftStuffLevelUpTable) {
+				this.addRecipe(new ItemStack(item_stuffLevelUpTableControlUnit), new Object[] {"RRR", "RCR", "RRR", 'R', Item.redstone, 'C', item_crystalCreation});
+				this.addRecipe(new ItemStack(block_stuffLevelUpTable), new Object[] {"C", "N", 'N', block_naquadahAlloy, 'C', item_stuffLevelUpTableControlUnit});
 				
 				canCraftCreationCrystal = true;
 			}
 			
-			if(StargateModConfig.canCraftSelfPoweredRedstoneLight) {
-				addRecipe(new ItemStack(block_selfPoweredRedstoneLight), new Object[] {"L", 'L', Block.redstoneLampIdle});
+			if(this.getConfig().canCraftSelfPoweredRedstoneLight) {
+				this.addRecipe(new ItemStack(block_selfPoweredRedstoneLight), new Object[] {"L", 'L', Block.redstoneLampIdle});
 			}
 		}
 		
-		if(StargateModConfig.canCraftToolsAndArmors) {
-			addRecipe(new ItemStack(item_naquadahPickaxe), new Object[] {"NNN", "_S_", "_S_", 'N', item_naquadahIngot, 'S', Item.stick});
-			addRecipe(new ItemStack(item_naquadahShovel), new Object[] {"N", "S", "S", 'N', item_naquadahIngot, 'S', Item.stick});
-			addRecipe(new ItemStack(item_naquadahAxe), new Object[] {"NN", "SN", "S_", 'N', item_naquadahIngot, 'S', Item.stick});
-			addRecipe(new ItemStack(item_naquadahHoe), new Object[] {"NN", "S_", "S_", 'N', item_naquadahIngot, 'S', Item.stick});
-			addRecipe(new ItemStack(item_naquadahSword), new Object[] {"N", "N", "S", 'N', item_naquadahIngot, 'S', Item.stick});
-			addRecipe(new ItemStack(item_naquadahHelmet), new Object[] {"NNN", "N_N", "___", 'N', item_naquadahIngot, 'S', Item.stick});
-			addRecipe(new ItemStack(item_naquadahPlate), new Object[] {"N_N", "NNN", "NNN", 'N', item_naquadahIngot, 'S', Item.stick});
-			addRecipe(new ItemStack(item_naquadahLegs), new Object[] {"NNN", "N_N", "N_N", 'N', item_naquadahIngot, 'S', Item.stick});
-			addRecipe(new ItemStack(item_naquadahBoots), new Object[] {"___", "N_N", "N_N", 'N', item_naquadahIngot, 'S', Item.stick});
-			addRecipe(new ItemStack(item_naquadahBow), new Object[] {"_NS", "N_S", "_NS", 'N', item_naquadahIngot, 'S', Item.silk});
-			addRecipe(new ItemStack(item_naquadahLighter), new Object[] {"D", "N", 'N', item_naquadahIngot, 'D', Item.diamond});
-			addRecipe(new ItemStack(item_naquadahShears), new Object[] {"_N", "N_", 'N', item_naquadahIngot});
-			addRecipe(new ItemStack(item_naquadahFishingRod), new Object[] {"__N", "_NS", "N_S", 'N', item_naquadahIngot, 'S', Item.silk});
+		if(this.getConfig().canCraftToolsAndArmors) {
+			this.addRecipe(new ItemStack(item_naquadahPickaxe), new Object[] {"NNN", "_S_", "_S_", 'N', item_naquadahIngot, 'S', Item.stick});
+			this.addRecipe(new ItemStack(item_naquadahShovel), new Object[] {"N", "S", "S", 'N', item_naquadahIngot, 'S', Item.stick});
+			this.addRecipe(new ItemStack(item_naquadahAxe), new Object[] {"NN", "SN", "S_", 'N', item_naquadahIngot, 'S', Item.stick});
+			this.addRecipe(new ItemStack(item_naquadahHoe), new Object[] {"NN", "S_", "S_", 'N', item_naquadahIngot, 'S', Item.stick});
+			this.addRecipe(new ItemStack(item_naquadahSword), new Object[] {"N", "N", "S", 'N', item_naquadahIngot, 'S', Item.stick});
+			this.addRecipe(new ItemStack(item_naquadahHelmet), new Object[] {"NNN", "N_N", "___", 'N', item_naquadahIngot, 'S', Item.stick});
+			this.addRecipe(new ItemStack(item_naquadahPlate), new Object[] {"N_N", "NNN", "NNN", 'N', item_naquadahIngot, 'S', Item.stick});
+			this.addRecipe(new ItemStack(item_naquadahLegs), new Object[] {"NNN", "N_N", "N_N", 'N', item_naquadahIngot, 'S', Item.stick});
+			this.addRecipe(new ItemStack(item_naquadahBoots), new Object[] {"___", "N_N", "N_N", 'N', item_naquadahIngot, 'S', Item.stick});
+			this.addRecipe(new ItemStack(item_naquadahBow), new Object[] {"_NS", "N_S", "_NS", 'N', item_naquadahIngot, 'S', Item.silk});
+			this.addRecipe(new ItemStack(item_naquadahLighter), new Object[] {"D", "N", 'N', item_naquadahIngot, 'D', Item.diamond});
+			this.addRecipe(new ItemStack(item_naquadahShears), new Object[] {"_N", "N_", 'N', item_naquadahIngot});
+			this.addRecipe(new ItemStack(item_naquadahFishingRod), new Object[] {"__N", "_NS", "N_S", 'N', item_naquadahIngot, 'S', Item.silk});
 			
-			if(StargateModConfig.canCraftFireStaff) {
-				addRecipe(new ItemStack(item_fireStaff), new Object[] {"F", "C", "L", 'L', item_naquadahLighter, 'C', item_crystalCreation, 'F', item_customFireBall});
+			if(this.getConfig().canCraftFireStaff) {
+				this.addRecipe(new ItemStack(item_fireStaff), new Object[] {"F", "C", "L", 'L', item_naquadahLighter, 'C', item_crystalCreation, 'F', item_customFireBall});
 				
-				if(StargateModConfig.canCraftExplosiveFireBalls && StargateModConfig.canCraftExplosiveFireStaff) {
-					addRecipe(new ItemStack(item_explosiveFireStaff), new Object[] {"F", "C", "L", 'L', item_naquadahLighter, 'C', item_crystalCreation, 'F', item_customExplosiveFireBall});
+				if(this.getConfig().canCraftExplosiveFireBalls && this.getConfig().canCraftExplosiveFireStaff) {
+					this.addRecipe(new ItemStack(item_explosiveFireStaff), new Object[] {"F", "C", "L", 'L', item_naquadahLighter, 'C', item_crystalCreation, 'F', item_customExplosiveFireBall});
 				}
 				
 				canCraftCreationCrystal = true;
 			}
 		}
 		
-		if(StargateModConfig.canCraftExplosiveFireBalls) {
-			addRecipe(new ItemStack(item_customExplosiveFireBall), new Object[] {"F", 'F', item_customFireBall});
+		if(this.getConfig().canCraftExplosiveFireBalls) {
+			this.addRecipe(new ItemStack(item_customExplosiveFireBall), new Object[] {"F", 'F', item_customFireBall});
 		}
 		else {
-			addRecipe(new ItemStack(Item.fireballCharge), new Object[] {"F", 'F', item_customFireBall});
+			this.addRecipe(new ItemStack(Item.fireballCharge), new Object[] {"F", 'F', item_customFireBall});
 		}
 		
 		if(canCraftCreationCrystal) {
-			addRecipe(new ItemStack(item_crystalCreation), new Object[] {"C__", "___", "R__", 'C', item_crystal, 'R', Item.redstone});
+			this.addRecipe(new ItemStack(item_crystalCreation), new Object[] {"C__", "___", "R__", 'C', item_crystal, 'R', Item.redstone});
 			
 			canCraftCrystal = true;
 		}
 		
 		if(canCraftCrystal) {
-			addRecipe(new ItemStack(item_crystal), new Object[] {"R", "D", "D", 'D', Item.diamond, 'R', Item.redstone});
+			this.addRecipe(new ItemStack(item_crystal), new Object[] {"R", "D", "D", 'D', Item.diamond, 'R', Item.redstone});
 		}
 	}
 	
-	private static void registerDispenserBehaviors() {
-		ModLoader.addDispenserBehavior(item_customFireBall, new DispenserBehaviorCustomFireBall());
-		ModLoader.addDispenserBehavior(item_customExplosiveFireBall, new DispenserBehaviorCustomExplosiveFireBall());
+	protected void registerDispenserBehaviors() {
+		this.registerDispenserBehavior(item_customFireBall, new DispenserBehaviorCustomFireBall());
+		this.registerDispenserBehavior(item_customExplosiveFireBall, new DispenserBehaviorCustomExplosiveFireBall());
 	}
 	
-	private static void registerTileEntities() {
-		registerTileEntity(TileEntityBaseDhd.class, "DhdBase");
-		registerTileEntity(TileEntityBaseShieldConsole.class, "ShieldConsoleBase");
-		registerTileEntity(TileEntityBaseTeleporter.class, "TeleporterBase");
-		registerTileEntity(TileEntityChevron.class, "Chevron");
-		registerTileEntity(TileEntityDetector.class, "Detector");
-		registerTileEntity(TileEntityMobGenerator.class, "MobGenerator");
-		registerTileEntity(TileEntityStargateControl.class, "StargateControl");
-		registerTileEntity(TileEntityStargatePart.class, "StargatePart");
-		registerTileEntity(TileEntityStuffLevelUpTable.class, "StuffLevelUpTable");
+	protected void registerTileEntities() {
+		this.registerTileEntity(TileEntityBaseDhd.class, "DhdBase");
+		this.registerTileEntity(TileEntityBaseShieldConsole.class, "ShieldConsoleBase");
+		this.registerTileEntity(TileEntityBaseTeleporter.class, "TeleporterBase");
+		this.registerTileEntity(TileEntityChevron.class, "Chevron");
+		this.registerTileEntity(TileEntityDetector.class, "Detector");
+		this.registerTileEntity(TileEntityMobGenerator.class, "MobGenerator");
+		this.registerTileEntity(TileEntityStargateControl.class, "StargateControl");
+		this.registerTileEntity(TileEntityStargatePart.class, "StargatePart");
+		this.registerTileEntity(TileEntityStuffLevelUpTable.class, "StuffLevelUpTable");
 	}
 	
-	private void registerEntities() {
-		EntityRegistry.registerModEntity(EntityCustomFishHook.class, "customFishHook", 0, this, 250, 5, true);
-		EntityRegistry.registerModEntity(EntityCustomFireBall.class, "customFireBall", 1, this, 250, 5, true);
-		EntityRegistry.registerModEntity(EntityCustomExplosiveFireBall.class, "customExplosiveFireBall", 2, this, 250, 5, true);
-		EntityRegistry.registerModEntity(EntityNuke.class, "nuke", 3, this, 250, 5, true);
-		EntityRegistry.registerModEntity(EntityNapalm.class, "napalm", 4, this, 250, 5, true);
+	protected void registerEntities() {
+		this.registerEntitiy(EntityCustomFishHook.class, "customFishHook", 0, 250, 5, true);
+		this.registerEntitiy(EntityCustomFireBall.class, "customFireBall", 1, 250, 5, true);
+		this.registerEntitiy(EntityCustomExplosiveFireBall.class, "customExplosiveFireBall", 2, 250, 5, true);
+		this.registerEntitiy(EntityNuke.class, "nuke", 3, 250, 5, true);
+		this.registerEntitiy(EntityNapalm.class, "napalm", 4, 250, 5, true);
 	}
 	
-	private static void registerEventHandler() {
-		MinecraftForge.EVENT_BUS.register(new StargateEventHandler());
+	protected void registerEventHandlers() {
+		this.registerEventHandler(new StargateEventHandler());
 	}
 	
-	private static void registerGuiHandler() {
-		NetworkRegistry.instance().registerGuiHandler(instance, proxy);
+	protected void registerGuiHandler() {
+		this.registerGuiHandler(proxy);
 	}
 	
-	private static void registerWorldGenerator() {
-		GameRegistry.registerWorldGenerator(new NaquadahGenerator());
+	protected void registerWorldGenerators() {
+		this.registerWorldGenerator(new NaquadahGenerator());
 	}
 	
-	private static void setBlocksHarvestLevel() {
-		int naquadahHarvestLevel = StargateModConfig.canCraftToolsAndArmors ? 4 : 3;
+	protected void setBlocksHarvestLevel() {
+		int naquadahHarvestLevel = this.getConfig().canCraftToolsAndArmors ? 4 : 3;
 		
-		setBlockHarvestLevel(block_naquadahOre, "pickaxe", 3);
-		setBlockHarvestLevel(block_naquadahBlock, "pickaxe", naquadahHarvestLevel);
-		setBlockHarvestLevel(block_naquadahAlloy, "pickaxe", naquadahHarvestLevel);
-		setBlockHarvestLevel(block_chevronOff, "pickaxe", naquadahHarvestLevel);
-		setBlockHarvestLevel(block_stargateControl, "pickaxe", naquadahHarvestLevel);
-		setBlockHarvestLevel(block_dhdPanel, "pickaxe", naquadahHarvestLevel);
-		setBlockHarvestLevel(block_dhdBase, "pickaxe", naquadahHarvestLevel);
-		setBlockHarvestLevel(block_teleporterPanel, "pickaxe", naquadahHarvestLevel);
-		setBlockHarvestLevel(block_teleporterBase, "pickaxe", naquadahHarvestLevel);
-		setBlockHarvestLevel(block_shieldConsolePanel, "pickaxe", naquadahHarvestLevel);
-		setBlockHarvestLevel(block_shieldConsoleBase, "pickaxe", naquadahHarvestLevel);
-		setBlockHarvestLevel(block_detector, "pickaxe", naquadahHarvestLevel);
-		setBlockHarvestLevel(block_mobGenerator, "pickaxe", naquadahHarvestLevel);
-		setBlockHarvestLevel(block_stuffLevelUpTable, "pickaxe", naquadahHarvestLevel);
-		setBlockHarvestLevel(block_fastStargate, "pickaxe", naquadahHarvestLevel);
-		setBlockHarvestLevel(block_fastStargate2, "pickaxe", naquadahHarvestLevel);
-		setBlockHarvestLevel(block_fastStargate3, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_naquadahOre, "pickaxe", 3);
+		this.setBlockHarvestLevel(block_naquadahBlock, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_naquadahAlloy, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_chevronOff, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_stargateControl, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_dhdPanel, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_dhdBase, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_teleporterPanel, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_teleporterBase, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_shieldConsolePanel, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_shieldConsoleBase, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_detector, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_mobGenerator, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_stuffLevelUpTable, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_fastStargate, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_fastStargate2, "pickaxe", naquadahHarvestLevel);
+		this.setBlockHarvestLevel(block_fastStargate3, "pickaxe", naquadahHarvestLevel);
 	}
 	
-	private static void registerNames() {
+	protected void registerNames() {
 		// Tabs :
-		addName("itemGroup." + stargateBlocksTabName, "Stargate blocks", "Blocs stargate");
-		addName("itemGroup." + stargateItemsTabName, "Stargate items", "Items stargate");
+		this.addName("itemGroup." + stargateBlocksTabName, "Stargate blocks", "Blocs stargate");
+		this.addName("itemGroup." + stargateItemsTabName, "Stargate items", "Items stargate");
 		
 		// Blocks :
-		addName(block_naquadahOre, "Naquadah ore", "Minerai de naquadah");
-		addName(block_naquadahBlock, "Naquadah block", "Block de naquadah");
-		addName(block_naquadahAlloy, "Naquadah alloy", "Alliage de naquadah");
-		addName(block_chevronOff, "Chevron", "Chevron");
-		addName(block_chevronOn, "Chevron (Active)", "Chevron (Active)");
-		addName(block_stargateControl, "Stargate control unit", "Unite de controle de porte des eloiles");
-		addName(block_vortex, "Vortex", "Vortex");
-		addName(block_shield, "Shield", "Bouclier");
-		addName(block_shieldedVortex, "Shielded vortex", "Vortex avec bouclier");
-		addName(block_kawoosh, "Kawoosh", "Kawoosh");
-		addName(block_dhdPanel, "DHD control panel", "Panneau de controle de DHD");
-		addName(block_dhdBase, "DHD base", "Socle de DHD");
-		addName(block_teleporterPanel, "Teleporter control panel", "Panneau de controle de teleporteur");
-		addName(block_teleporterBase, "Teleporter base", "Socle de teleporteur");
-		addName(block_shieldConsolePanel, "Shield console control panel", "Panneau de console de controle de bouclier");
-		addName(block_shieldConsoleBase, "Shield console base", "Socle de console de controle de bouclier");
-		addName(block_detector, "Detector", "Detecteur");
-		addName(block_mobGenerator, "Mob generator", "Generateur de mobs");
-		addName(block_stuffLevelUpTable, "Stuff levelup table", "Table d'amelioration d'equipment");
-		addName(block_selfPoweredRedstoneLight, "Self powered redstone light", "Lampe a redstone auto-alimentee");
-		addName(block_fastStargate, "Fast Stargate v1", "Fast Stargate v1");
-		addName(block_fastStargate2, "Fast Stargate v2", "Fast Stargate v2");
-		addName(block_fastStargate3, "Fast Stargate v3", "Fast Stargate v3");
+		this.addName(block_naquadahOre, "Naquadah ore", "Minerai de naquadah");
+		this.addName(block_naquadahBlock, "Naquadah block", "Block de naquadah");
+		this.addName(block_naquadahAlloy, "Naquadah alloy", "Alliage de naquadah");
+		this.addName(block_chevronOff, "Chevron", "Chevron");
+		this.addName(block_chevronOn, "Chevron (Active)", "Chevron (Active)");
+		this.addName(block_stargateControl, "Stargate control unit", "Unite de controle de porte des eloiles");
+		this.addName(block_vortex, "Vortex", "Vortex");
+		this.addName(block_shield, "Shield", "Bouclier");
+		this.addName(block_shieldedVortex, "Shielded vortex", "Vortex avec bouclier");
+		this.addName(block_kawoosh, "Kawoosh", "Kawoosh");
+		this.addName(block_dhdPanel, "DHD control panel", "Panneau de controle de DHD");
+		this.addName(block_dhdBase, "DHD base", "Socle de DHD");
+		this.addName(block_teleporterPanel, "Teleporter control panel", "Panneau de controle de teleporteur");
+		this.addName(block_teleporterBase, "Teleporter base", "Socle de teleporteur");
+		this.addName(block_shieldConsolePanel, "Shield console control panel", "Panneau de console de controle de bouclier");
+		this.addName(block_shieldConsoleBase, "Shield console base", "Socle de console de controle de bouclier");
+		this.addName(block_detector, "Detector", "Detecteur");
+		this.addName(block_mobGenerator, "Mob generator", "Generateur de mobs");
+		this.addName(block_stuffLevelUpTable, "Stuff levelup table", "Table d'amelioration d'equipment");
+		this.addName(block_selfPoweredRedstoneLight, "Self powered redstone light", "Lampe a redstone auto-alimentee");
+		this.addName(block_fastStargate, "Fast Stargate v1", "Fast Stargate v1");
+		this.addName(block_fastStargate2, "Fast Stargate v2", "Fast Stargate v2");
+		this.addName(block_fastStargate3, "Fast Stargate v3", "Fast Stargate v3");
 		
 		// Items :
-		addName(item_naquadahOre, "Naquadah ore", "Minerai de naquadah");
-		addName(item_naquadahIngot, "Naquadah ingot", "Lingot de naquadah");
-		addName(item_crystal, "Crystal", "Cristal");
-		addName(item_crystalStargate, "Stargate control crystal", "Cristal de controle de porte des etoiles");
-		addName(item_crystalDhd, "DHD control crystal", "Cristal de controle de DHD");
-		addName(item_crystalTeleporter, "Teleporter crystal", "Cristal de teleporteur");
-		addName(item_crystalScanner, "Scanner crystal", "Cristal de scanner");
-		addName(item_crystalSoulEmpty, "Empty soul crystal", "Cristal d'ame vide");
-		addName(item_crystalCreation, "Materialization crystal", "Cristal de materialisation");
-		addName(item_crystalShield, "Shield crystal", "Cristal de bouclier");
-		addName(item_chevronCompound, "Chevron compound", "Composant de chevron");
-		addName(item_stargateControlUnit, "Stargate control unit", "Unite de controle de porte des eloiles");
-		addName(item_dhdControlUnit, "DHD control unit", "Unite de controle de DHD");
-		addName(item_teleporterControlUnit, "Teleporter control unit", "Unite de controle de teleporteur");
-		addName(item_detectorControlUnit, "Detector control unit", "Unite de controle de detecteur");
-		addName(item_mobGeneratorControlUnit, "Mob generator control unit", "Unite de controle de generateur de mobs");
-		addName(item_stuffLevelUpTableControlUnit, "Stuff levelup table control unit", "Unite de controle de table d'amelioration d'equipment");
-		addName(item_shieldControlUnit, "Shield control unit", "Unite de controle de bouclier");
-		addName(item_dhdPanel, "DHD control panel", "Panneau de controle de DHD");
-		addName(item_touchScreen, "Teleporter touch screen", "Ecran tactile de teleporteur");
-		addName(item_shieldRemote, "Shield remote", "Telecommande du bouclier");
+		this.addName(item_naquadahOre, "Naquadah ore", "Minerai de naquadah");
+		this.addName(item_naquadahIngot, "Naquadah ingot", "Lingot de naquadah");
+		this.addName(item_crystal, "Crystal", "Cristal");
+		this.addName(item_crystalStargate, "Stargate control crystal", "Cristal de controle de porte des etoiles");
+		this.addName(item_crystalDhd, "DHD control crystal", "Cristal de controle de DHD");
+		this.addName(item_crystalTeleporter, "Teleporter crystal", "Cristal de teleporteur");
+		this.addName(item_crystalScanner, "Scanner crystal", "Cristal de scanner");
+		this.addName(item_crystalSoulEmpty, "Empty soul crystal", "Cristal d'ame vide");
+		this.addName(item_crystalCreation, "Materialization crystal", "Cristal de materialisation");
+		this.addName(item_crystalShield, "Shield crystal", "Cristal de bouclier");
+		this.addName(item_chevronCompound, "Chevron compound", "Composant de chevron");
+		this.addName(item_stargateControlUnit, "Stargate control unit", "Unite de controle de porte des eloiles");
+		this.addName(item_dhdControlUnit, "DHD control unit", "Unite de controle de DHD");
+		this.addName(item_teleporterControlUnit, "Teleporter control unit", "Unite de controle de teleporteur");
+		this.addName(item_detectorControlUnit, "Detector control unit", "Unite de controle de detecteur");
+		this.addName(item_mobGeneratorControlUnit, "Mob generator control unit", "Unite de controle de generateur de mobs");
+		this.addName(item_stuffLevelUpTableControlUnit, "Stuff levelup table control unit", "Unite de controle de table d'amelioration d'equipment");
+		this.addName(item_shieldControlUnit, "Shield control unit", "Unite de controle de bouclier");
+		this.addName(item_dhdPanel, "DHD control panel", "Panneau de controle de DHD");
+		this.addName(item_touchScreen, "Teleporter touch screen", "Ecran tactile de teleporteur");
+		this.addName(item_shieldRemote, "Shield remote", "Telecommande du bouclier");
 		
-		addName(item_naquadahPickaxe, "Naquadah pickaxe", "Pioche de naquadah");
-		addName(item_naquadahShovel, "Naquadah shovel", "Pelle de naquadah");
-		addName(item_naquadahAxe, "Naquadah axe", "Hache de naquadah");
-		addName(item_naquadahHoe, "Naquadah hoe", "Houe de naquadah");
-		addName(item_naquadahSword, "Naquadah sword", "Epee de naquadah");
-		addName(item_naquadahHelmet, "Naquadah helmet", "Haume de naquadah");
-		addName(item_naquadahPlate, "Naquadah plate", "Armure de naquadah");
-		addName(item_naquadahLegs, "Naquadah legs", "Jambieres de naquadah");
-		addName(item_naquadahBoots, "Naquadah boots", "Bottes de naquadah");
-		addName(item_naquadahBow, "Naquadah bow", "Arc de naquadah");
-		addName(item_naquadahLighter, "Naquadah ligher", "Briquet de naquadah");
-		addName(item_naquadahShears, "Naquadah shears", "Cisailles de naquadah");
-		addName(item_naquadahFishingRod, "Naquadah fishing rod", "Canne a peche de naquadah");
-		addName(item_fireStaff, "Fire staff", "Baguette de feu");
-		addName(item_explosiveFireStaff, "Explosive fire staff", "Baguette de feu explosive");
-		addName(item_nukeStaff, "Nuke staff - wtf!?", "Baguette nucleaire - wtf!?");
-		addName(item_napalmStaff, "Napalm staff - wtf!?", "Baguette napalm - wtf!?");
-		addName(item_customFireBall, "Fireball v2 - stargate compatible", "Boule de feu v2 - stargate compatible");
-		addName(item_customExplosiveFireBall, "Fireball v3 - explosive", "Boule de feu v3 - explosive");
+		this.addName(item_naquadahPickaxe, "Naquadah pickaxe", "Pioche de naquadah");
+		this.addName(item_naquadahShovel, "Naquadah shovel", "Pelle de naquadah");
+		this.addName(item_naquadahAxe, "Naquadah axe", "Hache de naquadah");
+		this.addName(item_naquadahHoe, "Naquadah hoe", "Houe de naquadah");
+		this.addName(item_naquadahSword, "Naquadah sword", "Epee de naquadah");
+		this.addName(item_naquadahHelmet, "Naquadah helmet", "Haume de naquadah");
+		this.addName(item_naquadahPlate, "Naquadah plate", "Armure de naquadah");
+		this.addName(item_naquadahLegs, "Naquadah legs", "Jambieres de naquadah");
+		this.addName(item_naquadahBoots, "Naquadah boots", "Bottes de naquadah");
+		this.addName(item_naquadahBow, "Naquadah bow", "Arc de naquadah");
+		this.addName(item_naquadahLighter, "Naquadah ligher", "Briquet de naquadah");
+		this.addName(item_naquadahShears, "Naquadah shears", "Cisailles de naquadah");
+		this.addName(item_naquadahFishingRod, "Naquadah fishing rod", "Canne a peche de naquadah");
+		this.addName(item_fireStaff, "Fire staff", "Baguette de feu");
+		this.addName(item_explosiveFireStaff, "Explosive fire staff", "Baguette de feu explosive");
+		this.addName(item_nukeStaff, "Nuke staff - wtf!?", "Baguette nucleaire - wtf!?");
+		this.addName(item_napalmStaff, "Napalm staff - wtf!?", "Baguette napalm - wtf!?");
+		this.addName(item_customFireBall, "Fireball v2 - stargate compatible", "Boule de feu v2 - stargate compatible");
+		this.addName(item_customExplosiveFireBall, "Fireball v3 - explosive", "Boule de feu v3 - explosive");
 		
-		addName(item_crystalSoulChicken, "Chicken soul crystal", "Cristal d'ame de poulet");
-		addName(item_crystalSoulCow, "Cow soul crystal", "Cristal d'ame de vache");
-		addName(item_crystalSoulMooshroom, "Mooshroom soul crystal", "Cristal d'ame de champimheu");
-		addName(item_crystalSoulPig, "Pig soul crystal", "Cristal d'ame de cochon");
-		addName(item_crystalSoulSheep, "Sheep soul crystal", "Cristal d'ame de mouton");
-		addName(item_crystalSoulOcelot, "Ocelot soul crystal", "Cristal d'ame de chat sauvage");
-		addName(item_crystalSoulWolf, "Wolf soul crystal", "Cristal d'ame de loup");
-		addName(item_crystalSoulIronGolem, "Iron golem soul crystal", "Cristal d'ame de golem de fer");
-		addName(item_crystalSoulSnowman, "Snowman soul crystal", "Cristal d'ame de bonhomme de neige");
-		addName(item_crystalSoulBlaze, "Blaze soul crystal", "Cristal d'ame d'elementaire de feu");
-		addName(item_crystalSoulCreeper, "Creeper soul crystal", "Cristal d'ame de creeper");
-		addName(item_crystalSoulEnderman, "Enderman soul crystal", "Cristal d'ame d'enderman");
-		addName(item_crystalSoulGiantZombie, "Giant zombie soul crystal", "Cristal d'ame de zombie geant");
-		addName(item_crystalSoulSilverfish, "Silver fish soul crystal", "Cristal d'ame de poisson d'argent");
-		addName(item_crystalSoulSkeleton, "Skeleton soul crystal", "Cristal d'ame de skelette");
-		addName(item_crystalSoulSpider, "Spider soul crystal", "Cristal d'ame d'areignee");
-		addName(item_crystalSoulCaveSpider, "Cave spider soul crystal", "Cristal d'ame d'areignee venimeuse");
-		addName(item_crystalSoulWitch, "Witch soul crystal", "Cristal d'ame de sorciere");
-		addName(item_crystalSoulWither, "Wither soul crystal", "Cristal d'ame de Wither");
-		addName(item_crystalSoulZombie, "Zombie soul crystal", "Cristal d'ame de zombie");
-		addName(item_crystalSoulPigZombie, "Pig-zombie soul crystal", "Cristal d'ame de cochon-zombie");
-		addName(item_crystalSoulSquid, "Squid soul crystal", "Cristal d'ame de poulpe");
-		addName(item_crystalSoulDragon, "Dragon soul crystal", "Cristal d'ame de Dragon");
-		addName(item_crystalSoulGhast, "Ghast soul crystal", "Cristal d'ame de ghast");
-		addName(item_crystalSoulSlime, "Slime soul crystal", "Cristal d'ame de blob");
-		addName(item_crystalSoulMagmaCube, "Magma cube soul crystal", "Cristal d'ame de blob de lave");
-		addName(item_crystalSoulBat, "Bat soul crystal", "Cristal d'ame de chauve-souris");
-		addName(item_crystalSoulVillager, "Villager soul crystal", "Cristal d'ame de villageois");
-		addName(item_crystalSoulHorse, "Horse soul crystal", "Cristal d'ame de cheval");
+		this.addName(item_crystalSoulChicken, "Chicken soul crystal", "Cristal d'ame de poulet");
+		this.addName(item_crystalSoulCow, "Cow soul crystal", "Cristal d'ame de vache");
+		this.addName(item_crystalSoulMooshroom, "Mooshroom soul crystal", "Cristal d'ame de champimheu");
+		this.addName(item_crystalSoulPig, "Pig soul crystal", "Cristal d'ame de cochon");
+		this.addName(item_crystalSoulSheep, "Sheep soul crystal", "Cristal d'ame de mouton");
+		this.addName(item_crystalSoulOcelot, "Ocelot soul crystal", "Cristal d'ame de chat sauvage");
+		this.addName(item_crystalSoulWolf, "Wolf soul crystal", "Cristal d'ame de loup");
+		this.addName(item_crystalSoulIronGolem, "Iron golem soul crystal", "Cristal d'ame de golem de fer");
+		this.addName(item_crystalSoulSnowman, "Snowman soul crystal", "Cristal d'ame de bonhomme de neige");
+		this.addName(item_crystalSoulBlaze, "Blaze soul crystal", "Cristal d'ame d'elementaire de feu");
+		this.addName(item_crystalSoulCreeper, "Creeper soul crystal", "Cristal d'ame de creeper");
+		this.addName(item_crystalSoulEnderman, "Enderman soul crystal", "Cristal d'ame d'enderman");
+		this.addName(item_crystalSoulGiantZombie, "Giant zombie soul crystal", "Cristal d'ame de zombie geant");
+		this.addName(item_crystalSoulSilverfish, "Silver fish soul crystal", "Cristal d'ame de poisson d'argent");
+		this.addName(item_crystalSoulSkeleton, "Skeleton soul crystal", "Cristal d'ame de skelette");
+		this.addName(item_crystalSoulSpider, "Spider soul crystal", "Cristal d'ame d'areignee");
+		this.addName(item_crystalSoulCaveSpider, "Cave spider soul crystal", "Cristal d'ame d'areignee venimeuse");
+		this.addName(item_crystalSoulWitch, "Witch soul crystal", "Cristal d'ame de sorciere");
+		this.addName(item_crystalSoulWither, "Wither soul crystal", "Cristal d'ame de Wither");
+		this.addName(item_crystalSoulZombie, "Zombie soul crystal", "Cristal d'ame de zombie");
+		this.addName(item_crystalSoulPigZombie, "Pig-zombie soul crystal", "Cristal d'ame de cochon-zombie");
+		this.addName(item_crystalSoulSquid, "Squid soul crystal", "Cristal d'ame de poulpe");
+		this.addName(item_crystalSoulDragon, "Dragon soul crystal", "Cristal d'ame de Dragon");
+		this.addName(item_crystalSoulGhast, "Ghast soul crystal", "Cristal d'ame de ghast");
+		this.addName(item_crystalSoulSlime, "Slime soul crystal", "Cristal d'ame de blob");
+		this.addName(item_crystalSoulMagmaCube, "Magma cube soul crystal", "Cristal d'ame de blob de lave");
+		this.addName(item_crystalSoulBat, "Bat soul crystal", "Cristal d'ame de chauve-souris");
+		this.addName(item_crystalSoulVillager, "Villager soul crystal", "Cristal d'ame de villageois");
+		this.addName(item_crystalSoulHorse, "Horse soul crystal", "Cristal d'ame de cheval");
 		
 		// Inventory :
-		addName(TileEntityBaseTeleporter.INV_NAME, "Teleporter", "Teleporteur");
-		addName(TileEntityBaseDhd.INV_NAME, "DHD", "DHD");
-		addName(TileEntityBaseShieldConsole.INV_NAME, "Shield console", "Console du bouclier");
-		addName(TileEntityDetector.INV_NAME, "Detector", "Detecteur");
-		addName(TileEntityMobGenerator.INV_NAME, "Mob generator", "Generateur de mobs");
-		addName(TileEntityStargateControl.INV_NAME, "Stargate", "Stargate");
-		addName(TileEntityStuffLevelUpTable.INV_NAME, "Stuff level up table", "Table d'amelioration d'equipement");
+		this.addName(TileEntityBaseTeleporter.INV_NAME, "Teleporter", "Teleporteur");
+		this.addName(TileEntityBaseDhd.INV_NAME, "DHD", "DHD");
+		this.addName(TileEntityBaseShieldConsole.INV_NAME, "Shield console", "Console du bouclier");
+		this.addName(TileEntityDetector.INV_NAME, "Detector", "Detecteur");
+		this.addName(TileEntityMobGenerator.INV_NAME, "Mob generator", "Generateur de mobs");
+		this.addName(TileEntityStargateControl.INV_NAME, "Stargate", "Stargate");
+		this.addName(TileEntityStuffLevelUpTable.INV_NAME, "Stuff level up table", "Table d'amelioration d'equipement");
 		
-		addName(GuiBase.DESTINATION, "Destination", "Destination");
-		addName(GuiBase.NAME, "Name", "Nom");
-		addName(GuiBase.ADD_THIS, "Add to the list", "Ajouter a la liste");
-		addName(GuiBase.ADD, "Add", "Ajouter");
-		addName(GuiBase.DELETE, "Delete", "Supprimer");
-		addName(GuiBase.OVERWRITE, "Overwrite", "Ecraser");
-		addName(GuiBase.TAB, "Tab", "Tab");
-		addName(GuiBase.ALL, "All", "Tous");
+		this.addName(GuiScreen.ENTER, " (ENTER)", " (ENTRER)");
+		this.addName(GuiScreen.TAB, " (TAB)", " (TAB)");
+		this.addName(GuiScreen.ESC, " (ESC)", " (ECHAP)");
 		
-		addName(GuiTeleporter.COORDINATES, "Coordinates", "Coordonnees");
-		addName(GuiTeleporter.TELEPORT, "Teleport (ENTER)", "Teleportation (ENTRER)");
-		addName(GuiTeleporter.IN_RANGE, "In range", "A portee");
-		addName(GuiTeleporter.MESSAGE_OK, "Coordinates in range", "Coordonnees a portee");
-		addName(GuiTeleporter.MESSAGE_OUT_OF_RANGE, "Coordinates out of range", "Coordonnes trop eloignees");
-		addName(GuiTeleporter.MESSAGE_INVALID, "Invalid coordinates", "Coordonnees non valides");
+		this.addName(GuiBase.DESTINATION, "Destination", "Destination");
+		this.addName(GuiBase.NAME, "Name", "Nom");
+		this.addName(GuiBase.ADD_THIS, "Add to the list", "Ajouter a la liste");
+		this.addName(GuiBase.ADD, "Add", "Ajouter");
+		this.addName(GuiBase.DELETE, "Delete", "Supprimer");
+		this.addName(GuiBase.OVERWRITE, "Overwrite", "Ecraser");
+		this.addName(GuiBase.TAB, "Tab", "Tab");
+		this.addName(GuiBase.ALL, "All", "Tous");
 		
-		addName(GuiDhd.ADDRESS, "Address", "Adresse");
-		addName(GuiDhd.ACTIVATE, "Activate (ENTER)", "Activer (ENTRER)");
-		addName(GuiDhd.CLOSE, "Close (ENTER)", "Fermer (ENTRER)");
-		addName(GuiDhd.EARTH, "Earth", "Terre");
-		addName(GuiDhd.HELL, "Hell", "Enfer");
-		addName(GuiDhd.END, "End", "End");
-		addName(DhdPanel.RESET, "Reset", "Reset");
+		this.addName(GuiTeleporter.COORDINATES, "Coordinates", "Coordonnees");
+		this.addName(GuiTeleporter.TELEPORT, "Teleport", "Teleportation");
+		this.addName(GuiTeleporter.IN_RANGE, "In range", "A portee");
+		this.addName(GuiTeleporter.MESSAGE_OK, "Coordinates in range", "Coordonnees a portee");
+		this.addName(GuiTeleporter.MESSAGE_OUT_OF_RANGE, "Coordinates out of range", "Coordonnes trop eloignees");
+		this.addName(GuiTeleporter.MESSAGE_INVALID, "Invalid coordinates", "Coordonnees non valides");
 		
-		addName(GuiShieldConsole.CURRENT_CODE, "Current code", "Code actuel");
-		addName(GuiShieldConsole.SHIELD_ON, "Shield : ON", "Bouclier : ON");
-		addName(GuiShieldConsole.SHIELD_OFF, "Shield : OFF", "Bouclier : OFF");
-		addName(GuiShieldConsole.SHIELD_DISCONNECTED, "Shield : disconnected", "Bouclier : deconnecte");
-		addName(GuiShieldConsole.SHIELD_SWITCH, "Shield (ENTER)", "Bouclier (ENTRER)");
-		addName(GuiShieldConsole.AUTO_SHIELD_ON, "Automatic shield : ON", "Bouclier automtique : ON");
-		addName(GuiShieldConsole.AUTO_SHIELD_OFF, "Automatic shield : OFF", "Bouclier automatique : OFF");
-		addName(GuiShieldConsole.AUTO_SHIELD_DISCONNECTED, "Automatic shield : disconnected", "Bouclier automatique : deconnecte");
-		addName(GuiShieldConsole.AUTO_SHIELD_SWITCH, "Automatic shield (TAB)", "Bouclier automatique (TAB)");
-		addName(GuiShieldConsole.CHANGE_CODE, "Change code", "Changer le code");
+		this.addName(GuiDhd.ADDRESS, "Address", "Adresse");
+		this.addName(GuiDhd.ACTIVATE, "Activate", "Activer");
+		this.addName(GuiDhd.CLOSE, "Close", "Fermer");
+		this.addName(GuiDhd.EARTH, "Earth", "Terre");
+		this.addName(GuiDhd.HELL, "Hell", "Enfer");
+		this.addName(GuiDhd.END, "End", "End");
+		this.addName(DhdPanel.RESET, "Reset", "Reset");
 		
-		addName(GuiStargateControl.DEFAULT_ADDRESS, "Default address", "Adresse par defaut");
-		addName(GuiStargateControl.CUSTOM_ADDRESS, "Custom address", "Adresse speciale");
-		addName(GuiStargateControl.CREATE_WITH_DEFAULT_ADDRESS, "Create with the default address", "Creer avec l'adresse par defaut");
-		addName(GuiStargateControl.CREATE_WITH_CUSTOM_ADDRESS, "Create with a custom address", "Creer avec une adresse speciale");
-		addName(GuiStargateControl.ADDRESS_SELECTION, "Address selection", "Choix d'une adresse");
+		this.addName(GuiShieldConsole.CURRENT_CODE, "Current code", "Code actuel");
+		this.addName(GuiShieldConsole.SHIELD_ON, "Shield : ON", "Bouclier : ON");
+		this.addName(GuiShieldConsole.SHIELD_OFF, "Shield : OFF", "Bouclier : OFF");
+		this.addName(GuiShieldConsole.SHIELD_DISCONNECTED, "Shield : disconnected", "Bouclier : deconnecte");
+		this.addName(GuiShieldConsole.SHIELD_SWITCH, "Shield", "Bouclier");
+		this.addName(GuiShieldConsole.AUTO_SHIELD_ON, "Automatic shield : ON", "Bouclier automtique : ON");
+		this.addName(GuiShieldConsole.AUTO_SHIELD_OFF, "Automatic shield : OFF", "Bouclier automatique : OFF");
+		this.addName(GuiShieldConsole.AUTO_SHIELD_DISCONNECTED, "Automatic shield : disconnected", "Bouclier automatique : deconnecte");
+		this.addName(GuiShieldConsole.AUTO_SHIELD_SWITCH, "Automatic shield", "Bouclier automatique");
+		this.addName(GuiShieldConsole.CHANGE_CODE, "Change code", "Changer le code");
 		
-		addName(GuiDetector.RANGE, "Range", "Portee");
-		addName(GuiDetector.RANGE_LIMITS, "min range = 1, max range = 10", "portee min = 1, portee max = 10");
-		addName(GuiDetector.INVERTED_OUTPUT, "Inverted output.", "Sortie inversee.");
-		addName(GuiDetector.NORMAL_OUTPUT, "Normal output", "Sortie normale");
-		addName(GuiDetector.INVERT_BUTTON, "Invert output (TAB)", "Inverser la sortie (TAB)");
+		this.addName(GuiStargateControl.DEFAULT_ADDRESS, "Default address", "Adresse par defaut");
+		this.addName(GuiStargateControl.CUSTOM_ADDRESS, "Custom address", "Adresse speciale");
+		this.addName(GuiStargateControl.CREATE_WITH_DEFAULT_ADDRESS, "Create with the default address", "Creer avec l'adresse par defaut");
+		this.addName(GuiStargateControl.CREATE_WITH_CUSTOM_ADDRESS, "Create with a custom address", "Creer avec une adresse speciale");
+		this.addName(GuiStargateControl.ADDRESS_SELECTION, "Address selection", "Choix d'une adresse");
 		
-		addName(GuiStuffLevelUpTable.POWER, "Power", "Puissance");
+		this.addName(GuiDetector.RANGE, "Range", "Portee");
+		this.addName(GuiDetector.RANGE_LIMITS, "min range = 1, max range = 10", "portee min = 1, portee max = 10");
+		this.addName(GuiDetector.INVERTED_OUTPUT, "Inverted output.", "Sortie inversee.");
+		this.addName(GuiDetector.NORMAL_OUTPUT, "Normal output", "Sortie normale");
+		this.addName(GuiDetector.INVERT_BUTTON, "Invert output", "Inverser la sortie");
+
+		this.addName(GuiShieldRemote.INV_NAME, "Shield remote", "Telecommande du bouclier");
+		this.addName(GuiShieldRemote.CODE, "Code", "Code");
+		this.addName(GuiShieldRemote.SEND_CODE, "Send code", "Envoyer le code");
+		
+		this.addName(GuiStuffLevelUpTable.POWER, "Power", "Puissance");
 		
 		// Damage sources :
-		addName("death.attack." + CustomDamageSource.kawoosh.getDamageType(), "%1$s tried to swim into the kawoosh.", "%1$s a essaye de nager dans le kawoosh.");
-		addName("death.attack." + CustomDamageSource.iris.getDamageType(), "%1$s couldn't exit hyperspace.", "%1$s n'a pas pu sortir de l'hyper-espace.");
-	}
-	
-	public static void registerBlock(Block block) {
-		GameRegistry.registerBlock(block, block.getUnlocalizedName());
-	}
-	
-	private static void addRecipe(ItemStack output, Object... params) {
-		GameRegistry.addRecipe(output, params);
-	}
-	
-	private static void addSmelting(int input, ItemStack output) {
-		GameRegistry.addSmelting(input, output, 1);
-	}
-	
-	private static void registerTileEntity(Class<? extends TileEntity> tileEntityClass, String id) {
-		GameRegistry.registerTileEntity(tileEntityClass, id);
-	}
-	
-	private static void setBlockHarvestLevel(Block block, String toolClass, int harvestLevel) {
-		MinecraftForge.setBlockHarvestLevel(block, toolClass, harvestLevel);
-	}
-	
-	private static void addName(Object instance, String enName, String frName) {
-		LanguageRegistry.instance().addNameForObject(instance, "en_US", enName);
-		LanguageRegistry.instance().addNameForObject(instance, "en_UK", enName);
-		LanguageRegistry.instance().addNameForObject(instance, "fr_FR", frName);
-		LanguageRegistry.instance().addNameForObject(instance, "fr_CA", frName);
-	}
-	
-	private static void addName(String key, String enName, String frName) {
-		LanguageRegistry.instance().addStringLocalization(key, "en_US", enName);
-		LanguageRegistry.instance().addStringLocalization(key, "en_UK", enName);
-		LanguageRegistry.instance().addStringLocalization(key, "fr_FR", frName);
-		LanguageRegistry.instance().addStringLocalization(key, "fr_CA", frName);
-	}
-	
-	// Chunk loading interface :
-	
-	@Override
-	public void ticketsLoaded(List<Ticket> tickets, World world) {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	// Utility :
-	
-	/**
-	 * Returns the server world corresponding to the given dimension id, if it exists.
-	 * @param dim - the dimension id.
-	 * @return the server world corresponding to the dimension id if it exists, else null.
-	 */
-	public static World getServerWorldForDimension(int dim) {
-		return ModLoader.getMinecraftServerInstance().worldServerForDimension(dim);
-	}
-	
-	/**
-	 * Returns the client world corresponding to the given dimension id, if it exists.
-	 * @param dim - the dimension id.
-	 * @return the client world corresponding to the dimension id if it exists, else null.
-	 */
-	public static World getClientWorldForDimension(int dim) {
-		WorldClient world = ModLoader.getMinecraftInstance().theWorld;
-		
-		if(world != null && world.provider.dimensionId != dim) {
-			return null;
-		}
-		
-		return world;
-	}
-	
-	/**
-	 * Sends a packet from the client to the server.
-	 * @param packet - the packet to send.
-	 */
-	public static void sendPacketToServer(Packet packet) {
-		PacketDispatcher.sendPacketToServer(packet);
-	}
-	
-	/**
-	 * Sends a packet from the server to all players.
-	 * @param packet - the packet to send.
-	 */
-	public static void sendPacketToAllPlayers(Packet packet) {
-		PacketDispatcher.sendPacketToAllPlayers(packet);
-	}
-	
-	/**
-	 * Sends a packet from the server to all players in the specified dimension.
-	 * @param packet - the packet to send.
-	 * @param dimension - the dimension in which the players have to be.
-	 */
-	public static void sendPacketToAllPlayersInDimension(Packet packet, int dimension) {
-		PacketDispatcher.sendPacketToAllInDimension(packet, dimension);
-	}
-	
-	/**
-	 * Sends a packet from the server to a player.
-	 * @param packet - the packet to send.
-	 * @param player - the player.
-	 */
-	public static void sendPacketToPlayer(Packet packet, EntityPlayer player) {
-		PacketDispatcher.sendPacketToPlayer(packet, (Player) player);
-	}
-	
-	/**
-	 * Logs a string, at INFO level, only if debug mode is active.
-	 * @param text - the string to log.
-	 * @param logNow - indicates whether the string should be logged immediately, or stored until the rest of the line get in.
-	 */
-	public static void debug(String text, boolean logNow) {
-		debug(text, Level.INFO, logNow, 1);
-	}
-	
-	/**
-	 * Logs a string n times, at INFO level, only if debug mode is active.
-	 * @param text - the string to log.
-	 * @param logNow - indicates whether the string should be logged immediately, or stored until the rest of the line get in.
-	 * @param nb - the number of times the string has to be loged.
-	 */
-	public static void debug(String text, boolean logNow, int n) {
-		debug(text, Level.INFO, logNow, n);
-	}
-	
-	/**
-	 * Logs a string, at the given message level, only if debug mode is active.
-	 * @param text - the string to log.
-	 * @param level - the message level.
-	 * @param logNow - indicates whether the string should be logged immediately, or stored until the rest of the line get in.
-	 */
-	public static void debug(String text, Level level, boolean logNow) {
-		debug(text, level, logNow, 1);
-	}
-	
-	/**
-	 * Logs a string n times, at the given message level, only if debug mode is active.
-	 * @param text - the string to log.
-	 * @param level - the message level.
-	 * @param logNow - indicates whether the string should be logged immediately, or stored until the rest of the line get in.
-	 * @param nb - the number of times the string has to be loged.
-	 */
-	public static void debug(String text, Level level, boolean logNow, int n) {
-		if(StargateModConfig.debug) {
-			for(int i = 0; i < n; ++i) {
-				logBuffer.append(text);
-			}
-			if(logNow) {
-				logger.log(level, logBuffer.toString());
-				logBuffer.delete(0, logBuffer.length());
-			}
-		}
+		this.addName("death.attack." + CustomDamageSource.kawoosh.getDamageType(), "%1$s tried to swim into the kawoosh.", "%1$s a essaye de nager dans le kawoosh.");
+		this.addName("death.attack." + CustomDamageSource.iris.getDamageType(), "%1$s couldn't exit hyperspace.", "%1$s n'a pas pu sortir de l'hyper-espace.");
 	}
 	
 }

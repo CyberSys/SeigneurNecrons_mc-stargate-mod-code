@@ -7,7 +7,7 @@ import seigneurnecron.minecraftmods.stargate.inventory.ContainerStuffLevelUpTabl
 /**
  * @author Seigneur Necron
  */
-public class TileEntityStuffLevelUpTable extends TileEntityGuiContainer {
+public class TileEntityStuffLevelUpTable extends TileEntityStargateGuiContainer {
 	
 	public static final String INV_NAME = "container.stuffLevelUpTable";
 	

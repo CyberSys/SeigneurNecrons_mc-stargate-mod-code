@@ -4,7 +4,6 @@ import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.renderer.texture.IconRegister;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.tools.config.StargateModConfig;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -14,11 +13,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 public abstract class BlockStargate extends Block {
 	
 	protected BlockStargate(String name, Material material) {
-		super(StargateModConfig.getBlockId(name), material);
+		super(StargateMod.instance.getConfig().getBlockId(name), material);
 		this.setUnlocalizedName(name);
 		this.func_111022_d(name); // setIconName()
 		this.setCreativeTab(StargateMod.stargateBlocksTab);
-		StargateMod.registerBlock(this);
+		StargateMod.instance.registerBlock(this);
 	}
 	
 	protected BlockStargate(String name) {
@@ -28,7 +27,7 @@ public abstract class BlockStargate extends Block {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		this.blockIcon = iconRegister.registerIcon(StargateMod.ASSETS_PREFIX + this.func_111023_E()); // getIconName()
+		this.blockIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111023_E()); // getIconName()
 	}
 	
 }

@@ -8,7 +8,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.client.gui.GuiDetector;
+import seigneurnecron.minecraftmods.stargate.gui.GuiDetector;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityDetector;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityGuiScreen;
 import cpw.mods.fml.relauncher.Side;
@@ -55,7 +55,7 @@ public class BlockDetector extends BlockGuiScreen {
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
 		super.registerIcons(iconRegister);
-		this.blockActiveIcon = iconRegister.registerIcon(StargateMod.ASSETS_PREFIX + StargateMod.blockName_detector + "_active");
+		this.blockActiveIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + StargateMod.blockName_detector + "_active");
 	}
 	
 	@Override
