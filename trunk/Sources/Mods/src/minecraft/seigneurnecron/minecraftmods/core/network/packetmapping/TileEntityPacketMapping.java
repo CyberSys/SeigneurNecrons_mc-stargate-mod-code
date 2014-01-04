@@ -29,7 +29,7 @@ public class TileEntityPacketMapping<T extends TileEntityBasic> extends PacketMa
 	
 	@Override
 	public int minPacketLenght() {
-		return 20; // id + dim + x + y + z => 5 * intSize.
+		return 0;
 	}
 	
 	@Override
@@ -48,7 +48,7 @@ public class TileEntityPacketMapping<T extends TileEntityBasic> extends PacketMa
 			if(world != null) {
 				TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 				
-				if(tileEntity != null && tileEntity instanceof TileEntityBasic) {
+				if(tileEntity instanceof TileEntityBasic) {
 					TileEntityBasic tileEntityBasic = (TileEntityBasic) tileEntity;
 					
 					if(this.getData(id) == tileEntityBasic.getClass()) {

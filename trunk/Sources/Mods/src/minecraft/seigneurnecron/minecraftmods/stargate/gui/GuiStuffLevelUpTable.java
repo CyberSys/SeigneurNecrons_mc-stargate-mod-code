@@ -1,14 +1,13 @@
 package seigneurnecron.minecraftmods.stargate.gui;
 
-import static seigneurnecron.minecraftmods.core.gui.Screen.LIGHT_GREEN;
-import static seigneurnecron.minecraftmods.core.gui.Screen.LIGHT_RED;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.LIGHT_GREEN;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.LIGHT_RED;
 import static seigneurnecron.minecraftmods.stargate.inventory.ContainerStuffLevelUpTable.MIN_NB_BOOKS;
 
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
-import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -16,10 +15,11 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import seigneurnecron.minecraftmods.core.gui.GuiContainerOneLine;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerStuffLevelUpTable;
+import seigneurnecron.minecraftmods.stargate.inventory.InventoryStuffLevelUpTable;
 import seigneurnecron.minecraftmods.stargate.inventory.PowerUp;
-import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStuffLevelUpTable;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -27,9 +27,11 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Seigneur Necron
  */
 @SideOnly(Side.CLIENT)
-public class GuiStuffLevelUpTable extends GuiContainer {
+public class GuiStuffLevelUpTable extends GuiContainerOneLine<ContainerStuffLevelUpTable> {
 	
-	public static final String POWER = TileEntityStuffLevelUpTable.INV_NAME + ".power";
+	// Static part :
+	
+	public static final String POWER = InventoryStuffLevelUpTable.INV_NAME + ".power";
 	
 	private static ResourceLocation TEXTURE;
 	
@@ -71,49 +73,35 @@ public class GuiStuffLevelUpTable extends GuiContainer {
 		return icons.containsKey(enchantment) ? icons.get(enchantment) : icons.size();
 	}
 	
-	public GuiStuffLevelUpTable(InventoryPlayer inventoryPlayer, TileEntityStuffLevelUpTable tileEntity) {
-		super(new ContainerStuffLevelUpTable(inventoryPlayer, tileEntity));
+	// ####################################################################################################
+	// Constructors :
+	// ####################################################################################################
+	
+	public GuiStuffLevelUpTable(InventoryPlayer inventoryPlayer, InventoryStuffLevelUpTable inventory) {
+		super(new ContainerStuffLevelUpTable(inventoryPlayer, inventory));
 		
 		if(TEXTURE == null) {
 			TEXTURE = new ResourceLocation(StargateMod.instance.getAssetPrefix() + "textures/gui/container/stuffLevelUpGui.png");
 		}
 	}
 	
-	private ContainerStuffLevelUpTable getContainer() {
-		return (ContainerStuffLevelUpTable) this.inventorySlots;
-	}
+	// ####################################################################################################
+	// Interface definition :
+	// ####################################################################################################
 	
-	@Override
-	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
-		this.fontRenderer.drawString(I18n.func_135053_a(TileEntityStuffLevelUpTable.INV_NAME), 12, 6, 0x404040);
-		this.fontRenderer.drawString(I18n.func_135053_a("container.inventory"), 8, this.ySize - 96 + 2, 0x404040);
-	}
-	
-	@Override
-	protected void mouseClicked(int xClick, int yClick, int click) {
-		super.mouseClicked(xClick, yClick, click);
-		int xPos = (this.width - this.xSize) / 2;
-		int yPos = (this.height - this.ySize) / 2;
-		
-		for(int i = 0; i < this.getContainer().getEnchantments().size(); ++i) {
-			int x = xClick - (xPos + SLOT_MIN_X + (SLOT_SIZE * (i % NB_SLOT_BY_LINE)));
-			int y = yClick - (yPos + SLOT_MIN_Y + (SLOT_SIZE * (i / NB_SLOT_BY_LINE)));
-			
-			if(x >= 0 && y >= 0 && x < SLOT_SIZE && y < SLOT_SIZE && this.inventorySlots.enchantItem(this.mc.thePlayer, i)) {
-				this.mc.playerController.sendEnchantPacket(this.inventorySlots.windowId, i);
-			}
-		}
-	}
+	// FIXME - mettre a jour cette interface.
 	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
+		// FIXME - cette methode doit etre completement refaite.
+		
 		this.mc.func_110434_K().func_110577_a(TEXTURE);
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		int xPos = (this.width - this.xSize) / 2;
 		int yPos = (this.height - this.ySize) / 2;
 		this.drawTexturedModalRect(xPos, yPos, 0, 0, this.xSize, this.ySize);
 		
-		int nbBooks = this.getContainer().getNbBooks();
+		int nbBooks = this.container.getNbBooks();
 		
 		if(nbBooks >= MIN_NB_BOOKS) {
 			this.fontRenderer.drawString(I18n.func_135053_a(POWER) + " : " + MIN_NB_BOOKS + " / " + MIN_NB_BOOKS, xPos + 70, yPos + 72, LIGHT_GREEN);
@@ -122,10 +110,10 @@ public class GuiStuffLevelUpTable extends GuiContainer {
 			this.fontRenderer.drawString(I18n.func_135053_a(POWER) + " : " + nbBooks + " / " + MIN_NB_BOOKS, xPos + 72, yPos + 72, LIGHT_RED);
 		}
 		
-		LinkedList<PowerUp> enchants = this.getContainer().getEnchantments();
+		LinkedList<PowerUp> enchants = this.container.getEnchantments();
 		
 		if(enchants.size() > 0) {
-			int baseCost = this.getContainer().getCurrentItemEnchantLevelSum();
+			int baseCost = this.container.getCurrentItemEnchantLevelSum();
 			
 			for(int i = 0; i < enchants.size(); ++i) {
 				PowerUp powerUp = enchants.get(i);
@@ -148,6 +136,37 @@ public class GuiStuffLevelUpTable extends GuiContainer {
 				String str = String.valueOf(cost);
 				
 				this.fontRenderer.drawString(str, x + SLOT_SIZE - 2 - this.fontRenderer.getStringWidth(str), y + SLOT_SIZE - 8, color);
+			}
+		}
+	}
+	
+	@Override
+	protected void initComponents() {
+		// TODO - initialiser les composants.
+	}
+	
+	@Override
+	protected void drawGuiContainerForegroundLayer(int par1, int par2) {
+		// FIXME - cette methode devrait disparaitre.
+		
+		this.fontRenderer.drawString(I18n.func_135053_a(InventoryStuffLevelUpTable.INV_NAME), 12, 6, 0x404040);
+		this.fontRenderer.drawString(I18n.func_135053_a("container.inventory"), 8, this.ySize - 96 + 2, 0x404040);
+	}
+	
+	@Override
+	protected void mouseClicked(int xClick, int yClick, int click) {
+		// FIXME - cette methode devrait disparaitre.
+		
+		super.mouseClicked(xClick, yClick, click);
+		int xPos = (this.width - this.xSize) / 2;
+		int yPos = (this.height - this.ySize) / 2;
+		
+		for(int i = 0; i < this.container.getEnchantments().size(); ++i) {
+			int x = xClick - (xPos + SLOT_MIN_X + (SLOT_SIZE * (i % NB_SLOT_BY_LINE)));
+			int y = yClick - (yPos + SLOT_MIN_Y + (SLOT_SIZE * (i / NB_SLOT_BY_LINE)));
+			
+			if(x >= 0 && y >= 0 && x < SLOT_SIZE && y < SLOT_SIZE && this.inventorySlots.enchantItem(this.mc.thePlayer, i)) {
+				this.mc.playerController.sendEnchantPacket(this.inventorySlots.windowId, i);
 			}
 		}
 	}

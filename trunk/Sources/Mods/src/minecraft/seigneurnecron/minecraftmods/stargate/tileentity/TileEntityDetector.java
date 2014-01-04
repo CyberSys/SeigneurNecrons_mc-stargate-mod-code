@@ -1,18 +1,12 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-
 import net.minecraft.nbt.NBTTagCompound;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 
 /**
  * @author Seigneur Necron
  */
-public class TileEntityDetector extends TileEntityGuiScreen {
-	
-	public static final String INV_NAME = "container.detector";
+public class TileEntityDetector extends TileEntityStargate {
 	
 	/**
 	 * Minimal detection range.
@@ -69,13 +63,15 @@ public class TileEntityDetector extends TileEntityGuiScreen {
 	 */
 	public void setRange(int range) {
 		if(range < MIN_RANGE) {
-			this.range = MIN_RANGE;
+			range = MIN_RANGE;
 		}
 		else if(range > MAX_RANGE) {
-			this.range = MAX_RANGE;
+			range = MAX_RANGE;
 		}
-		else {
+		
+		if(range != this.range) {
 			this.range = range;
+			this.setChanged();
 		}
 	}
 	
@@ -84,7 +80,10 @@ public class TileEntityDetector extends TileEntityGuiScreen {
 	 * @param inverted - true if the output must be inverted, else false.
 	 */
 	public void setInverted(boolean inverted) {
-		this.inverted = inverted;
+		if(inverted != this.inverted) {
+			this.inverted = inverted;
+			this.setChanged();
+		}
 	}
 	
 	/**
@@ -124,10 +123,11 @@ public class TileEntityDetector extends TileEntityGuiScreen {
 	 */
 	@Override
 	public void updateEntity() {
+		super.updateEntity();
+		
 		if(!this.worldObj.isRemote) {
 			this.setProvidingPower(this.inverted != this.anyPlayerInRange());
 		}
-		super.updateEntity();
 	}
 	
 	@Override
@@ -144,24 +144,6 @@ public class TileEntityDetector extends TileEntityGuiScreen {
 		compound.setInteger("range", this.range);
 		compound.setBoolean("inverted", this.inverted);
 		compound.setBoolean("providingPower", this.providingPower);
-	}
-	
-	@Override
-	protected void getTileEntityData(DataOutputStream output) throws IOException {
-		super.getTileEntityData(output);
-		
-		output.writeInt(this.range);
-		output.writeBoolean(this.inverted);
-		output.writeBoolean(this.providingPower);
-	}
-	
-	@Override
-	protected void loadEntityData(DataInputStream input) throws IOException {
-		super.loadEntityData(input);
-		
-		this.range = input.readInt();
-		this.inverted = input.readBoolean();
-		this.providingPower = input.readBoolean();
 	}
 	
 }

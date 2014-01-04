@@ -1,9 +1,9 @@
 package seigneurnecron.minecraftmods.core.gui;
 
-import static seigneurnecron.minecraftmods.core.gui.Screen.FIELD_HEIGHT;
-import static seigneurnecron.minecraftmods.core.gui.Screen.GRAY;
-import static seigneurnecron.minecraftmods.core.gui.Screen.MARGIN;
-import static seigneurnecron.minecraftmods.core.gui.Screen.WHITE;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.FIELD_HEIGHT;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.GRAY;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.MARGIN;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.WHITE;
 import net.minecraft.client.renderer.Tessellator;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

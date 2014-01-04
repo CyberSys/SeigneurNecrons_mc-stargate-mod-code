@@ -8,16 +8,24 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import seigneurnecron.minecraftmods.stargate.inventory.ContainerConsoleBase;
+import seigneurnecron.minecraftmods.stargate.inventory.ContainerCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerMobGenerator;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerStuffLevelUpTable;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityMobGenerator;
-import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStuffLevelUpTable;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.Console;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleCrystalFactory;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStuffLevelUpTable;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 /**
  * @author Seigneur Necron
  */
 public class StargateCommonProxy implements IGuiHandler {
+	
+	public static final int NOT_A_CONSOLE = 0;
+	public static final int A_CONSOLE = 1;
 	
 	private static final Map<String, NBTTagCompound> extendedEntityData = new HashMap<String, NBTTagCompound>();
 	
@@ -40,10 +48,28 @@ public class StargateCommonProxy implements IGuiHandler {
 		
 		if(tileEntity != null) {
 			if(tileEntity instanceof TileEntityMobGenerator) {
-				return new ContainerMobGenerator(player.inventory, (TileEntityMobGenerator) tileEntity);
+				return new ContainerMobGenerator(player.inventory, ((TileEntityMobGenerator) tileEntity).getInventory());
 			}
-			if(tileEntity instanceof TileEntityStuffLevelUpTable) {
-				return new ContainerStuffLevelUpTable(player.inventory, (TileEntityStuffLevelUpTable) tileEntity);
+			else if(tileEntity instanceof TileEntityConsoleBase) {
+				TileEntityConsoleBase tileEntityConsoleBase = (TileEntityConsoleBase) tileEntity;
+				
+				if(id == NOT_A_CONSOLE) {
+					return new ContainerConsoleBase(player.inventory, tileEntityConsoleBase.getInventory());
+				}
+				else {
+					Console console = tileEntityConsoleBase.getConsole();
+					
+					if(console != null) {
+						if(console instanceof ConsoleStuffLevelUpTable) {
+							ConsoleStuffLevelUpTable consoleStuffLevelUpTable = (ConsoleStuffLevelUpTable) console;
+							return new ContainerStuffLevelUpTable(player.inventory, consoleStuffLevelUpTable.getInventory());
+						}
+						else if(console instanceof ConsoleCrystalFactory) {
+							ConsoleCrystalFactory consoleCrystalFactory = (ConsoleCrystalFactory) console;
+							return new ContainerCrystalFactory(player.inventory, consoleCrystalFactory.getInventory());
+						}
+					}
+				}
 			}
 		}
 		
@@ -51,11 +77,11 @@ public class StargateCommonProxy implements IGuiHandler {
 	}
 	
 	public void registerRenderers() {
-		// Empty, server side.
+		// Empty server side.
 	}
 	
 	public void registerSounds() {
-		// Empty, server side.
+		// Empty server side.
 	}
 	
 	public int addArmor(String name) {

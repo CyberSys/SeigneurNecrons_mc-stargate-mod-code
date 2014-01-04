@@ -1,8 +1,9 @@
 package seigneurnecron.minecraftmods.stargate.gui;
 
 import net.minecraft.entity.player.EntityPlayer;
-import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseStargateConsole;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStargate;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -10,7 +11,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Seigneur Necron
  */
 @SideOnly(Side.CLIENT)
-public abstract class GuiStargateConsole<T extends TileEntityBaseStargateConsole> extends GuiBase<T> {
+public abstract class GuiStargateConsole<T extends ConsoleStargate> extends GuiConsolePanel<T> {
 	
 	// ####################################################################################################
 	// Data fields :
@@ -23,8 +24,8 @@ public abstract class GuiStargateConsole<T extends TileEntityBaseStargateConsole
 	// Builder :
 	// ####################################################################################################
 	
-	protected GuiStargateConsole(T tileEntity, EntityPlayer player) {
-		super(tileEntity, player);
+	protected GuiStargateConsole(TileEntityConsoleBase tileEntity, EntityPlayer player, T console) {
+		super(tileEntity, player, console);
 	}
 	
 	// ####################################################################################################
@@ -54,7 +55,7 @@ public abstract class GuiStargateConsole<T extends TileEntityBaseStargateConsole
 	// ####################################################################################################
 	
 	protected void updateConnectedStargate() {
-		this.stargate = this.tileEntity.getStargateControl();
+		this.stargate = this.console.getStargateControl();
 		boolean stargateConnected = this.stargate != null;
 		
 		if(this.stargateConnected != stargateConnected) {

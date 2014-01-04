@@ -10,7 +10,7 @@ import seigneurnecron.minecraftmods.core.loadable.Loadable;
 /**
  * @author Seigneur Necron
  */
-public class Stargate implements Comparable<Stargate>, Loadable<Stargate> {
+public class Stargate implements Loadable<Stargate> {
 	
 	// NBTTags names :
 	

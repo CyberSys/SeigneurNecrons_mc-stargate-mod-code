@@ -38,7 +38,7 @@ public class PlayerDataPacketMapping extends PacketMapping<String> {
 			int id = input.readInt();
 			IExtendedEntityProperties property = player.getExtendedProperties(this.getData(id));
 			
-			if(property != null && property instanceof EntityData) {
+			if(property instanceof EntityData) {
 				((EntityData) property).loadProperties(input);
 			}
 			

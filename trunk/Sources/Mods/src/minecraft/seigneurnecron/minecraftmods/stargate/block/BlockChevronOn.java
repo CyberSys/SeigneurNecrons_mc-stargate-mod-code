@@ -30,6 +30,7 @@ public class BlockChevronOn extends BlockChevron {
 	@Override
 	public int getLightValue(IBlockAccess world, int x, int y, int z) {
 		Block block = blocksList[world.getBlockId(x, y, z)];
+		
 		if(block != null) {
 			if(block == this) {
 				return 9;

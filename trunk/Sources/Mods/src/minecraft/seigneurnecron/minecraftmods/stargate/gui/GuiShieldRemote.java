@@ -1,11 +1,19 @@
 package seigneurnecron.minecraftmods.stargate.gui;
 
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.BACKGROUND_COLOR;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.BUTTON_HEIGHT;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.FIELD_HEIGHT;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.GREEN;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.LIGHT_BLUE;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.MARGIN;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.RED;
 import static seigneurnecron.minecraftmods.stargate.gui.GuiDhd.CLOSE;
 import static seigneurnecron.minecraftmods.stargate.gui.GuiShieldConsole.SHIELD_OFF;
 import static seigneurnecron.minecraftmods.stargate.gui.GuiShieldConsole.SHIELD_ON;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import seigneurnecron.minecraftmods.core.gui.GuiScreenTileEntity;
 import seigneurnecron.minecraftmods.core.gui.IntegerField;
 import seigneurnecron.minecraftmods.core.gui.Label;
 import seigneurnecron.minecraftmods.core.gui.Panel;
@@ -19,7 +27,7 @@ import seigneurnecron.minecraftmods.stargate.tools.playerdata.PlayerStargateData
 /**
  * @author Seigneur Necron
  */
-public class GuiShieldRemote extends GuiScreen<TileEntityStargateControl> {
+public class GuiShieldRemote extends GuiScreenTileEntity<TileEntityStargateControl> {
 	
 	// ####################################################################################################
 	// Lang constants :
@@ -70,6 +78,11 @@ public class GuiShieldRemote extends GuiScreen<TileEntityStargateControl> {
 	// ####################################################################################################
 	
 	@Override
+	public void drawDefaultBackground() {
+		this.panel_main.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
+	}
+	
+	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		if(!this.tileEntity.isActivated()) {
 			this.close();
@@ -91,8 +104,6 @@ public class GuiShieldRemote extends GuiScreen<TileEntityStargateControl> {
 		this.label_shield.setText(shieldMessage, shieldMessageColor);
 		
 		super.drawScreen(par1, par2, par3);
-		
-		this.panel_main.drawBox(GRAY);
 	}
 	
 	@Override
@@ -138,9 +149,9 @@ public class GuiShieldRemote extends GuiScreen<TileEntityStargateControl> {
 		this.label_code = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, stringSize, string_code), false);
 		this.field_code = this.addComponent(new IntegerField(this.panel_main, this.fontRenderer, fieldOffset, this.nextYPos, fieldSize, code));
 		
-		this.button_code = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(SEND_CODE) + I18n.func_135053_a(GuiScreen.ENTER)));
-		this.button_close = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(CLOSE) + I18n.func_135053_a(GuiScreen.TAB)));
-		this.button_done = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.done") + I18n.func_135053_a(GuiScreen.ESC)));
+		this.button_code = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(SEND_CODE) + I18n.func_135053_a(GuiScreenTileEntity.ENTER)));
+		this.button_close = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(CLOSE) + I18n.func_135053_a(GuiScreenTileEntity.TAB)));
+		this.button_done = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.done") + I18n.func_135053_a(GuiScreenTileEntity.ESC)));
 	}
 	
 	// ####################################################################################################

@@ -1,9 +1,5 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateOrientation;
@@ -115,7 +111,7 @@ public class TileEntityStargatePart extends TileEntityStargate {
 		if(this.isPartOfGate()) {
 			TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xGate, this.yGate, this.zGate);
 			
-			if(tileEntity != null && tileEntity instanceof TileEntityStargateControl) {
+			if(tileEntity instanceof TileEntityStargateControl) {
 				return (TileEntityStargateControl) tileEntity;
 			}
 		}
@@ -139,26 +135,6 @@ public class TileEntityStargatePart extends TileEntityStargate {
 		compound.setInteger("yGate", this.yGate);
 		compound.setInteger("zGate", this.zGate);
 		compound.setBoolean("partOfGate", this.partOfGate);
-	}
-	
-	@Override
-	protected void getTileEntityData(DataOutputStream output) throws IOException {
-		super.getTileEntityData(output);
-		
-		output.writeInt(this.xGate);
-		output.writeInt(this.yGate);
-		output.writeInt(this.zGate);
-		output.writeBoolean(this.partOfGate);
-	}
-	
-	@Override
-	protected void loadEntityData(DataInputStream input) throws IOException {
-		super.loadEntityData(input);
-		
-		this.xGate = input.readInt();
-		this.yGate = input.readInt();
-		this.zGate = input.readInt();
-		this.partOfGate = input.readBoolean();
 	}
 	
 }

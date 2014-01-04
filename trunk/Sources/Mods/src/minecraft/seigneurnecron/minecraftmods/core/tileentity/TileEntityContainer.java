@@ -1,94 +1,48 @@
 package seigneurnecron.minecraftmods.core.tileentity;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.nbt.NBTTagList;
+import seigneurnecron.minecraftmods.core.inventory.InventoryBasic;
 
 /**
  * @author Seigneur Necron
  */
-public abstract class TileEntityContainer extends TileEntityCommand implements IInventory {
+public abstract class TileEntityContainer<T extends InventoryBasic> extends TileEntityCommand {
 	
-	@Override
-	public int getInventoryStackLimit() {
-		return 64;
+	// Fields :
+	
+	protected T inventory;
+	
+	// Constructors :
+	
+	public TileEntityContainer() {
+		super();
+		this.inventory = this.getNewInventory();
 	}
 	
-	@Override
-	public ItemStack decrStackSize(int index, int nb) {
-		ItemStack itemStack = this.getStackInSlot(index);
-		if(itemStack != null) {
-			if(nb >= itemStack.stackSize) {
-				this.setInventorySlotContents(index, null);
-				return itemStack;
-			}
-			else {
-				itemStack.stackSize -= nb;
-				return new ItemStack(itemStack.itemID, nb, itemStack.getItemDamage());
-			}
-		}
-		
-		return null;
+	// Getters :
+	
+	public T getInventory() {
+		return this.inventory;
 	}
 	
-	@Override
-	public ItemStack getStackInSlotOnClosing(int index) {
-		if(index >= 0 && index < this.getSizeInventory()) {
-			ItemStack itemStack = this.getStackInSlot(index);
-			this.setInventorySlotContents(index, null);
-			return itemStack;
-		}
-		
-		return null;
-	}
+	// Methods :
 	
-	@Override
-	public boolean isUseableByPlayer(EntityPlayer entityPlayer) {
-		return (this.worldObj.getBlockTileEntity(this.xCoord, this.yCoord, this.zCoord) == this) && (entityPlayer.getDistanceSq(this.xCoord + 0.5D, this.yCoord + 0.5D, this.zCoord + 0.5D) <= 64.0D);
-	}
-	
-	@Override
-	public void openChest() {
-		// Nothing to do.
-	}
-	
-	@Override
-	public void closeChest() {
-		// Nothing to do.
-	}
+	/**
+	 * Returns a new inventory used to initialize this tile entity.
+	 * @return a new inventory used to initialize this tile entity.
+	 */
+	protected abstract T getNewInventory();
 	
 	@Override
 	public void readFromNBT(NBTTagCompound compound) {
 		super.readFromNBT(compound);
-		
-		NBTTagList itemListTag = compound.getTagList("Items");
-		
-		for(int i = 0; i < itemListTag.tagCount(); ++i) {
-			NBTTagCompound itemTag = (NBTTagCompound) itemListTag.tagAt(i);
-			int index = itemTag.getByte("Slot") & 255;
-			this.setInventorySlotContents(index, ItemStack.loadItemStackFromNBT(itemTag));
-		}
+		this.inventory.readFromNBT(compound);
 	}
 	
 	@Override
 	public void writeToNBT(NBTTagCompound compound) {
 		super.writeToNBT(compound);
-		
-		NBTTagList itemListTag = new NBTTagList();
-		
-		for(int i = 0; i < this.getSizeInventory(); ++i) {
-			ItemStack itemStack = this.getStackInSlot(i);
-			if(itemStack != null) {
-				NBTTagCompound itemTag = new NBTTagCompound();
-				itemTag.setByte("Slot", (byte) i);
-				itemStack.writeToNBT(itemTag);
-				itemListTag.appendTag(itemTag);
-			}
-		}
-		
-		compound.setTag("Items", itemListTag);
+		this.inventory.writeToNBT(compound);
 	}
 	
 }
