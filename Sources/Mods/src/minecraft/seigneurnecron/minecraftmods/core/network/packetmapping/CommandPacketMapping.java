@@ -49,7 +49,7 @@ public class CommandPacketMapping extends PacketMapping<Command> {
 			if(world != null) {
 				TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 				
-				if(tileEntity != null && tileEntity instanceof TileEntityCommand) {
+				if(tileEntity instanceof TileEntityCommand) {
 					TileEntityCommand tileEntityCommand = (TileEntityCommand) tileEntity;
 					Command command = this.getData(id);
 					

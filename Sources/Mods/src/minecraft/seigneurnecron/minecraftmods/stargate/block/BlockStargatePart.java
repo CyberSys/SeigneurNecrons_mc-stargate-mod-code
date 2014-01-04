@@ -9,7 +9,7 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargatePart;
 /**
  * @author Seigneur Necron
  */
-public abstract class BlockStargatePart extends BlockStargateContainer {
+public abstract class BlockStargatePart extends BlockContainerStargate {
 	
 	protected BlockStargatePart(String name, Material material) {
 		super(name, material);

@@ -1,9 +1,9 @@
 package seigneurnecron.minecraftmods.stargate.gui.components;
 
-import static seigneurnecron.minecraftmods.core.gui.Screen.GREEN;
-import static seigneurnecron.minecraftmods.core.gui.Screen.YELLOW;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.GREEN;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.YELLOW;
 import net.minecraft.client.gui.FontRenderer;
-import seigneurnecron.minecraftmods.core.gui.Container;
+import seigneurnecron.minecraftmods.core.gui.ComponentContainer;
 import seigneurnecron.minecraftmods.stargate.tools.address.GateAddress;
 import seigneurnecron.minecraftmods.stargate.tools.enums.Dimension;
 
@@ -14,7 +14,7 @@ public class AddressBarGateCreation extends AddressBar {
 	
 	protected final char dimension;
 	
-	public AddressBarGateCreation(Container parent, FontRenderer fontRenderer, int xPos, int yPos, int width, int dimension) {
+	public AddressBarGateCreation(ComponentContainer parent, FontRenderer fontRenderer, int xPos, int yPos, int width, int dimension) {
 		super(parent, fontRenderer, xPos, yPos, width);
 		this.dimension = Dimension.valueOf(dimension).getAddress();
 	}

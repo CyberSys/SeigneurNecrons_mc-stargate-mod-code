@@ -1,9 +1,5 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
@@ -67,22 +63,6 @@ public class TileEntityChevron extends TileEntityStargatePart {
 		super.writeToNBT(compound);
 		compound.setInteger("no", this.no);
 		compound.setBoolean("activating", this.activating);
-	}
-	
-	@Override
-	protected void getTileEntityData(DataOutputStream output) throws IOException {
-		super.getTileEntityData(output);
-		
-		output.writeInt(this.no);
-		output.writeBoolean(this.activating);
-	}
-	
-	@Override
-	protected void loadEntityData(DataInputStream input) throws IOException {
-		super.loadEntityData(input);
-		
-		this.no = input.readInt();
-		this.activating = input.readBoolean();
 	}
 	
 }

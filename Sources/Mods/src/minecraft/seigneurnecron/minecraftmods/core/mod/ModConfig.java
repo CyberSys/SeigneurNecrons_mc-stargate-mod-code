@@ -49,7 +49,7 @@ public abstract class ModConfig<M extends ModBase> {
 	
 	// Configuration fields :
 	
-	@Config(comment = "Determines the level of the logger. Possible values : ALL, FINEST, FINER, FINE, CONFIG, INFO, WARNING, SEVERE, OFF. Default : CONFIG. You should not choose OFF or SEVERE.")
+	@Config(comment = "Determines the level of the logger. Possible values : ALL, FINEST, FINER, FINE, CONFIG, INFO, WARNING, SEVERE, OFF. Default : INFO. You should not choose OFF or SEVERE.")
 	public String loggerLevel = ModBase.DEFAULT_LOGGER_LEVEL.getName();
 	
 	// Construtors :

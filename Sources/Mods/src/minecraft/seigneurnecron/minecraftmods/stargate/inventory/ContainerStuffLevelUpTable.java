@@ -14,7 +14,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.ICrafting;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemAxe;
@@ -30,16 +29,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.ItemSword;
 import net.minecraft.item.ItemTool;
 import net.minecraft.world.World;
-import seigneurnecron.minecraftmods.core.inventory.BasicContainer;
+import seigneurnecron.minecraftmods.core.inventory.ContainerOneLine;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStuffLevelUpTable;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Seigneur Necron
  */
-public class ContainerStuffLevelUpTable extends BasicContainer<TileEntityStuffLevelUpTable> {
+public class ContainerStuffLevelUpTable extends ContainerOneLine<InventoryStuffLevelUpTable> {
 	
 	/**
 	 * The number of bookcases required to use the enchantment table.
@@ -56,16 +55,10 @@ public class ContainerStuffLevelUpTable extends BasicContainer<TileEntityStuffLe
 	 */
 	private LinkedList<PowerUp> enchantments = new LinkedList<PowerUp>();
 	
-	public ContainerStuffLevelUpTable(InventoryPlayer inventoryPlayer, TileEntityStuffLevelUpTable tileEntity) {
-		super(inventoryPlayer, tileEntity);
-		tileEntity.container = this;
-		this.onCraftMatrixChanged(tileEntity);
-	}
-	
-	@Override
-	protected void init() {
-		this.addSlotToContainer(new Slot(this.tileEntity, 0, 25, 47));
-		this.addSlotToContainer(new Slot(this.tileEntity, 1, 25, -100));
+	public ContainerStuffLevelUpTable(InventoryPlayer inventoryPlayer, InventoryStuffLevelUpTable inventory) {
+		super(inventoryPlayer, inventory);
+		this.inventory.container = this;
+		this.onCraftMatrixChanged(this.inventory);
 	}
 	
 	/**
@@ -285,8 +278,8 @@ public class ContainerStuffLevelUpTable extends BasicContainer<TileEntityStuffLe
 	public void onContainerClosed(EntityPlayer entityPlayer) {
 		super.onContainerClosed(entityPlayer);
 		
-		if(!this.tileEntity.worldObj.isRemote) {
-			ItemStack itemStack = this.tileEntity.getStackInSlotOnClosing(0);
+		if(!this.inventory.getTileEntity().worldObj.isRemote) {
+			ItemStack itemStack = this.inventory.getStackInSlotOnClosing(0);
 			
 			if(itemStack != null) {
 				entityPlayer.dropPlayerItem(itemStack);
@@ -324,20 +317,20 @@ public class ContainerStuffLevelUpTable extends BasicContainer<TileEntityStuffLe
 	@Override
 	@SuppressWarnings("unchecked")
 	public boolean enchantItem(EntityPlayer entityPlayer, int index) {
-		ItemStack itemStack = this.tileEntity.getStackInSlot(0);
+		ItemStack itemStack = this.inventory.getStackInSlot(0);
 		
 		if(itemStack != null && index >= 0 && index < this.getEnchantments().size()) {
 			PowerUp powerUp = this.getEnchantments().get(index);
 			
 			if(entityPlayer.capabilities.isCreativeMode || (entityPlayer.experienceLevel >= powerUp.cost && this.getNbBooks() >= MIN_NB_BOOKS)) {
-				if(!this.tileEntity.worldObj.isRemote) {
+				if(!this.inventory.getTileEntity().worldObj.isRemote) {
 					entityPlayer.addExperienceLevel(-powerUp.cost);
 					
 					Map<Integer, Integer> enchantments = EnchantmentHelper.getEnchantments(itemStack);
 					enchantments.put(powerUp.enchant.effectId, powerUp.level);
 					EnchantmentHelper.setEnchantments(enchantments, itemStack);
 					
-					this.onCraftMatrixChanged(this.tileEntity);
+					this.onCraftMatrixChanged(this.inventory);
 				}
 				
 				return true;
@@ -349,13 +342,15 @@ public class ContainerStuffLevelUpTable extends BasicContainer<TileEntityStuffLe
 	
 	@Override
 	public void onCraftMatrixChanged(IInventory inventory) {
-		if(inventory == this.tileEntity) {
-			World world = this.tileEntity.worldObj;
+		if(inventory == this.inventory) {
+			TileEntityConsoleBase tileEntity = this.inventory.getTileEntity();
+			
+			World world = tileEntity.worldObj;
 			
 			if(!world.isRemote) {
-				int x = this.tileEntity.xCoord;
-				int y = this.tileEntity.yCoord;
-				int z = this.tileEntity.zCoord;
+				int x = tileEntity.xCoord;
+				int y = tileEntity.yCoord;
+				int z = tileEntity.zCoord;
 				ItemStack itemStack = inventory.getStackInSlot(0);
 				int nbBooks = 0;
 				
@@ -381,8 +376,8 @@ public class ContainerStuffLevelUpTable extends BasicContainer<TileEntityStuffLe
 	}
 	
 	public void updateEnchantments() {
-		if(this.tileEntity.worldObj.isRemote) {
-			ItemStack itemStack = this.tileEntity.getStackInSlot(1);
+		if(this.inventory.getTileEntity().worldObj.isRemote) {
+			ItemStack itemStack = this.inventory.getStackInSlot(1);
 			LinkedList<PowerUp> enchantments = new LinkedList<PowerUp>();
 			
 			if(itemStack != null) {
@@ -404,14 +399,14 @@ public class ContainerStuffLevelUpTable extends BasicContainer<TileEntityStuffLe
 			}
 			
 			EnchantmentHelper.setEnchantments(enchantments, itemStack);
-			this.tileEntity.setInventorySlotContents(1, itemStack);
+			this.inventory.setInventorySlotContents(1, itemStack);
 		}
 	}
 	
 	public int getCurrentItemEnchantLevelSum() {
 		int sum = 0;
 		
-		ItemStack itemStack = this.tileEntity.getStackInSlot(0);
+		ItemStack itemStack = this.inventory.getStackInSlot(0);
 		
 		if(itemStack != null) {
 			Map<Integer, Integer> enchantments = EnchantmentHelper.getEnchantments(itemStack);

@@ -1,16 +1,25 @@
 package seigneurnecron.minecraftmods.stargate.gui;
 
-import static seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseShieldConsole.INV_NAME;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.BACKGROUND_COLOR;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.BUTTON_HEIGHT;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.FIELD_HEIGHT;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.GRAY;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.GREEN;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.LIGHT_BLUE;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.MARGIN;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.RED;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import seigneurnecron.minecraftmods.core.gui.GuiScreenTileEntity;
 import seigneurnecron.minecraftmods.core.gui.IntegerField;
 import seigneurnecron.minecraftmods.core.gui.Label;
 import seigneurnecron.minecraftmods.core.gui.Panel;
 import seigneurnecron.minecraftmods.core.gui.TextField;
 import seigneurnecron.minecraftmods.core.mod.ModBase;
 import seigneurnecron.minecraftmods.stargate.gui.components.StargateButton;
-import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseShieldConsole;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStargateShield;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -18,11 +27,13 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Seigneur Necron
  */
 @SideOnly(Side.CLIENT)
-public class GuiShieldConsole extends GuiStargateConsole<TileEntityBaseShieldConsole> {
+public class GuiShieldConsole extends GuiStargateConsole<ConsoleStargateShield> {
 	
 	// ####################################################################################################
 	// Lang constants :
 	// ####################################################################################################
+	
+	public static final String INV_NAME = "container.shieldConsole";
 	
 	public static final String CURRENT_CODE = INV_NAME + ".currentCode";
 	public static final String SHIELD_ON = INV_NAME + ".shieldOn";
@@ -34,6 +45,12 @@ public class GuiShieldConsole extends GuiStargateConsole<TileEntityBaseShieldCon
 	public static final String AUTO_SHIELD_DISCONNECTED = INV_NAME + ".autoShieldDisconnected";
 	public static final String AUTO_SHIELD_SWITCH = INV_NAME + ".autoShieldSwitch";
 	public static final String CHANGE_CODE = INV_NAME + ".changeCode";
+	
+	// ####################################################################################################
+	// Gui constants :
+	// ####################################################################################################
+	
+	public static final int BONUS_MARGIN = 10;
 	
 	// ####################################################################################################
 	// Interface fields :
@@ -65,8 +82,8 @@ public class GuiShieldConsole extends GuiStargateConsole<TileEntityBaseShieldCon
 	// Builder :
 	// ####################################################################################################
 	
-	public GuiShieldConsole(TileEntityBaseShieldConsole tileEntity, EntityPlayer player) {
-		super(tileEntity, player);
+	public GuiShieldConsole(TileEntityConsoleBase tileEntity, EntityPlayer player, ConsoleStargateShield console) {
+		super(tileEntity, player, console);
 	}
 	
 	// ####################################################################################################
@@ -74,8 +91,12 @@ public class GuiShieldConsole extends GuiStargateConsole<TileEntityBaseShieldCon
 	// ####################################################################################################
 	
 	@Override
+	public void drawDefaultBackground() {
+		this.panel_main.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
+	}
+	
+	@Override
 	public void drawScreen(int par1, int par2, float par3) {
-		
 		String code;
 		String shieldMessage;
 		int shieldMessageColor;
@@ -116,8 +137,6 @@ public class GuiShieldConsole extends GuiStargateConsole<TileEntityBaseShieldCon
 		this.label_shield.setText(shieldMessage, shieldMessageColor);
 		
 		super.drawScreen(par1, par2, par3);
-		
-		this.panel_main.drawBox(GRAY);
 	}
 	
 	@Override
@@ -161,14 +180,14 @@ public class GuiShieldConsole extends GuiStargateConsole<TileEntityBaseShieldCon
 		
 		this.nextYPos += BONUS_MARGIN;
 		this.label_autoShield = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, ""));
-		this.button_autoShield = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(AUTO_SHIELD_SWITCH) + I18n.func_135053_a(GuiScreen.TAB)));
+		this.button_autoShield = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(AUTO_SHIELD_SWITCH) + I18n.func_135053_a(GuiScreenTileEntity.TAB)));
 		
 		this.nextYPos += BONUS_MARGIN;
 		this.label_shield = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, ""));
-		this.button_shield = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(SHIELD_SWITCH) + I18n.func_135053_a(GuiScreen.ENTER)));
+		this.button_shield = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(SHIELD_SWITCH) + I18n.func_135053_a(GuiScreenTileEntity.ENTER)));
 		
 		this.nextYPos += BONUS_MARGIN;
-		this.button_done = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.done") + I18n.func_135053_a(GuiScreen.ESC)));
+		this.button_done = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.done") + I18n.func_135053_a(GuiScreenTileEntity.ESC)));
 	}
 	
 	// ####################################################################################################
@@ -195,13 +214,13 @@ public class GuiShieldConsole extends GuiStargateConsole<TileEntityBaseShieldCon
 	
 	protected void shield() {
 		if(this.stargateConnected) {
-			ModBase.sendPacketToServer(this.tileEntity.getShieldPacket(!this.stargate.isShieldActivated()));
+			ModBase.sendPacketToServer(this.console.getShieldPacket(!this.stargate.isShieldActivated()));
 		}
 	}
 	
 	protected void autoShield() {
 		if(this.stargateConnected) {
-			ModBase.sendPacketToServer(this.tileEntity.getShieldAutomatedPacket(!this.stargate.isShieldAutomated()));
+			ModBase.sendPacketToServer(this.console.getShieldAutomatedPacket(!this.stargate.isShieldAutomated()));
 		}
 	}
 	
@@ -209,7 +228,7 @@ public class GuiShieldConsole extends GuiStargateConsole<TileEntityBaseShieldCon
 		if(this.stargateConnected) {
 			try {
 				int code = Integer.parseInt(this.field_code.getText());
-				ModBase.sendPacketToServer(this.tileEntity.getShieldCodePacket(code));
+				ModBase.sendPacketToServer(this.console.getShieldCodePacket(code));
 			}
 			catch(NumberFormatException argh) {
 				// If the value is not a valid integer, it is ignored.

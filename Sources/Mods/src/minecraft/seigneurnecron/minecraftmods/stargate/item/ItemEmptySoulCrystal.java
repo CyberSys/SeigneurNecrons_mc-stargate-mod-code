@@ -11,7 +11,7 @@ import net.minecraft.world.World;
 /**
  * @author Seigneur Necron
  */
-public class ItemEmptySoulCrystal extends ItemStargate {
+public class ItemEmptySoulCrystal extends ItemCrystal {
 	
 	private static final int MAX_HEALTH = 10;
 	

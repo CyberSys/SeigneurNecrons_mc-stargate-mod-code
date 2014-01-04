@@ -1,8 +1,11 @@
 package seigneurnecron.minecraftmods.stargate.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 
 /**
  * @author Seigneur Necron
@@ -82,11 +85,17 @@ public class BlockFastStargate2 extends BlockFastStargate {
 		x = xCoord + (zAxis * this.getDhdDistance());
 		z = zCoord + (xAxis * this.getDhdDistance());
 		
-		y = yCoord + 1;
-		world.setBlock(x, y, z, StargateMod.block_dhdPanel.blockID, side, 3);
+		y = yCoord;
+		world.setBlock(x, y, z, StargateMod.block_consoleBase.blockID, side, 3);
 		
-		y--;
-		world.setBlock(x, y, z, StargateMod.block_dhdBase.blockID, side, 3);
+		y++;
+		world.setBlock(x, y, z, StargateMod.block_consolePanel.blockID, side, 3);
+		
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
+		
+		if(tileEntity instanceof TileEntityConsoleBase) {
+			((TileEntityConsoleBase) tileEntity).getInventory().setInventorySlotContents(0, new ItemStack(StargateMod.item_crystalDhd));
+		}
 		
 		if(this.dhdLight()) {
 			y--;

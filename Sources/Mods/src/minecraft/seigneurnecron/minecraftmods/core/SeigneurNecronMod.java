@@ -1,6 +1,7 @@
 package seigneurnecron.minecraftmods.core;
 
 import net.minecraftforge.common.Configuration;
+import seigneurnecron.minecraftmods.core.gui.GuiContainerBasic;
 import seigneurnecron.minecraftmods.core.mod.ModBase;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -20,7 +21,7 @@ public class SeigneurNecronMod extends ModBase<SeigneurNecronMod, SeigneurNecron
 	
 	public static final String MOD_ID = "seigneur_necron_mod_core";
 	public static final String MOD_NAME = "SeigneurNecron's Mod Core";
-	public static final String VERSION = "[1.6.2] v1.0.0 [forge 9.10.0.789]";
+	public static final String VERSION = "[1.6.2] v1.1.0 [forge 9.10.0.845]";
 	
 	@Override
 	protected String getModId() {
@@ -51,6 +52,12 @@ public class SeigneurNecronMod extends ModBase<SeigneurNecronMod, SeigneurNecron
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		super.init(event);
+		this.registerNames();
+	}
+	
+	protected void registerNames() {
+		this.addName(GuiContainerBasic.INVENTORY, "Inventory", "Inventaire");
+		this.addName(GuiContainerBasic.TOOL_BAR, "Tool bar", "Bare d'outils");
 	}
 	
 	@Override

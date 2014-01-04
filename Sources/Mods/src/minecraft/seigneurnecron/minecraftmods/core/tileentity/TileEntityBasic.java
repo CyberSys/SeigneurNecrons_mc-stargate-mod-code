@@ -7,6 +7,8 @@ import java.io.IOException;
 import java.util.logging.Level;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.network.packet.Packet250CustomPayload;
 import net.minecraft.tileentity.TileEntity;
@@ -33,7 +35,7 @@ public abstract class TileEntityBasic extends TileEntity {
 	/**
 	 * Transmits changes to server/clients.
 	 */
-	protected final void update() {
+	public final void update() {
 		if(this.worldObj != null && this.changed) {
 			if(this.worldObj.isRemote) {
 				this.updateServer();
@@ -93,8 +95,9 @@ public abstract class TileEntityBasic extends TileEntity {
 	 * @param input - the DataInputStream from which the data must be read.
 	 * @throws IOException - if an IOException occurs while reading the DataInputStream.
 	 */
-	protected void loadEntityData(DataInputStream input) throws IOException {
-		// Nothing here.
+	private void loadEntityData(DataInputStream input) throws IOException {
+		NBTTagCompound compound = CompressedStreamTools.read(input);
+		this.readFromNBT(compound);
 	}
 	
 	/**
@@ -122,6 +125,19 @@ public abstract class TileEntityBasic extends TileEntity {
 	}
 	
 	/**
+	 * Writes the tile entity data in a DataOutputStream, in order to create a tile entity packet.
+	 * @param output - the DataOutputStream in which the data must be written.
+	 * @throws IOException - if an IOException occurs while writting in the DataOutputStream.
+	 */
+	private void getTileEntityData(DataOutputStream output) throws IOException {
+		this.getTileEntityBasicData(output, this.getTileEntityPacketId());
+		
+		NBTTagCompound compound = new NBTTagCompound();
+		this.writeToNBT(compound);
+		CompressedStreamTools.write(compound, output);
+	}
+	
+	/**
 	 * Writes the tile entity basic data in a DataOutputStream, in order to create a packet with the given id.
 	 * @param output - the DataOutputStream in which the data must be written.
 	 * @param id - the packet id.
@@ -133,15 +149,6 @@ public abstract class TileEntityBasic extends TileEntity {
 		output.writeInt(this.xCoord);
 		output.writeInt(this.yCoord);
 		output.writeInt(this.zCoord);
-	}
-	
-	/**
-	 * Writes the tile entity data in a DataOutputStream, in order to create a tile entity packet.
-	 * @param output - the DataOutputStream in which the data must be written.
-	 * @throws IOException - if an IOException occurs while writting in the DataOutputStream.
-	 */
-	protected void getTileEntityData(DataOutputStream output) throws IOException {
-		this.getTileEntityBasicData(output, this.getTileEntityPacketId());
 	}
 	
 	/**
@@ -175,7 +182,10 @@ public abstract class TileEntityBasic extends TileEntity {
 	 * @return the squared distance between the DHD and the block.
 	 */
 	public double squaredDistance(int x, int y, int z) {
-		return Math.pow(this.xCoord - x, 2) + Math.pow(this.yCoord - y, 2) + Math.pow(this.zCoord - z, 2);
+		int xd = this.xCoord - x;
+		int yd = this.yCoord - y;
+		int zd = this.zCoord - z;
+		return (xd * xd) + (yd * yd) + (zd * zd);
 	}
 	
 	/**

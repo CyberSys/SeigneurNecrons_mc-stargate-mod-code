@@ -1,18 +1,18 @@
 package seigneurnecron.minecraftmods.stargate.gui.components;
 
 import net.minecraft.client.gui.FontRenderer;
-import seigneurnecron.minecraftmods.core.gui.Container;
+import seigneurnecron.minecraftmods.core.gui.ComponentContainer;
 
 /**
  * @author Seigneur Necron
  */
 public class DhdPanelGateCreation extends DhdPanel {
 	
-	public DhdPanelGateCreation(Container parent, FontRenderer fontRenderer, int xPos, int yPos, int width, int height) {
+	public DhdPanelGateCreation(ComponentContainer parent, FontRenderer fontRenderer, int xPos, int yPos, int width, int height) {
 		super(parent, fontRenderer, xPos, yPos, width, height);
 	}
 	
-	public DhdPanelGateCreation(Container parent, FontRenderer fontRenderer, int xPos, int yPos, int width) {
+	public DhdPanelGateCreation(ComponentContainer parent, FontRenderer fontRenderer, int xPos, int yPos, int width) {
 		super(parent, fontRenderer, xPos, yPos, width);
 	}
 	

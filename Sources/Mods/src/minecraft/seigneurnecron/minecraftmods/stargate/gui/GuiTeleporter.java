@@ -1,6 +1,14 @@
 package seigneurnecron.minecraftmods.stargate.gui;
 
-import static seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseTeleporter.INV_NAME;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.BACKGROUND_COLOR;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.BUTTON_HEIGHT;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.FIELD_HEIGHT;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.GREEN;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.LIGHT_BLUE;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.MARGIN;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.PANEL_MARGIN;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.RED;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.YELLOW;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +17,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import seigneurnecron.minecraftmods.core.gui.GuiScreenTileEntity;
 import seigneurnecron.minecraftmods.core.gui.IntegerField;
 import seigneurnecron.minecraftmods.core.gui.Label;
 import seigneurnecron.minecraftmods.core.gui.ListProviderGui;
@@ -17,7 +26,8 @@ import seigneurnecron.minecraftmods.core.gui.TextField;
 import seigneurnecron.minecraftmods.core.mod.ModBase;
 import seigneurnecron.minecraftmods.stargate.gui.components.StargateButton;
 import seigneurnecron.minecraftmods.stargate.gui.components.TeleporterSelectionList;
-import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseTeleporter;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleTeleporter;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.Teleporter;
 import seigneurnecron.minecraftmods.stargate.tools.playerdata.PlayerTeleporterData;
 import cpw.mods.fml.relauncher.Side;
@@ -27,11 +37,13 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Seigneur Necron
  */
 @SideOnly(Side.CLIENT)
-public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements ListProviderGui<Teleporter> {
+public class GuiTeleporter extends GuiConsolePanel<ConsoleTeleporter> implements ListProviderGui<Teleporter> {
 	
 	// ####################################################################################################
 	// Lang constants :
 	// ####################################################################################################
+	
+	public static final String INV_NAME = "container.teleporter";
 	
 	public static final String COORDINATES = INV_NAME + ".coordinates";
 	public static final String TELEPORT = INV_NAME + ".teleport";
@@ -100,11 +112,11 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 	protected PlayerTeleporterData playerData;
 	
 	// ####################################################################################################
-	// Builder :
+	// Constructors :
 	// ####################################################################################################
 	
-	public GuiTeleporter(TileEntityBaseTeleporter tileEntity, EntityPlayer player) {
-		super(tileEntity, player);
+	public GuiTeleporter(TileEntityConsoleBase tileEntity, EntityPlayer player, ConsoleTeleporter console) {
+		super(tileEntity, player, console);
 		this.playerData = PlayerTeleporterData.get(player);
 		this.updateList();
 	}
@@ -114,13 +126,16 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 	// ####################################################################################################
 	
 	@Override
+	public void drawDefaultBackground() {
+		this.panel_listSelect.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
+		this.panel_listButtons.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
+		this.panel_information.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
+		this.panel_main.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
+	}
+	
+	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
-		
-		this.panel_listSelect.drawBox(GRAY);
-		this.panel_listButtons.drawBox(GRAY);
-		this.panel_information.drawBox(GRAY);
-		this.panel_main.drawBox(GRAY);
 		
 		this.selectionList.drawScreen(par1, par2, par3);
 	}
@@ -211,8 +226,8 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 		this.field_name2 = this.addComponent(new TextField(this.panel_main, this.fontRenderer, fieldOffset, this.nextYPos, fieldSize));
 		this.nextYPos += this.offset;
 		this.label_message = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_main, "", true));
-		this.button_teleport = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a(TELEPORT) + I18n.func_135053_a(GuiScreen.ENTER)));
-		this.button_cancel = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a("gui.cancel") + I18n.func_135053_a(GuiScreen.ESC)));
+		this.button_teleport = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a(TELEPORT) + I18n.func_135053_a(GuiScreenTileEntity.ENTER)));
+		this.button_cancel = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a("gui.cancel") + I18n.func_135053_a(GuiScreenTileEntity.ESC)));
 		
 		this.nextYPos = MARGIN;
 		this.label_tab = this.addComponent(new Label(this.panel_listButtons, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_listButtons, "", true));
@@ -273,7 +288,7 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 			
 			if(teleporter != null) {
 				this.close();
-				ModBase.sendPacketToServer(this.tileEntity.getTeleportPacket(teleporter.x, teleporter.y, teleporter.z));
+				ModBase.sendPacketToServer(this.console.getTeleportPacket(teleporter.x, teleporter.y, teleporter.z));
 			}
 		}
 	}
@@ -349,7 +364,7 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 		List<Teleporter> teleportersInRange = new LinkedList<Teleporter>();
 		
 		for(Teleporter teleporter : this.playerData.getDataList()) {
-			if(teleporter.dim == this.tileEntity.getDimension() && (this.displayAll || this.tileEntity.isValid(teleporter.x, teleporter.y, teleporter.z) && this.tileEntity.isInRange(teleporter.x, teleporter.y, teleporter.z))) {
+			if(teleporter.dim == this.tileEntity.getDimension() && (this.displayAll || this.console.isValidDestination(teleporter.x, teleporter.y, teleporter.z) && this.console.isInRange(teleporter.x, teleporter.y, teleporter.z))) {
 				teleportersInRange.add(teleporter);
 			}
 		}
@@ -364,10 +379,10 @@ public class GuiTeleporter extends GuiBase<TileEntityBaseTeleporter> implements 
 			int y = Integer.parseInt(this.field_y.getText());
 			int z = Integer.parseInt(this.field_z.getText());
 			
-			if(!this.tileEntity.isValid(x, y, z)) {
+			if(!this.console.isValidDestination(x, y, z)) {
 				this.updateInterface(false, false);
 			}
-			else if(!this.tileEntity.isInRange(x, y, z)) {
+			else if(!this.console.isInRange(x, y, z)) {
 				this.updateInterface(false, true);
 			}
 			else {

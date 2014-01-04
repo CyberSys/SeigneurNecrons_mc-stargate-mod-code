@@ -1,6 +1,6 @@
 package seigneurnecron.minecraftmods.core.gui;
 
-import static seigneurnecron.minecraftmods.core.gui.Screen.FIELD_HEIGHT;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.FIELD_HEIGHT;
 
 import java.util.logging.Level;
 
@@ -27,7 +27,7 @@ public class TextField extends GuiTextField implements Component {
 	
 	// Constructors :
 	
-	public TextField(Container container, FontRenderer par1FontRenderer, int xPos, int yPos, int width, int height, String text) {
+	public TextField(ComponentContainer container, FontRenderer par1FontRenderer, int xPos, int yPos, int width, int height, String text) {
 		super(par1FontRenderer, container.getXPosInScreen(xPos), container.getYPosInScreen(yPos), width, height);
 		this.setMaxStringLength(25);
 		this.setText(text);
@@ -35,15 +35,15 @@ public class TextField extends GuiTextField implements Component {
 		this.height = height;
 	}
 	
-	public TextField(Container container, FontRenderer par1FontRenderer, int xPos, int yPos, int width, int height) {
+	public TextField(ComponentContainer container, FontRenderer par1FontRenderer, int xPos, int yPos, int width, int height) {
 		this(container, par1FontRenderer, xPos, yPos, width, height, "");
 	}
 	
-	public TextField(Container container, FontRenderer par1FontRenderer, int xPos, int yPos, int width, String text) {
+	public TextField(ComponentContainer container, FontRenderer par1FontRenderer, int xPos, int yPos, int width, String text) {
 		this(container, par1FontRenderer, xPos, yPos, width, FIELD_HEIGHT, text);
 	}
 	
-	public TextField(Container container, FontRenderer par1FontRenderer, int xPos, int yPos, int width) {
+	public TextField(ComponentContainer container, FontRenderer par1FontRenderer, int xPos, int yPos, int width) {
 		this(container, par1FontRenderer, xPos, yPos, width, FIELD_HEIGHT, "");
 	}
 	

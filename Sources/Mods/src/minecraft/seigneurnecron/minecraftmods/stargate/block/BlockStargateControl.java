@@ -12,7 +12,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.gui.GuiStargateControl;
-import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityGuiScreen;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateState;
 import cpw.mods.fml.relauncher.Side;
@@ -56,7 +55,7 @@ public class BlockStargateControl extends BlockGuiScreen {
 	public void breakBlock(World world, int x, int y, int z, int par5, int par6) {
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		
-		if(tileEntity != null && tileEntity instanceof TileEntityStargateControl) {
+		if(tileEntity instanceof TileEntityStargateControl) {
 			((TileEntityStargateControl) tileEntity).setBroken();
 		}
 		
@@ -77,22 +76,15 @@ public class BlockStargateControl extends BlockGuiScreen {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	public Icon getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side) {
-		int metadata = iBlockAccess.getBlockMetadata(x, y, z);
+	public Icon getBlockTexture(IBlockAccess world, int x, int y, int z, int side) {
+		int metadata = world.getBlockMetadata(x, y, z);
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		
-		if(side == metadata) {
-			TileEntityStargateControl tileEntity = (TileEntityStargateControl) iBlockAccess.getBlockTileEntity(x, y, z);
-			if(tileEntity != null && tileEntity.getState() == GateState.BROKEN) {
-				return this.blockIcon;
-			}
+		if(side == metadata && this.tileEntityOk(tileEntity)) {
+			return this.blockIcon;
 		}
 		
 		return this.naquadaIcon;
-	}
-	
-	@Override
-	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int par6, float par7, float par8, float par9) {
-		return this.openGui(world, x, y, z, player);
 	}
 	
 	@Override
@@ -102,7 +94,7 @@ public class BlockStargateControl extends BlockGuiScreen {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected GuiScreen getGuiScreen(TileEntityGuiScreen tileEntity, EntityPlayer player) {
+	protected GuiScreen getGuiScreen(TileEntity tileEntity, EntityPlayer player) {
 		return new GuiStargateControl((TileEntityStargateControl) tileEntity);
 	}
 	

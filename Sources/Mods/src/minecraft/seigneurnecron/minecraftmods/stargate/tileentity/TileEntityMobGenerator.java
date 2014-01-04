@@ -1,24 +1,19 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import seigneurnecron.minecraftmods.stargate.inventory.InventoryMobGenerator;
 import seigneurnecron.minecraftmods.stargate.item.ItemSoulCrystal;
 
 /**
  * @author Seigneur Necron
  */
-public class TileEntityMobGenerator extends TileEntityStargateGuiContainer {
+public class TileEntityMobGenerator extends TileEntityContainerStargate<InventoryMobGenerator> {
 	
-	public static final String INV_NAME = "container.mobGenerator";
+	// Constants :
 	
 	/**
 	 * Initial spawn delay.
@@ -30,10 +25,7 @@ public class TileEntityMobGenerator extends TileEntityStargateGuiContainer {
 	 */
 	private static final int SPAWN_RANGE = 4;
 	
-	/**
-	 * The unique inventory slot, where you can insert a soul crystal.
-	 */
-	private ItemStack crystal;
+	// Fields :
 	
 	/**
 	 * Indicates whether the generator is powered by a redstone signal.
@@ -45,13 +37,7 @@ public class TileEntityMobGenerator extends TileEntityStargateGuiContainer {
 	 */
 	private int delay = INIT_DELAY;
 	
-	/**
-	 * Indicates whether a soul crystal is inserted in the generator.
-	 * @return true if a crystal is inserted, else false.
-	 */
-	public boolean isCrystalInserted() {
-		return(this.crystal != null && this.crystal.getItem() instanceof ItemSoulCrystal);
-	}
+	// Getters :
 	
 	/**
 	 * Indicates whether the generator is powered by a redstone signal.
@@ -60,6 +46,8 @@ public class TileEntityMobGenerator extends TileEntityStargateGuiContainer {
 	public boolean isPowered() {
 		return this.powered;
 	}
+	
+	// Setters :
 	
 	/**
 	 * Updates the power state of the generator (informs clients).
@@ -73,49 +61,28 @@ public class TileEntityMobGenerator extends TileEntityStargateGuiContainer {
 		}
 	}
 	
-	/**
-	 * Updates the crystal slot (informs clients).
-	 * @param crystal - the new item to insert in the crystal slot.
-	 */
-	private void setCrystal(ItemStack crystal) {
-		if(!ItemStack.areItemStacksEqual(this.crystal, crystal)) {
-			this.crystal = crystal;
-			
-			if(!this.worldObj.isRemote) {
-				this.setChanged();
-			}
-		}
+	// Methods :
+	
+	@Override
+	protected InventoryMobGenerator getNewInventory() {
+		return new InventoryMobGenerator(this);
 	}
 	
 	private void resetDelay() {
 		this.delay = INIT_DELAY;
 	}
 	
-	@Override
-	public String getInvName() {
-		return INV_NAME;
-	}
-	
-	@Override
-	public int getSizeInventory() {
-		return 1;
-	}
-	
-	@Override
-	public ItemStack getStackInSlot(int index) {
-		return index == 0 ? this.crystal : null;
-	}
-	
-	@Override
-	public void setInventorySlotContents(int index, ItemStack itemStack) {
-		if(index == 0) {
-			this.setCrystal(itemStack);
+	public void onCrystalChanged() {
+		if(this.worldObj != null && !this.worldObj.isRemote) {
+			this.setChanged();
 			this.update();
 		}
 	}
 	
 	@Override
 	public void updateEntity() {
+		super.updateEntity();
+		
 		if(!this.worldObj.isRemote) {
 			
 			if(this.delay > 0) {
@@ -123,15 +90,15 @@ public class TileEntityMobGenerator extends TileEntityStargateGuiContainer {
 				return;
 			}
 			
-			if(this.powered && this.crystal != null && this.crystal.getItem() instanceof ItemSoulCrystal) {
-				ItemSoulCrystal crystal = (ItemSoulCrystal) this.crystal.getItem();
+			if(this.powered && this.getInventory().isCrystalInserted()) {
+				ItemSoulCrystal crystal = (ItemSoulCrystal) this.getInventory().getCrystal().getItem();
 				boolean spawnSucces = false;
 				
-				for(int i = 0; i < crystal.getSpawnCount(); ++i) {
-					Entity entity = EntityList.createEntityByID(crystal.getMonsterId(), this.worldObj);
+				for(int i = 0; i < crystal.spawnCount; ++i) {
+					Entity entity = EntityList.createEntityByID(crystal.monsterId, this.worldObj);
 					int nbEntities = this.worldObj.getEntitiesWithinAABB(entity.getClass(), AxisAlignedBB.getAABBPool().getAABB(this.xCoord, this.yCoord, this.zCoord, this.xCoord + 1, this.yCoord + 1, this.zCoord + 1).expand(SPAWN_RANGE * 2, SPAWN_RANGE, SPAWN_RANGE * 2)).size();
 					
-					if(nbEntities >= crystal.getMaxMob()) {
+					if(nbEntities >= crystal.maxMob) {
 						this.resetDelay();
 						return;
 					}
@@ -159,8 +126,6 @@ public class TileEntityMobGenerator extends TileEntityStargateGuiContainer {
 				}
 			}
 		}
-		
-		super.updateEntity();
 	}
 	
 	@Override
@@ -175,42 +140,6 @@ public class TileEntityMobGenerator extends TileEntityStargateGuiContainer {
 		super.writeToNBT(compound);
 		compound.setBoolean("powered", this.powered);
 		compound.setInteger("delay", this.delay);
-	}
-	
-	@Override
-	protected void getTileEntityData(DataOutputStream output) throws IOException {
-		super.getTileEntityData(output);
-		
-		output.writeBoolean(this.powered);
-		output.writeInt(this.delay);
-		
-		output.writeInt((this.crystal != null) ? this.crystal.itemID : -1);
-	}
-	
-	@Override
-	protected void loadEntityData(DataInputStream input) throws IOException {
-		super.loadEntityData(input);
-		
-		this.powered = input.readBoolean();
-		this.delay = input.readInt();
-		
-		int itemId = input.readInt();
-		Item item = (itemId > 0 && itemId < Item.itemsList.length) ? Item.itemsList[itemId] : null;
-		this.setCrystal((item != null) ? new ItemStack(item) : null);
-	}
-	
-	@Override
-	public boolean isInvNameLocalized() {
-		return false;
-	}
-	
-	@Override
-	public boolean isItemValidForSlot(int index, ItemStack itemstack) {
-		if(index == 0 && !(itemstack.getItem() instanceof ItemSoulCrystal)) {
-			return false;
-		}
-		
-		return true;
 	}
 	
 }

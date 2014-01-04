@@ -13,11 +13,16 @@ import seigneurnecron.minecraftmods.stargate.entity.EntityCustomExplosiveFireBal
 import seigneurnecron.minecraftmods.stargate.entity.EntityCustomFireBall;
 import seigneurnecron.minecraftmods.stargate.entity.EntityNapalm;
 import seigneurnecron.minecraftmods.stargate.entity.EntityNuke;
+import seigneurnecron.minecraftmods.stargate.gui.GuiConsoleBase;
+import seigneurnecron.minecraftmods.stargate.gui.GuiCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.gui.GuiMobGenerator;
 import seigneurnecron.minecraftmods.stargate.gui.GuiStuffLevelUpTable;
 import seigneurnecron.minecraftmods.stargate.render.RenderCustomFireBall;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityMobGenerator;
-import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStuffLevelUpTable;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.Console;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleCrystalFactory;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStuffLevelUpTable;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 import cpw.mods.fml.relauncher.Side;
@@ -37,10 +42,28 @@ public class StargateClientProxy extends StargateCommonProxy {
 		
 		if(tileEntity != null) {
 			if(tileEntity instanceof TileEntityMobGenerator) {
-				return new GuiMobGenerator(player.inventory, (TileEntityMobGenerator) tileEntity);
+				return new GuiMobGenerator(player.inventory, ((TileEntityMobGenerator) tileEntity).getInventory());
 			}
-			if(tileEntity instanceof TileEntityStuffLevelUpTable) {
-				return new GuiStuffLevelUpTable(player.inventory, (TileEntityStuffLevelUpTable) tileEntity);
+			else if(tileEntity instanceof TileEntityConsoleBase) {
+				TileEntityConsoleBase tileEntityConsoleBase = (TileEntityConsoleBase) tileEntity;
+				
+				if(id == NOT_A_CONSOLE) {
+					return new GuiConsoleBase(player.inventory, tileEntityConsoleBase.getInventory());
+				}
+				else {
+					Console console = tileEntityConsoleBase.getConsole();
+					
+					if(console != null) {
+						if(console instanceof ConsoleStuffLevelUpTable) {
+							ConsoleStuffLevelUpTable consoleStuffLevelUpTable = (ConsoleStuffLevelUpTable) console;
+							return new GuiStuffLevelUpTable(player.inventory, consoleStuffLevelUpTable.getInventory());
+						}
+						else if(console instanceof ConsoleCrystalFactory) {
+							ConsoleCrystalFactory consoleCrystalFactory = (ConsoleCrystalFactory) console;
+							return new GuiCrystalFactory(player.inventory, consoleCrystalFactory.getInventory());
+						}
+					}
+				}
 			}
 		}
 		

@@ -9,8 +9,8 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.gui.GuiShieldRemote;
-import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseStargateConsole;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStargate;
 
 /**
  * @author Seigneur Necron
@@ -38,7 +38,7 @@ public class ItemShieldRemote extends ItemStargate {
 	 * Searches for stargates in the area and returns the nearest one.
 	 */
 	protected TileEntityStargateControl getNearestActivatedGate(World world, int xCoord, int yCoord, int zCoord) {
-		final int maxRange = TileEntityBaseStargateConsole.MAX_RANGE;
+		final int maxRange = ConsoleStargate.MAX_RANGE;
 		
 		// Searches all the control units within range.
 		LinkedList<TileEntityStargateControl> controlUnitsList = new LinkedList<TileEntityStargateControl>();

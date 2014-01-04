@@ -1,13 +1,13 @@
 package seigneurnecron.minecraftmods.stargate.gui.components;
 
-import static seigneurnecron.minecraftmods.core.gui.Screen.BUTTON_HEIGHT;
-import static seigneurnecron.minecraftmods.core.gui.Screen.DHD_MARGIN;
-import static seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseDhd.INV_NAME;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.BUTTON_HEIGHT;
+import static seigneurnecron.minecraftmods.stargate.gui.GuiDhd.DHD_MARGIN;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import seigneurnecron.minecraftmods.core.gui.Container;
+import seigneurnecron.minecraftmods.core.gui.ComponentContainer;
 import seigneurnecron.minecraftmods.core.gui.Panel;
+import seigneurnecron.minecraftmods.stargate.gui.GuiDhd;
 import seigneurnecron.minecraftmods.stargate.tools.address.GateAddress;
 import seigneurnecron.minecraftmods.stargate.tools.enums.Dimension;
 
@@ -16,7 +16,7 @@ import seigneurnecron.minecraftmods.stargate.tools.enums.Dimension;
  */
 public class DhdPanel extends Panel {
 	
-	public static final String RESET = INV_NAME + ".reset";
+	public static final String RESET = GuiDhd.INV_NAME + ".reset";
 	
 	protected final FontRenderer fontRenderer;
 	
@@ -28,7 +28,7 @@ public class DhdPanel extends Panel {
 	protected DhdButton specialButton;
 	protected StargateButton resetButton;
 	
-	public DhdPanel(Container parent, FontRenderer fontRenderer, int xPos, int yPos, int width, int height) {
+	public DhdPanel(ComponentContainer parent, FontRenderer fontRenderer, int xPos, int yPos, int width, int height) {
 		super(parent, xPos, yPos, width, height);
 		this.fontRenderer = fontRenderer;
 		
@@ -45,24 +45,26 @@ public class DhdPanel extends Panel {
 		int buttonSize = (width - (14 * DHD_MARGIN)) / nbXButtons;
 		int resetButtonSize = (3 * buttonSize) + (2 * DHD_MARGIN);
 		
+		int xOffset = (width - (15 * buttonSize) - (14 * DHD_MARGIN)) / 2;
+		
 		for(int i = 0; i < nbXButtons; i++) {
-			this.xButtons[i] = this.addComponent(new DhdButton(this, this.fontRenderer, i * (buttonSize + DHD_MARGIN), y0, buttonSize, GateAddress.X_SYMBOLS.get(i)), false);
-			this.zButtons[i] = this.addComponent(new DhdButton(this, this.fontRenderer, i * (buttonSize + DHD_MARGIN), y1, buttonSize, GateAddress.Z_SYMBOLS.get(i)), false);
+			this.xButtons[i] = this.addComponent(new DhdButton(this, this.fontRenderer, xOffset + i * (buttonSize + DHD_MARGIN), y0, buttonSize, GateAddress.X_SYMBOLS.get(i)), false);
+			this.zButtons[i] = this.addComponent(new DhdButton(this, this.fontRenderer, xOffset + i * (buttonSize + DHD_MARGIN), y1, buttonSize, GateAddress.Z_SYMBOLS.get(i)), false);
 		}
 		
 		for(int i = 0; i < nbYButtons; i++) {
-			this.yButtons[i] = this.addComponent(new DhdButton(this, this.fontRenderer, i * (buttonSize + DHD_MARGIN), y2, buttonSize, GateAddress.Y_SYMBOLS.get(i)), false);
+			this.yButtons[i] = this.addComponent(new DhdButton(this, this.fontRenderer, xOffset + i * (buttonSize + DHD_MARGIN), y2, buttonSize, GateAddress.Y_SYMBOLS.get(i)), false);
 		}
 		
 		for(int i = 0; i < nbDimButtons; i++) {
-			this.dimButtons[i] = this.addComponent(new DhdButton(this, this.fontRenderer, (i + dimSlotOffset) * (buttonSize + DHD_MARGIN), y2, buttonSize, Dimension.values()[i].getAddress()), false);
+			this.dimButtons[i] = this.addComponent(new DhdButton(this, this.fontRenderer, xOffset + ((i + dimSlotOffset) * (buttonSize + DHD_MARGIN)), y2, buttonSize, Dimension.values()[i].getAddress()), false);
 		}
 		
-		this.specialButton = this.addComponent(new DhdButton(this, this.fontRenderer, (nbXButtons - 1) * (buttonSize + DHD_MARGIN), y2, buttonSize, GateAddress.SPECIAL_SYMBOL), false);
-		this.resetButton = this.addComponent(new StargateButton(this, resetButtonOffset * (buttonSize + DHD_MARGIN), y2, resetButtonSize, I18n.func_135053_a(RESET)), false);
+		this.specialButton = this.addComponent(new DhdButton(this, this.fontRenderer, xOffset + ((nbXButtons - 1) * (buttonSize + DHD_MARGIN)), y2, buttonSize, GateAddress.SPECIAL_SYMBOL), false);
+		this.resetButton = this.addComponent(new StargateButton(this, xOffset + (resetButtonOffset * (buttonSize + DHD_MARGIN)), y2, resetButtonSize, I18n.func_135053_a(RESET)), false);
 	}
 	
-	public DhdPanel(Container parent, FontRenderer fontRenderer, int xPos, int yPos, int width) {
+	public DhdPanel(ComponentContainer parent, FontRenderer fontRenderer, int xPos, int yPos, int width) {
 		this(parent, fontRenderer, xPos, yPos, width, (3 * BUTTON_HEIGHT) + (2 * DHD_MARGIN));
 	}
 	

@@ -1,6 +1,13 @@
 package seigneurnecron.minecraftmods.stargate.gui;
 
-import static seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseDhd.INV_NAME;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.BACKGROUND_COLOR;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.BUTTON_HEIGHT;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.FIELD_HEIGHT;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.GREEN;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.LIGHT_BLUE;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.MARGIN;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.PANEL_MARGIN;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.YELLOW;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,6 +16,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
+import seigneurnecron.minecraftmods.core.gui.GuiScreenTileEntity;
 import seigneurnecron.minecraftmods.core.gui.Label;
 import seigneurnecron.minecraftmods.core.gui.ListProviderGui;
 import seigneurnecron.minecraftmods.core.gui.Panel;
@@ -20,7 +28,8 @@ import seigneurnecron.minecraftmods.stargate.gui.components.Dhd;
 import seigneurnecron.minecraftmods.stargate.gui.components.DhdPanel;
 import seigneurnecron.minecraftmods.stargate.gui.components.StargateButton;
 import seigneurnecron.minecraftmods.stargate.gui.components.StargateSelectionList;
-import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityBaseDhd;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStargateDhd;
 import seigneurnecron.minecraftmods.stargate.tools.address.GateAddress;
 import seigneurnecron.minecraftmods.stargate.tools.address.MalformedGateAddressException;
 import seigneurnecron.minecraftmods.stargate.tools.enums.Dimension;
@@ -34,11 +43,13 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Seigneur Necron
  */
 @SideOnly(Side.CLIENT)
-public class GuiDhd extends GuiStargateConsole<TileEntityBaseDhd> implements ListProviderGui<Stargate> {
+public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements ListProviderGui<Stargate> {
 	
 	// ####################################################################################################
 	// Lang constants :
 	// ####################################################################################################
+	
+	public static final String INV_NAME = "container.dhd";
 	
 	public static final String ADDRESS = INV_NAME + ".address";
 	public static final String ACTIVATE = INV_NAME + ".activate";
@@ -46,6 +57,12 @@ public class GuiDhd extends GuiStargateConsole<TileEntityBaseDhd> implements Lis
 	public static final String EARTH = INV_NAME + ".earth";
 	public static final String HELL = INV_NAME + ".hell";
 	public static final String END = INV_NAME + ".end";
+	
+	// ####################################################################################################
+	// Gui constants :
+	// ####################################################################################################
+	
+	public static final int DHD_MARGIN = 1;
 	
 	// ####################################################################################################
 	// Interface fields :
@@ -113,8 +130,8 @@ public class GuiDhd extends GuiStargateConsole<TileEntityBaseDhd> implements Lis
 	// Builder :
 	// ####################################################################################################
 	
-	public GuiDhd(TileEntityBaseDhd tileEntity, EntityPlayer player) {
-		super(tileEntity, player);
+	public GuiDhd(TileEntityConsoleBase tileEntity, EntityPlayer player, ConsoleStargateDhd console) {
+		super(tileEntity, player, console);
 		this.selectedDimension = this.getDimension();
 		this.stargateFontRenderer = StargateMod.proxy.getStargateFontRender();
 		this.playerData = PlayerStargateData.get(player);
@@ -126,14 +143,17 @@ public class GuiDhd extends GuiStargateConsole<TileEntityBaseDhd> implements Lis
 	// ####################################################################################################
 	
 	@Override
+	public void drawDefaultBackground() {
+		this.panel_listSelect.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
+		this.panel_listButtons.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
+		this.panel_information.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
+		this.panel_main.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
+	}
+	
+	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
 		this.updateActivateButton();
-		
-		this.panel_listSelect.drawBox(GRAY);
-		this.panel_listButtons.drawBox(GRAY);
-		this.panel_information.drawBox(GRAY);
-		this.panel_main.drawBox(GRAY);
 		
 		this.selectionList.drawScreen(par1, par2, par3);
 		this.addressBar1.drawScreen();
@@ -167,8 +187,8 @@ public class GuiDhd extends GuiStargateConsole<TileEntityBaseDhd> implements Lis
 		String string_name = I18n.func_135053_a(NAME) + " : ";
 		String string_address = I18n.func_135053_a(ADDRESS) + " : ";
 		
-		this.string_activate = I18n.func_135053_a(ACTIVATE) + I18n.func_135053_a(GuiScreen.ENTER);
-		this.string_close = I18n.func_135053_a(CLOSE) + I18n.func_135053_a(GuiScreen.ENTER);
+		this.string_activate = I18n.func_135053_a(ACTIVATE) + I18n.func_135053_a(GuiScreenTileEntity.ENTER);
+		this.string_close = I18n.func_135053_a(CLOSE) + I18n.func_135053_a(GuiScreenTileEntity.ENTER);
 		this.string_tab = I18n.func_135053_a(TAB);
 		this.string_earth = I18n.func_135053_a(EARTH);
 		this.string_hell = I18n.func_135053_a(HELL);
@@ -211,7 +231,7 @@ public class GuiDhd extends GuiStargateConsole<TileEntityBaseDhd> implements Lis
 		this.label_name2 = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_main, string_name), false);
 		this.field_name2 = this.addComponent(new TextField(this.panel_main, this.fontRenderer, fieldOffset, this.nextYPos, fieldSize));
 		this.button_activate = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a(this.string_activate)));
-		this.button_cancel = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a("gui.cancel") + I18n.func_135053_a(GuiScreen.ESC)));
+		this.button_cancel = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a("gui.cancel") + I18n.func_135053_a(GuiScreenTileEntity.ESC)));
 		
 		this.nextYPos = MARGIN;
 		this.label_tab = this.addComponent(new Label(this.panel_listButtons, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_listButtons, "", true));
@@ -288,14 +308,14 @@ public class GuiDhd extends GuiStargateConsole<TileEntityBaseDhd> implements Lis
 	protected void activate() {
 		if(this.button_activate.enabled && this.stargateConnected) {
 			if(this.stargate.isActivated()) {
-				ModBase.sendPacketToServer(this.tileEntity.getStargateClosePacket());
+				ModBase.sendPacketToServer(this.console.getStargateClosePacket());
 			}
 			else {
 				Stargate stargate = this.getStargateFromFields();
 				
 				if(stargate != null) {
 					this.close();
-					ModBase.sendPacketToServer(this.tileEntity.getStargateOpenPacket(stargate.address));
+					ModBase.sendPacketToServer(this.console.getStargateOpenPacket(stargate.address));
 				}
 			}
 		}

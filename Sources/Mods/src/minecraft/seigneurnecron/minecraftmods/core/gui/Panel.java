@@ -1,6 +1,6 @@
 package seigneurnecron.minecraftmods.core.gui;
 
-import static seigneurnecron.minecraftmods.core.gui.Screen.TRANSPARENT;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.TRANSPARENT;
 import net.minecraft.client.gui.FontRenderer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -9,11 +9,11 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Seigneur Necron
  */
 @SideOnly(Side.CLIENT)
-public class Panel implements Container {
+public class Panel implements ComponentContainer {
 	
 	// Fields :
 	
-	protected final Container parent;
+	protected final ComponentContainer parent;
 	protected final int xPos;
 	protected final int yPos;
 	protected final int width;
@@ -21,7 +21,7 @@ public class Panel implements Container {
 	
 	// Constructors :
 	
-	public Panel(Container parent, int xPos, int yPos, int width, int height) {
+	public Panel(ComponentContainer parent, int xPos, int yPos, int width, int height) {
 		this.parent = parent;
 		this.xPos = xPos;
 		this.yPos = yPos;
@@ -41,20 +41,20 @@ public class Panel implements Container {
 		return this.height;
 	}
 	
-	public int getxPos() {
+	public int getXPos() {
 		return this.xPos;
 	}
 	
-	public int getyPos() {
+	public int getYPos() {
 		return this.yPos;
 	}
 	
-	public int getBottom() {
-		return this.xPos + this.height;
+	public int getRight() {
+		return this.xPos + this.width;
 	}
 	
-	public int getRight() {
-		return this.yPos + this.width;
+	public int getBottom() {
+		return this.yPos + this.height;
 	}
 	
 	@Override

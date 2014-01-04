@@ -49,8 +49,8 @@ public class BlockMobGenerator extends BlockGuiContainer {
 		if(tileentity instanceof TileEntityMobGenerator) {
 			TileEntityMobGenerator tileentityMobGenerator = (TileEntityMobGenerator) tileentity;
 			
-			for(int i = 0; i < tileentityMobGenerator.getSizeInventory(); ++i) {
-				ItemStack itemstack = tileentityMobGenerator.getStackInSlot(i);
+			for(int i = 0; i < tileentityMobGenerator.getInventory().getSizeInventory(); ++i) {
+				ItemStack itemstack = tileentityMobGenerator.getInventory().getStackInSlot(i);
 				
 				if(itemstack != null) {
 					float x1 = this.rand.nextFloat() * 0.8F + 0.1F;
@@ -92,9 +92,9 @@ public class BlockMobGenerator extends BlockGuiContainer {
 	public Icon getBlockTexture(IBlockAccess iBlockAccess, int x, int y, int z, int side) {
 		TileEntity tileEntity = iBlockAccess.getBlockTileEntity(x, y, z);
 		if(tileEntity != null && tileEntity instanceof TileEntityMobGenerator) {
-			TileEntityMobGenerator tileEntityMG = (TileEntityMobGenerator) tileEntity;
-			if(tileEntityMG.isCrystalInserted()) {
-				if(tileEntityMG.isPowered()) {
+			TileEntityMobGenerator tileEntityMobGenerator = (TileEntityMobGenerator) tileEntity;
+			if(tileEntityMobGenerator.getInventory().isCrystalInserted()) {
+				if(tileEntityMobGenerator.isPowered()) {
 					return this.blockActiveIcon;
 				}
 				else {

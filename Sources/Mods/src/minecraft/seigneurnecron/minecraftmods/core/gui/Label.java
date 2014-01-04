@@ -1,5 +1,7 @@
 package seigneurnecron.minecraftmods.core.gui;
 
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.FIELD_HEIGHT;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.WHITE;
 import net.minecraft.client.gui.FontRenderer;
 
 /**
@@ -17,7 +19,7 @@ public class Label extends Panel {
 	
 	// Constructors :
 	
-	public Label(Container parent, FontRenderer fontRenderer, int xPos, int yPos, int width, int height, String text, int color, boolean centered) {
+	public Label(ComponentContainer parent, FontRenderer fontRenderer, int xPos, int yPos, int width, int height, String text, int color, boolean centered) {
 		super(parent, xPos, yPos, width, height);
 		this.fontRenderer = fontRenderer;
 		this.centered = centered;
@@ -25,32 +27,32 @@ public class Label extends Panel {
 		this.setColor(color);
 	}
 	
-	public Label(Container parent, FontRenderer fontRenderer, int xPos, int yPos, int width, int height, String text, boolean centered) {
-		this(parent, fontRenderer, xPos, yPos, width, height, text, Screen.WHITE, centered);
+	public Label(ComponentContainer parent, FontRenderer fontRenderer, int xPos, int yPos, int width, int height, String text, boolean centered) {
+		this(parent, fontRenderer, xPos, yPos, width, height, text, WHITE, centered);
 	}
 	
-	public Label(Container parent, FontRenderer fontRenderer, int xPos, int yPos, int width, int height, String text, int color) {
+	public Label(ComponentContainer parent, FontRenderer fontRenderer, int xPos, int yPos, int width, int height, String text, int color) {
 		this(parent, fontRenderer, xPos, yPos, width, height, text, color, false);
 	}
 	
-	public Label(Container parent, FontRenderer fontRenderer, int xPos, int yPos, int width, int height, String text) {
-		this(parent, fontRenderer, xPos, yPos, width, height, text, Screen.WHITE, false);
+	public Label(ComponentContainer parent, FontRenderer fontRenderer, int xPos, int yPos, int width, int height, String text) {
+		this(parent, fontRenderer, xPos, yPos, width, height, text, WHITE, false);
 	}
 	
-	public Label(Container parent, FontRenderer fontRenderer, int xPos, int yPos, int width, String text, int color, boolean centered) {
-		this(parent, fontRenderer, xPos, yPos, width, Screen.FIELD_HEIGHT, text, color, centered);
+	public Label(ComponentContainer parent, FontRenderer fontRenderer, int xPos, int yPos, int width, String text, int color, boolean centered) {
+		this(parent, fontRenderer, xPos, yPos, width, FIELD_HEIGHT, text, color, centered);
 	}
 	
-	public Label(Container parent, FontRenderer fontRenderer, int xPos, int yPos, int width, String text, boolean centered) {
-		this(parent, fontRenderer, xPos, yPos, width, Screen.FIELD_HEIGHT, text, Screen.WHITE, centered);
+	public Label(ComponentContainer parent, FontRenderer fontRenderer, int xPos, int yPos, int width, String text, boolean centered) {
+		this(parent, fontRenderer, xPos, yPos, width, FIELD_HEIGHT, text, WHITE, centered);
 	}
 	
-	public Label(Container parent, FontRenderer fontRenderer, int xPos, int yPos, int width, String text, int color) {
-		this(parent, fontRenderer, xPos, yPos, width, Screen.FIELD_HEIGHT, text, color, false);
+	public Label(ComponentContainer parent, FontRenderer fontRenderer, int xPos, int yPos, int width, String text, int color) {
+		this(parent, fontRenderer, xPos, yPos, width, FIELD_HEIGHT, text, color, false);
 	}
 	
-	public Label(Container parent, FontRenderer fontRenderer, int xPos, int yPos, int width, String text) {
-		this(parent, fontRenderer, xPos, yPos, width, Screen.FIELD_HEIGHT, text, Screen.WHITE, false);
+	public Label(ComponentContainer parent, FontRenderer fontRenderer, int xPos, int yPos, int width, String text) {
+		this(parent, fontRenderer, xPos, yPos, width, FIELD_HEIGHT, text, WHITE, false);
 	}
 	
 	// Setters :

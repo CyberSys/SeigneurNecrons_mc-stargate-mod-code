@@ -1,8 +1,5 @@
 package seigneurnecron.minecraftmods.stargate.tileentity;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -24,17 +21,20 @@ import seigneurnecron.minecraftmods.core.mod.ModBase;
 import seigneurnecron.minecraftmods.core.sound.Sound;
 import seigneurnecron.minecraftmods.core.teleportation.Teleporter;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.block.BlockBaseStargateConsole;
 import seigneurnecron.minecraftmods.stargate.block.BlockChevron;
+import seigneurnecron.minecraftmods.stargate.block.BlockConsoleBase;
+import seigneurnecron.minecraftmods.stargate.block.BlockConsolePanel;
 import seigneurnecron.minecraftmods.stargate.block.BlockKawoosh;
 import seigneurnecron.minecraftmods.stargate.block.BlockNaquadahAlloy;
-import seigneurnecron.minecraftmods.stargate.block.BlockPanelStargateConsole;
 import seigneurnecron.minecraftmods.stargate.block.BlockPortal;
 import seigneurnecron.minecraftmods.stargate.block.BlockStargateControl;
 import seigneurnecron.minecraftmods.stargate.block.BlockStargatePart;
 import seigneurnecron.minecraftmods.stargate.entity.damagesource.CustomDamageSource;
 import seigneurnecron.minecraftmods.stargate.network.packetmapping.StargateCommandPacketMapping;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.Console;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStargate;
 import seigneurnecron.minecraftmods.stargate.tools.address.GateAddress;
+import seigneurnecron.minecraftmods.stargate.tools.enums.Dimension;
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateActivationSequence;
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateActivationState;
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateActivationType;
@@ -48,11 +48,9 @@ import seigneurnecron.minecraftmods.stargate.tools.worlddata.WorldStargateData;
 /**
  * @author Seigneur Necron
  */
-public class TileEntityStargateControl extends TileEntityGuiScreen {
+public class TileEntityStargateControl extends TileEntityStargate {
 	
 	// Constants :
-	
-	public static final String INV_NAME = "container.stargateControl";
 	
 	/**
 	 * The number of ticks in one second.
@@ -334,9 +332,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	 * @param state - the new gate state.
 	 */
 	private void setState(GateState state) {
-		boolean changed = this.state != state;
-		
-		if(changed) {
+		if(this.state != state) {
 			this.state = state;
 			this.setChanged();
 			
@@ -391,7 +387,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		}
 		else {
 			// If the gate is almost activated and the shield is in automatic mode, activates the shield.
-			if(activationState == GateActivationState.E7 && this.shieldAutomated) {
+			if(activationState == GateActivationState.E7 && this.activationType != GateActivationType.FAILED && this.shieldAutomated) {
 				this.setShieldActivated(true);
 			}
 			
@@ -419,9 +415,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	 * @param shieldActivated - the new shield state.
 	 */
 	private void setShieldActivated(boolean shieldActivated) {
-		boolean changed = this.shieldActivated != shieldActivated;
-		
-		if(changed) {
+		if(this.shieldActivated != shieldActivated) {
 			this.shieldActivated = shieldActivated;
 			this.setChanged();
 			
@@ -524,7 +518,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		if(world != null) {
 			TileEntity tileEntity = world.getBlockTileEntity(this.destination.x, this.destination.y, this.destination.z);
 			
-			if(tileEntity != null && tileEntity instanceof TileEntityStargateControl) {
+			if(tileEntity instanceof TileEntityStargateControl) {
 				return (TileEntityStargateControl) tileEntity;
 			}
 		}
@@ -792,7 +786,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 							TileEntity tileEntity = this.worldObj.getBlockTileEntity(x, y, z);
 							
 							// If the block is still there.
-							if(tileEntity != null && tileEntity instanceof TileEntityStargatePart) {
+							if(tileEntity instanceof TileEntityStargatePart) {
 								// Breaks the link with the gate.
 								((TileEntityStargatePart) tileEntity).breakGate();
 							}
@@ -880,7 +874,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	}
 	
 	protected void deactivateStargateConsoles() {
-		final int maxRange = TileEntityBaseStargateConsole.MAX_RANGE;
+		final int maxRange = ConsoleStargate.MAX_RANGE;
 		
 		// Searches in a cube with a side length of MAX_RANGE.
 		for(int i = -maxRange; i <= maxRange; ++i) {
@@ -889,11 +883,16 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 					TileEntity tileEntity = this.worldObj.getBlockTileEntity(this.xCoord + k, this.yCoord + i, this.zCoord + j);
 					
 					// If the block is a control unit, adds it to the list of stargates that can be linked to the DHD.
-					if(tileEntity != null && tileEntity instanceof TileEntityBaseStargateConsole) {
-						TileEntityBaseStargateConsole console = (TileEntityBaseStargateConsole) tileEntity;
+					if(tileEntity instanceof TileEntityConsoleBase) {
+						TileEntityConsoleBase tileEntityConsole = (TileEntityConsoleBase) tileEntity;
+						Console console = tileEntityConsole.getConsole();
 						
-						if(console.isLinkedToGate() && (console.getXGate() == this.xCoord) && (console.getYGate() == this.yCoord) && (console.getZGate() == this.zCoord)) {
-							console.onStargateDestroyed(this);
+						if(console instanceof ConsoleStargate) {
+							ConsoleStargate consoleStargate = (ConsoleStargate) console;
+							
+							if(consoleStargate.isLinkedToGate() && (consoleStargate.getXGate() == this.xCoord) && (consoleStargate.getYGate() == this.yCoord) && (consoleStargate.getZGate() == this.zCoord)) {
+								consoleStargate.onStargateDestroyed(this);
+							}
 						}
 					}
 				}
@@ -1015,47 +1014,44 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 			return;
 		}
 		
-		// Translates the address.
-		StargateCoordinates destination = WorldStargateData.getInstance().getCoordinates(address);
-		
-		if(destination == null) {
-			StargateMod.instance.log("No gate registered with the address \"" + address + "\".");
-			return;
-		}
-		
-		// Registers the destination.
-		this.setDestination(destination);
-		
-		// If the given coordinates are those of that gate, exits.
-		if(destination.dim == this.getDimension() && destination.x == this.xCoord && destination.y == this.yCoord && destination.z == this.zCoord) {
-			StargateMod.instance.log("The input gate can't be the output gate ! >.<");
-			return;
-		}
-		
 		// Chooses an activation sequence.
 		GateActivationSequence activationSequence;
 		
 		if(address.length() == 9) {
 			activationSequence = GateActivationSequence.S9;
 		}
-		else if(destination.dim != this.getDimension()) {
+		else if(address.length() == 8 && Dimension.byAddress(address.charAt(7)).getValue() != this.getDimension()) {
 			activationSequence = GateActivationSequence.S8;
 		}
 		else {
 			activationSequence = GateActivationSequence.S7;
 		}
 		
-		// Gets the tile entity of the other gate control unit.
-		TileEntityStargateControl otherGate = this.getOtherGate();
+		// Translates the address.
+		StargateCoordinates destination = WorldStargateData.getInstance().getCoordinates(address);
 		
-		if(otherGate == null) {
-			StargateMod.instance.log("Wrong number ! try again ! XD");
+		// If there is no gate registered with that adress, launches a false activation.
+		if(destination == null) {
+			StargateMod.instance.log("No gate registered with the address \"" + address + "\". Wrong number, try again ! XD");
 			this.setActivating(GateActivationType.FAILED, activationSequence);
 			return;
 		}
 		
+		// Registers the destination.
+		this.setDestination(destination);
+		
+		// If the given coordinates are those of that gate, launches a false activation.
+		if(destination.dim == this.getDimension() && destination.x == this.xCoord && destination.y == this.yCoord && destination.z == this.zCoord) {
+			StargateMod.instance.log("The input gate can't be the output gate ! >.<");
+			this.setActivating(GateActivationType.FAILED, activationSequence);
+			return;
+		}
+		
+		// Gets the tile entity of the other gate control unit.
+		TileEntityStargateControl otherGate = this.getOtherGate();
+		
 		// If the output gate can't be activated, launches a false activation.
-		if(!otherGate.isActivable()) {
+		if(otherGate == null || !otherGate.isActivable()) {
 			StargateMod.instance.log("The gate you are trying to call is currently busy, please try again later... XD");
 			this.setActivating(GateActivationType.FAILED, activationSequence);
 			return;
@@ -1261,6 +1257,8 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	 */
 	@Override
 	public void updateEntity() {
+		super.updateEntity();
+		
 		// If server side.
 		if(!this.worldObj.isRemote) {
 			// Updates counter.
@@ -1381,7 +1379,6 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 				default:
 			}
 		}
-		super.updateEntity();
 	}
 	
 	/**
@@ -1478,7 +1475,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 	 */
 	private static boolean isBlockReplaceableByKawoosh(World world, int x, int y, int z) {
 		Block block = Block.blocksList[world.getBlockId(x, y, z)];
-		return block == null || !(block instanceof BlockKawoosh || block instanceof BlockStargatePart || block instanceof BlockStargateControl || block instanceof BlockBaseStargateConsole || block instanceof BlockPanelStargateConsole);
+		return block == null || !(block instanceof BlockKawoosh || block instanceof BlockStargatePart || block instanceof BlockStargateControl || block instanceof BlockConsoleBase || block instanceof BlockConsolePanel);
 	}
 	
 	/**
@@ -1567,11 +1564,7 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 				chevron.setGate(this.xCoord, this.yCoord, this.zCoord);
 				chevron.setNo(no);
 				
-				StargateMod.instance.log("Chevron " + no + " updated.");
 				return true;
-			}
-			else {
-				StargateMod.instance.log("Chevron " + no + " : no update needed.");
 			}
 		}
 		
@@ -2119,44 +2112,6 @@ public class TileEntityStargateControl extends TileEntityGuiScreen {
 		compound.setBoolean("otherGateShieldActivated", this.otherGateShieldActivated);
 		
 		compound.setCompoundTag("destination", this.destination.getCompound());
-	}
-	
-	@Override
-	protected void getTileEntityData(DataOutputStream output) throws IOException {
-		super.getTileEntityData(output);
-		
-		output.writeUTF(this.address);
-		output.writeInt(this.state.getValue());
-		output.writeInt(this.activationType.getValue());
-		output.writeInt(this.activationSequence.getValue());
-		output.writeInt(this.activationState.getValue());
-		output.writeInt(this.kawooshState.getValue());
-		output.writeBoolean(this.shieldActivated);
-		output.writeBoolean(this.shieldAutomated);
-		output.writeInt(this.code);
-		output.writeInt(this.count);
-		output.writeBoolean(this.otherGateShieldActivated);
-		
-		this.destination.writeData(output);
-	}
-	
-	@Override
-	protected void loadEntityData(DataInputStream input) throws IOException {
-		super.loadEntityData(input);
-		
-		this.address = input.readUTF();
-		this.state = GateState.valueOf(input.readInt());
-		this.activationType = GateActivationType.valueOf(input.readInt());
-		this.activationSequence = GateActivationSequence.valueOf(input.readInt());
-		this.activationState = GateActivationState.valueOf(input.readInt());
-		this.kawooshState = GateKawooshState.valueOf(input.readInt());
-		this.shieldActivated = input.readBoolean();
-		this.shieldAutomated = input.readBoolean();
-		this.code = input.readInt();
-		this.count = input.readInt();
-		this.otherGateShieldActivated = input.readBoolean();
-		
-		this.destination.readData(input);
 	}
 	
 }

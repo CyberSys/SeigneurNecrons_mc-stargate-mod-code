@@ -1,12 +1,18 @@
 package seigneurnecron.minecraftmods.stargate.gui;
 
-import static seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl.INV_NAME;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.BACKGROUND_COLOR;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.BUTTON_HEIGHT;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.FIELD_HEIGHT;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.LIGHT_BLUE;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.MARGIN;
+import static seigneurnecron.minecraftmods.stargate.gui.GuiDhd.DHD_MARGIN;
 
 import java.util.logging.Level;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
+import seigneurnecron.minecraftmods.core.gui.GuiScreenTileEntity;
 import seigneurnecron.minecraftmods.core.gui.Label;
 import seigneurnecron.minecraftmods.core.gui.Panel;
 import seigneurnecron.minecraftmods.core.mod.ModBase;
@@ -24,11 +30,13 @@ import seigneurnecron.minecraftmods.stargate.tools.loadable.BlockCoordinates;
 /**
  * @author Seigneur Necron
  */
-public class GuiStargateControl extends GuiScreen<TileEntityStargateControl> {
+public class GuiStargateControl extends GuiScreenTileEntity<TileEntityStargateControl> {
 	
 	// ####################################################################################################
 	// Lang constants :
 	// ####################################################################################################
+	
+	public static final String INV_NAME = "container.stargateControl";
 	
 	public static final String DEFAULT_ADDRESS = INV_NAME + ".defaultAddress";
 	public static final String CUSTOM_ADDRESS = INV_NAME + ".customAddress";
@@ -78,10 +86,13 @@ public class GuiStargateControl extends GuiScreen<TileEntityStargateControl> {
 	// ####################################################################################################
 	
 	@Override
+	public void drawDefaultBackground() {
+		this.panel_main.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
+	}
+	
+	@Override
 	public void drawScreen(int par1, int par2, float par3) {
 		super.drawScreen(par1, par2, par3);
-		
-		this.panel_main.drawBox(GRAY);
 		
 		this.addressBar1.drawScreen();
 		this.addressBar2.drawScreen();
@@ -127,7 +138,7 @@ public class GuiStargateControl extends GuiScreen<TileEntityStargateControl> {
 		this.label_address = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, stringSize_address, string_address), false);
 		this.addressBar2 = this.addComponent(new AddressBarGateCreation(this.panel_main, this.stargateFontRenderer, fieldOffset_address, this.nextYPos, fieldSize_address, this.tileEntity.getDimension()));
 		this.button_custom = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(CREATE_WITH_CUSTOM_ADDRESS)));
-		this.button_cancel = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.cancel") + I18n.func_135053_a(GuiScreen.ESC)));
+		this.button_cancel = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.cancel") + I18n.func_135053_a(GuiScreenTileEntity.ESC)));
 		
 		// Dhd :
 		
