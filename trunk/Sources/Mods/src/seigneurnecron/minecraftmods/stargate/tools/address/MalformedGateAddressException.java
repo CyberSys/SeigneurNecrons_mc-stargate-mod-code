@@ -1,0 +1,22 @@
+package seigneurnecron.minecraftmods.stargate.tools.address;
+
+/**
+ * @author Seigneur Necron
+ */
+public class MalformedGateAddressException extends Exception {
+	
+	// Constants :
+	
+	private static final long serialVersionUID = 1L;
+	
+	// Constructors :
+	
+	public MalformedGateAddressException() {
+		super();
+	}
+	
+	public MalformedGateAddressException(String message) {
+		super(message);
+	}
+	
+}
