@@ -95,10 +95,10 @@ public class GuiDetector extends GuiScreenTileEntity<TileEntityDetector> {
 		
 		// Strings :
 		
-		String string_range = I18n.func_135053_a(RANGE) + " : ";
+		String string_range = I18n.getString(RANGE) + " : ";
 		
-		this.string_invertedOutput = I18n.func_135053_a(INVERTED_OUTPUT);
-		this.string_normalOutput = I18n.func_135053_a(NORMAL_OUTPUT);
+		this.string_invertedOutput = I18n.getString(INVERTED_OUTPUT);
+		this.string_normalOutput = I18n.getString(NORMAL_OUTPUT);
 		
 		// Component sizes :
 		
@@ -110,13 +110,13 @@ public class GuiDetector extends GuiScreenTileEntity<TileEntityDetector> {
 		// Fields and buttons :
 		
 		this.nextYPos = MARGIN;
-		this.label_invName = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(INV_NAME), true));
+		this.label_invName = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, I18n.getString(INV_NAME), true));
 		this.label_range = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, stringSize, string_range), false);
 		this.field_range = this.addComponent(new IntegerField(this.panel_main, this.fontRenderer, fieldOffset, this.nextYPos, fieldSize, this.tileEntity.getRange()));
-		this.label_rangeLimits = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(RANGE_LIMITS), true));
+		this.label_rangeLimits = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, I18n.getString(RANGE_LIMITS), true));
 		this.label_output = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, "", true));
-		this.button_invert = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(INVERT_BUTTON) + I18n.func_135053_a(GuiScreenTileEntity.TAB)));
-		this.button_done = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.done") + I18n.func_135053_a(GuiScreenTileEntity.ESC)));
+		this.button_invert = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.getString(INVERT_BUTTON) + I18n.getString(KEY_TAB)));
+		this.button_done = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.getString(GUI_DONE) + I18n.getString(KEY_ESC)));
 	}
 	
 	// ####################################################################################################

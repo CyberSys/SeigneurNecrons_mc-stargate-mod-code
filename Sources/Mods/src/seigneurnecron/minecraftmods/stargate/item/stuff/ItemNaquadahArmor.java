@@ -19,7 +19,7 @@ public abstract class ItemNaquadahArmor extends ItemArmor {
 	public ItemNaquadahArmor(String name, int renderId, int armorType) {
 		super(StargateMod.instance.getConfig().getItemId(name), StargateMod.naquadahArmorMaterial, renderId, armorType);
 		this.setUnlocalizedName(name);
-		this.func_111206_d(name); // setIconName(name)
+		this.setTextureName(name);
 		this.setCreativeTab(StargateMod.stargateItemsTab);
 	}
 	
@@ -28,7 +28,7 @@ public abstract class ItemNaquadahArmor extends ItemArmor {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		this.itemIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111208_A()); // getIconName()
+		this.itemIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.getIconString());
 	}
 	
 	@Override

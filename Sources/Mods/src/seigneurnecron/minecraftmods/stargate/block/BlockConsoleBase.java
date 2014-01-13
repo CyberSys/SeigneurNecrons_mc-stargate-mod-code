@@ -85,7 +85,7 @@ public class BlockConsoleBase extends BlockGuiContainer {
 	public void registerIcons(IconRegister iconRegister) {
 		this.naquadaIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + StargateMod.blockName_naquadahAlloy);
 		
-		String blockName = StargateMod.instance.getAssetPrefix() + this.func_111023_E();
+		String blockName = StargateMod.instance.getAssetPrefix() + this.getTextureName();
 		
 		for(int i = 0; i < 4; i++) {
 			this.defaultIcons[i] = iconRegister.registerIcon(blockName + "_Default" + i);

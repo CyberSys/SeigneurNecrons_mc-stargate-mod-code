@@ -11,6 +11,8 @@ import net.minecraft.tileentity.TileEntity;
  */
 public interface Command {
 	
+	// Methids :
+	
 	public void run(TileEntity tileEntity, DataInputStream input, EntityPlayer player) throws IOException;
 	
 }

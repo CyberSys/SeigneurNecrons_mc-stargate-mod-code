@@ -113,8 +113,8 @@ public class GuiStargateControl extends GuiScreenTileEntity<TileEntityStargateCo
 		
 		// Strings :
 		
-		String string_defaultAddress = I18n.func_135053_a(DEFAULT_ADDRESS) + " : ";
-		String string_address = I18n.func_135053_a(GuiDhd.ADDRESS) + " : ";
+		String string_defaultAddress = I18n.getString(DEFAULT_ADDRESS) + " : ";
+		String string_address = I18n.getString(GuiDhd.ADDRESS) + " : ";
 		
 		// Component sizes :
 		
@@ -129,16 +129,16 @@ public class GuiStargateControl extends GuiScreenTileEntity<TileEntityStargateCo
 		// Fields and buttons :
 		
 		this.nextYPos = MARGIN;
-		this.label_invName = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(INV_NAME) + " - " + I18n.func_135053_a(ADDRESS_SELECTION), true));
+		this.label_invName = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, I18n.getString(INV_NAME) + " - " + I18n.getString(ADDRESS_SELECTION), true));
 		this.label_defaultAddress = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, stringSize_defaultAddress, string_defaultAddress), false);
 		this.addressBar1 = this.addComponent(new AddressBar(this.panel_main, this.stargateFontRenderer, fieldOffset_defaultAddress, this.nextYPos, fieldSize_defaultAddress, false));
-		this.button_default = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(CREATE_WITH_DEFAULT_ADDRESS)));
-		this.label_customAddress = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(CUSTOM_ADDRESS) + " : "));
+		this.button_default = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.getString(CREATE_WITH_DEFAULT_ADDRESS)));
+		this.label_customAddress = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, I18n.getString(CUSTOM_ADDRESS) + " : "));
 		this.dhdPanel = this.addComponent(new DhdPanelGateCreation(this.panel_main, this.stargateFontRenderer, MARGIN, this.nextYPos, buttonSize));
 		this.label_address = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, stringSize_address, string_address), false);
 		this.addressBar2 = this.addComponent(new AddressBarGateCreation(this.panel_main, this.stargateFontRenderer, fieldOffset_address, this.nextYPos, fieldSize_address, this.tileEntity.getDimension()));
-		this.button_custom = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(CREATE_WITH_CUSTOM_ADDRESS)));
-		this.button_cancel = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.cancel") + I18n.func_135053_a(GuiScreenTileEntity.ESC)));
+		this.button_custom = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.getString(CREATE_WITH_CUSTOM_ADDRESS)));
+		this.button_cancel = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.getString(GUI_CANCEL) + I18n.getString(KEY_ESC)));
 		
 		// Dhd :
 		

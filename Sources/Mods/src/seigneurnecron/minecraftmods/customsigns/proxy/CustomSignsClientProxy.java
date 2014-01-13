@@ -9,6 +9,8 @@ import cpw.mods.fml.client.registry.ClientRegistry;
  */
 public class CustomSignsClientProxy extends CustomSignsCommonProxy {
 	
+	// Methods :
+	
 	@Override
 	public void registerRenderers() {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntitySign.class, new TileEntitySignCustomRenderer());

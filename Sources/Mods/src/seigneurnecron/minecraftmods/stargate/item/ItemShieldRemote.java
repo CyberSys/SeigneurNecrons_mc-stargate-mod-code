@@ -4,13 +4,13 @@ import java.util.LinkedList;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.src.ModLoader;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.gui.GuiShieldRemote;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStargate;
+import cpw.mods.fml.client.FMLClientHandler;
 
 /**
  * @author Seigneur Necron
@@ -31,7 +31,7 @@ public class ItemShieldRemote extends ItemStargate {
 			TileEntityStargateControl stargate = this.getNearestActivatedGate(world, (int) player.posX, (int) player.posY, (int) player.posZ);
 			
 			if(stargate != null) {
-				ModLoader.openGUI(player, new GuiShieldRemote(stargate, player));
+				FMLClientHandler.instance().displayGuiScreen(player, new GuiShieldRemote(stargate, player));
 			}
 		}
 		

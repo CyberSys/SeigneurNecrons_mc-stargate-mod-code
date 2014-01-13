@@ -20,7 +20,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class TextField extends GuiTextField implements Component {
 	
-	// Field :
+	// Fields :
 	
 	protected final int width;
 	protected final int height;

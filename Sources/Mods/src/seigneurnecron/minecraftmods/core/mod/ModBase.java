@@ -4,6 +4,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockDispenser;
 import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.entity.Entity;
@@ -11,7 +12,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.src.ModLoader;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
@@ -20,6 +20,7 @@ import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.MinecraftForge;
 import seigneurnecron.minecraftmods.core.SeigneurNecronMod;
 import seigneurnecron.minecraftmods.core.SeigneurNecronModConfig;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.IWorldGenerator;
@@ -226,7 +227,7 @@ public abstract class ModBase<M extends ModBase, C extends ModConfig> {
 	 * @param behavior - the dispenser behavior.
 	 */
 	protected void registerDispenserBehavior(Item item, IBehaviorDispenseItem behavior) {
-		ModLoader.addDispenserBehavior(item, behavior);
+		BlockDispenser.dispenseBehaviorRegistry.putObject(item, behavior);
 	}
 	
 	/**
@@ -338,7 +339,7 @@ public abstract class ModBase<M extends ModBase, C extends ModConfig> {
 	 * @return the server world corresponding to the dimension id if it exists, else null.
 	 */
 	public static WorldServer getServerWorldForDimension(int dim) {
-		return ModLoader.getMinecraftServerInstance().worldServerForDimension(dim);
+		return FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dim);
 	}
 	
 	/**
@@ -347,7 +348,7 @@ public abstract class ModBase<M extends ModBase, C extends ModConfig> {
 	 * @return the client world corresponding to the dimension id if it exists, else null.
 	 */
 	public static WorldClient getClientWorldForDimension(int dim) {
-		WorldClient world = ModLoader.getMinecraftInstance().theWorld;
+		WorldClient world = FMLClientHandler.instance().getClient().theWorld;
 		
 		if(world != null && world.provider.dimensionId != dim) {
 			return null;

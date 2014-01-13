@@ -1,6 +1,7 @@
 package seigneurnecron.minecraftmods.core.gui;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.Tessellator;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -124,6 +125,26 @@ public interface ComponentContainer extends Component {
 	 * @param extendedLikeFields - whether the box must be extended by one pixel.
 	 */
 	public void drawBox(int xPos, int yPos, int width, int height, int borderColor, int boxColor, boolean extendedLikeFields);
+	
+	/**
+	 * Adds a vertex to a Tessellator buffer.
+	 * @param tessellator - the tessellator.
+	 * @param x - the X position.
+	 * @param y - the Y position.
+	 * @param z - the Z position.
+	 * @param u - the texture U.
+	 * @param v - the texture V.
+	 */
+	public void addVertexWithUV(Tessellator tessellator, double x, double y, double z, double u, double v);
+	
+	/**
+	 * Adds a vertex to a tessellator buffer.
+	 * @param tessellator - the tessellator.
+	 * @param x - the X position.
+	 * @param y - the Y position.
+	 * @param z - the Z position.
+	 */
+	public void addVertex(Tessellator tessellator, double x, double y, double z);
 	
 	/**
 	 * Adds a component to this container and increment the next Y position.

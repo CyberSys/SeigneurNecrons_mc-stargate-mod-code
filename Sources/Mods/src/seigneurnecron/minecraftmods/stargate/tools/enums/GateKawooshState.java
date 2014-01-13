@@ -74,7 +74,7 @@ public enum GateKawooshState {
 		if(size.length > TileEntityStargateControl.MAX_KAWOOSH_LENGHT) {
 			throw(new RuntimeException(new IllegalArgumentException("The size table of a kawoosh state must be beetwen 0 and " + TileEntityStargateControl.MAX_KAWOOSH_LENGHT)));
 		}
-		new RuntimeException("");
+		
 		for(int i : size) {
 			if(i < 0 || i > TileEntityStargateControl.MAX_KAWOOSH_WIDTH) {
 				throw(new RuntimeException(new IllegalArgumentException("The values in the size table of a kawoosh state must be beetwen 0 and " + TileEntityStargateControl.MAX_KAWOOSH_WIDTH)));

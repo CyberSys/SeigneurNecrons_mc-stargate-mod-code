@@ -11,8 +11,10 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.renderer.Tessellator;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import seigneurnecron.minecraftmods.core.SeigneurNecronMod;
 import seigneurnecron.minecraftmods.core.reflection.Reflection;
@@ -29,6 +31,19 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public abstract class GuiScreenBasic extends GuiScreen implements ComponentContainer {
+	
+	// ####################################################################################################
+	// Lang constants :
+	// ####################################################################################################
+	
+	public static final String INV_NAME_SCREEN = "container.screenBasic";
+	
+	public static final String KEY_ENTER = INV_NAME_SCREEN + ".enter";
+	public static final String KEY_TAB = INV_NAME_SCREEN + ".tab";
+	public static final String KEY_ESC = INV_NAME_SCREEN + ".esc";
+	
+	public static final String GUI_CANCEL = "gui.cancel";
+	public static final String GUI_DONE = "gui.done";
 	
 	// ####################################################################################################
 	// Reflection :
@@ -163,6 +178,18 @@ public abstract class GuiScreenBasic extends GuiScreen implements ComponentConta
 		if(boxColor != TRANSPARENT) {
 			drawRect(xPos + 1, yPos + 1, xPos + width - 1, yPos + height - 1, boxColor);
 		}
+	}
+	
+	@Override
+	public void addVertexWithUV(Tessellator tessellator, double x, double y, double z, double u, double v) {
+		// WARNING : This method is different from the GuiContainerBasic one.
+		tessellator.addVertexWithUV(x, y, z, u, v);
+	}
+	
+	@Override
+	public void addVertex(Tessellator tessellator, double x, double y, double z) {
+		// WARNING : This method is different from the GuiContainerBasic one.
+		tessellator.addVertex(x, y, z);
 	}
 	
 	@Override
@@ -407,6 +434,22 @@ public abstract class GuiScreenBasic extends GuiScreen implements ComponentConta
 	 */
 	protected boolean closeLikeInventory() {
 		return true;
+	}
+	
+	/**
+	 * Returns the X position of the mouse during the last mouse event.
+	 * @return the X position of the mouse during the last mouse event.
+	 */
+	protected final int getMouseXFromEvent() {
+		return Mouse.getEventX() * this.width / this.mc.displayWidth;
+	}
+	
+	/**
+	 * Returns the Y position of the mouse during the last mouse event.
+	 * @return the Y position of the mouse during the last mouse event.
+	 */
+	protected final int getMouseYFromEvent() {
+		return this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
 	}
 	
 	// ####################################################################################################

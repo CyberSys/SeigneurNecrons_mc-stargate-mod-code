@@ -16,7 +16,7 @@ public class SeigneurNecronModConfig extends ModConfig<SeigneurNecronMod> {
 	
 	// Configuration fields :
 	
-	@Config(comment = "THIS MUST BE TRUE or the mod will not work correctly. This is only used to test the mod in Eclipse while developing.")
+	@Config(comment = "THIS MUST BE TRUE or the mod will not work correctly. \"false\" is only used to test the mod in Eclipse while developing.")
 	public boolean obfuscated = true;
 	
 	// Obfuscated name fields :

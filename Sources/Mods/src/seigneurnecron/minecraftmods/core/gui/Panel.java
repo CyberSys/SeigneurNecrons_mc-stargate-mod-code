@@ -2,6 +2,7 @@ package seigneurnecron.minecraftmods.core.gui;
 
 import static seigneurnecron.minecraftmods.core.gui.GuiConstants.TRANSPARENT;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.Tessellator;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -122,6 +123,16 @@ public class Panel implements ComponentContainer {
 	@Override
 	public void drawBox(int xPos, int yPos, int width, int height, int borderColor, int boxColor, boolean extendedLikeFields) {
 		this.parent.drawBox(xPos + this.xPos, yPos + this.yPos, width, height, borderColor, boxColor, extendedLikeFields);
+	}
+	
+	@Override
+	public void addVertexWithUV(Tessellator tessellator, double x, double y, double z, double u, double v) {
+		this.parent.addVertexWithUV(tessellator, x + this.xPos, y + this.yPos, z, u, v);
+	}
+	
+	@Override
+	public void addVertex(Tessellator tessellator, double x, double y, double z) {
+		this.parent.addVertex(tessellator, x + this.xPos, y + this.yPos, z);
 	}
 	
 	@Override

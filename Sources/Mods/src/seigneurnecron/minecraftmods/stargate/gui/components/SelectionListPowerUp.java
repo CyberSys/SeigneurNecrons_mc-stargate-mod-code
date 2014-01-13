@@ -2,9 +2,11 @@ package seigneurnecron.minecraftmods.stargate.gui.components;
 
 import static seigneurnecron.minecraftmods.core.gui.GuiConstants.GREEN;
 import static seigneurnecron.minecraftmods.core.gui.GuiConstants.RED;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import seigneurnecron.minecraftmods.core.gui.ListProviderGui;
+import seigneurnecron.minecraftmods.core.gui.ComponentContainer;
+import seigneurnecron.minecraftmods.core.gui.ListProviderSelectTwoLines;
 import seigneurnecron.minecraftmods.core.gui.SelectionListInventory;
 import seigneurnecron.minecraftmods.stargate.gui.GuiStuffLevelUpTable;
 import seigneurnecron.minecraftmods.stargate.tools.enchant.EnchantmentTools;
@@ -25,17 +27,17 @@ public class SelectionListPowerUp extends SelectionListInventory<PowerUp> {
 	
 	// Constructors :
 	
-	public SelectionListPowerUp(ListProviderGui<PowerUp> gui, int xPos, int yPos, int width, int height, EntityPlayer player) {
-		super(gui, xPos, yPos, width, height, player);
-		this.cost = I18n.func_135053_a(GuiStuffLevelUpTable.COST);
-		this.levels = I18n.func_135053_a(GuiStuffLevelUpTable.LEVELS);
+	public SelectionListPowerUp(ComponentContainer parent, int xPos, int yPos, int width, int height, Minecraft minecraft, ListProviderSelectTwoLines<PowerUp> listProvider, EntityPlayer player) {
+		super(parent, xPos, yPos, width, height, minecraft, listProvider, player);
+		this.cost = I18n.getString(GuiStuffLevelUpTable.COST);
+		this.levels = I18n.getString(GuiStuffLevelUpTable.LEVELS);
 	}
 	
 	// Methods :
 	
 	@Override
 	protected String getName(PowerUp element) {
-		return I18n.func_135053_a(element.enchant.getName()) + " " + element.level;
+		return I18n.getString(element.enchant.getName()) + " " + element.level;
 	}
 	
 	@Override

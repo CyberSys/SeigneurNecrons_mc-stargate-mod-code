@@ -1,11 +1,12 @@
 package seigneurnecron.minecraftmods.stargate.tileentity.console;
 
+import static seigneurnecron.minecraftmods.stargate.inventory.InventoryConsoleBase.NB_CRYSTALS;
+
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.logging.Level;
 
 import net.minecraft.entity.player.EntityPlayer;
@@ -15,6 +16,8 @@ import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.item.ItemCrystal;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 
+import com.google.common.collect.ImmutableList;
+
 /**
  * @author Seigneur Necron
  */
@@ -22,21 +25,28 @@ public abstract class Console {
 	
 	// Static part :
 	
-	public static final String CONSOLE_NAMES_PREFIX = "container.console.";
+	private static final String CONSOLE_PREFIX = "container.console.";
+	public static final String CONSOLE_NAME_PREFIX = CONSOLE_PREFIX + "name.";
+	public static final String CONSOLE_INFO_PREFIX = CONSOLE_PREFIX + "info.";
 	
 	private static Map<ArrayList<ItemCrystal>, Class<? extends Console>> crystalsToConsoleMap = new HashMap<ArrayList<ItemCrystal>, Class<? extends Console>>();
 	private static Map<Class<? extends Console>, String> consoleToNameMap = new HashMap<Class<? extends Console>, String>();
 	
 	public static void registerConsole(ArrayList<ItemCrystal> crystals, Class<? extends Console> console, String name) {
-		if(!crystalsToConsoleMap.containsKey(crystals)) {
-			crystalsToConsoleMap.put(crystals, console);
-			
-			if(!consoleToNameMap.containsKey(console)) {
-				consoleToNameMap.put(console, name);
+		if(crystals != null && crystals.size() <= NB_CRYSTALS) {
+			if(!crystalsToConsoleMap.containsKey(crystals)) {
+				crystalsToConsoleMap.put(crystals, console);
+				
+				if(!consoleToNameMap.containsKey(console)) {
+					consoleToNameMap.put(console, name);
+				}
+			}
+			else {
+				StargateMod.instance.log("Error : this crystal set is already registered in the console map.", Level.SEVERE);
 			}
 		}
 		else {
-			StargateMod.instance.log("Error : this crystal set is already registered in the console map.", Level.SEVERE);
+			StargateMod.instance.log("Error : the crystal set must be not null and contain at most " + NB_CRYSTALS + " crystals.", Level.SEVERE);
 		}
 	}
 	
@@ -74,12 +84,12 @@ public abstract class Console {
 		return consoleToNameMap.get(clazz);
 	}
 	
-	public static Set<Entry<ArrayList<ItemCrystal>, Class<? extends Console>>> getValidCristalSets() {
-		return crystalsToConsoleMap.entrySet();
+	public static ImmutableList<Entry<ArrayList<ItemCrystal>, Class<? extends Console>>> getValidCristalSets() {
+		return ImmutableList.copyOf(crystalsToConsoleMap.entrySet());
 	}
 	
-	public static Set<Entry<Class<? extends Console>, String>> getConsoles() {
-		return consoleToNameMap.entrySet();
+	public static ImmutableList<Entry<Class<? extends Console>, String>> getConsoles() {
+		return ImmutableList.copyOf(consoleToNameMap.entrySet());
 	}
 	
 	// Fields :

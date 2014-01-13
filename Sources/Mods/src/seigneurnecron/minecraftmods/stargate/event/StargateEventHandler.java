@@ -15,6 +15,7 @@ import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.living.LivingDropsEvent;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
+import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.entity.damagesource.CustomDamageSource;
 import seigneurnecron.minecraftmods.stargate.item.ItemSoul;
 import seigneurnecron.minecraftmods.stargate.item.ItemSoulCrystalFull;
@@ -98,7 +99,7 @@ public class StargateEventHandler {
 					NBTTagCompound tag = new NBTTagCompound(TAG);
 					tag.setInteger(MONSTER_ID, monsterId);
 					
-					ItemStack itemStack = new ItemStack(crystal);
+					ItemStack itemStack = new ItemStack(StargateMod.item_soul);
 					itemStack.setTagCompound(tag);
 					
 					EntityItem entityItem = new EntityItem(event.entity.worldObj, event.entity.posX, event.entity.posY, event.entity.posZ, itemStack);

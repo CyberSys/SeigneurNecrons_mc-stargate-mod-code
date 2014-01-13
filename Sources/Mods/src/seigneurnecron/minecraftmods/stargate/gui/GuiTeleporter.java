@@ -17,10 +17,9 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import seigneurnecron.minecraftmods.core.gui.GuiScreenTileEntity;
 import seigneurnecron.minecraftmods.core.gui.IntegerField;
 import seigneurnecron.minecraftmods.core.gui.Label;
-import seigneurnecron.minecraftmods.core.gui.ListProviderGui;
+import seigneurnecron.minecraftmods.core.gui.ListProviderSelectTwoLines;
 import seigneurnecron.minecraftmods.core.gui.Panel;
 import seigneurnecron.minecraftmods.core.gui.TextField;
 import seigneurnecron.minecraftmods.core.mod.ModBase;
@@ -37,7 +36,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Seigneur Necron
  */
 @SideOnly(Side.CLIENT)
-public class GuiTeleporter extends GuiScreenConsolePanel<ConsoleTeleporter> implements ListProviderGui<Teleporter> {
+public class GuiTeleporter extends GuiScreenConsolePanel<ConsoleTeleporter> implements ListProviderSelectTwoLines<Teleporter> {
 	
 	// ####################################################################################################
 	// Lang constants :
@@ -137,7 +136,7 @@ public class GuiTeleporter extends GuiScreenConsolePanel<ConsoleTeleporter> impl
 	@Override
 	protected void drawForeground(int par1, int par2) {
 		super.drawForeground(par1, par2);
-		this.selectionList.drawScreen(par1, par2);
+		this.selectionList.drawList(par1, par2);
 	}
 	
 	@Override
@@ -177,14 +176,14 @@ public class GuiTeleporter extends GuiScreenConsolePanel<ConsoleTeleporter> impl
 			}
 		}
 		
-		String string_name = I18n.func_135053_a(NAME) + " : ";
+		String string_name = I18n.getString(NAME) + " : ";
 		
-		this.string_tab = I18n.func_135053_a(TAB);
-		this.string_all = I18n.func_135053_a(ALL);
-		this.string_inRange = I18n.func_135053_a(IN_RANGE);
-		this.string_messageOk = I18n.func_135053_a(MESSAGE_OK);
-		this.string_messageOutOfRange = I18n.func_135053_a(MESSAGE_OUT_OF_RANGE);
-		this.string_messageInvalid = I18n.func_135053_a(MESSAGE_INVALID);
+		this.string_tab = I18n.getString(TAB);
+		this.string_all = I18n.getString(ALL);
+		this.string_inRange = I18n.getString(IN_RANGE);
+		this.string_messageOk = I18n.getString(MESSAGE_OK);
+		this.string_messageOutOfRange = I18n.getString(MESSAGE_OUT_OF_RANGE);
+		this.string_messageInvalid = I18n.getString(MESSAGE_INVALID);
 		
 		// Component sizes :
 		
@@ -208,14 +207,14 @@ public class GuiTeleporter extends GuiScreenConsolePanel<ConsoleTeleporter> impl
 		// Components :
 		
 		this.nextYPos = MARGIN;
-		this.label_invName = this.addComponent(new Label(this.panel_information, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a(INV_NAME), true));
-		this.label_coordinates = this.addComponent(new Label(this.panel_information, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a(COORDINATES) + " : " + coords, true));
+		this.label_invName = this.addComponent(new Label(this.panel_information, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_main, I18n.getString(INV_NAME), true));
+		this.label_coordinates = this.addComponent(new Label(this.panel_information, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_main, I18n.getString(COORDINATES) + " : " + coords, true));
 		this.label_name1 = this.addComponent(new Label(this.panel_information, this.fontRenderer, MARGIN, this.nextYPos, stringSize, string_name), false);
 		this.field_name1 = this.addComponent(new TextField(this.panel_information, this.fontRenderer, fieldOffset, this.nextYPos, fieldSize, teleporterName));
-		this.button_addThis = this.addComponent(new StargateButton(this.panel_information, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a(ADD_THIS)));
+		this.button_addThis = this.addComponent(new StargateButton(this.panel_information, MARGIN, this.nextYPos, buttonSize_main, I18n.getString(ADD_THIS)));
 		
 		this.nextYPos = MARGIN;
-		this.label_destination = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a(DESTINATION), true));
+		this.label_destination = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_main, I18n.getString(DESTINATION), true));
 		this.label_x = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, stringSize, "x : "), false);
 		this.field_x = this.addComponent(new IntegerField(this.panel_main, this.fontRenderer, fieldOffset, this.nextYPos, fieldSize));
 		this.label_y = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, stringSize, "y : "), false);
@@ -226,21 +225,20 @@ public class GuiTeleporter extends GuiScreenConsolePanel<ConsoleTeleporter> impl
 		this.field_name2 = this.addComponent(new TextField(this.panel_main, this.fontRenderer, fieldOffset, this.nextYPos, fieldSize));
 		this.nextYPos += this.offset;
 		this.label_message = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_main, "", true));
-		this.button_teleport = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a(TELEPORT) + I18n.func_135053_a(GuiScreenTileEntity.ENTER)));
-		this.button_cancel = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a("gui.cancel") + I18n.func_135053_a(GuiScreenTileEntity.ESC)));
+		this.button_teleport = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize_main, I18n.getString(TELEPORT) + I18n.getString(KEY_ENTER)));
+		this.button_cancel = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize_main, I18n.getString(GUI_CANCEL) + I18n.getString(KEY_ESC)));
 		
 		this.nextYPos = MARGIN;
 		this.label_tab = this.addComponent(new Label(this.panel_listButtons, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_listButtons, "", true));
 		this.button_inRange = this.addComponent(new StargateButton(this.panel_listButtons, MARGIN, this.nextYPos, buttonSize_listButtons_1, this.string_inRange), false);
 		this.button_all = this.addComponent(new StargateButton(this.panel_listButtons, buttonSize_listButtons_1 + (2 * MARGIN), this.nextYPos, buttonSize_listButtons_1, this.string_all));
-		this.button_delete = this.addComponent(new StargateButton(this.panel_listButtons, MARGIN, this.nextYPos, buttonSize_listButtons_2, I18n.func_135053_a(DELETE)), false);
-		this.button_overwrite = this.addComponent(new StargateButton(this.panel_listButtons, buttonSize_listButtons_2 + (2 * MARGIN), this.nextYPos, buttonSize_listButtons_2, I18n.func_135053_a(OVERWRITE)), false);
-		this.button_add = this.addComponent(new StargateButton(this.panel_listButtons, (2 * buttonSize_listButtons_2) + (3 * MARGIN), this.nextYPos, buttonSize_listButtons_2, I18n.func_135053_a(ADD)));
+		this.button_delete = this.addComponent(new StargateButton(this.panel_listButtons, MARGIN, this.nextYPos, buttonSize_listButtons_2, I18n.getString(DELETE)), false);
+		this.button_overwrite = this.addComponent(new StargateButton(this.panel_listButtons, buttonSize_listButtons_2 + (2 * MARGIN), this.nextYPos, buttonSize_listButtons_2, I18n.getString(OVERWRITE)), false);
+		this.button_add = this.addComponent(new StargateButton(this.panel_listButtons, (2 * buttonSize_listButtons_2) + (3 * MARGIN), this.nextYPos, buttonSize_listButtons_2, I18n.getString(ADD)));
 		
 		// List :
 		
-		this.selectionList = new SelectionListTeleporter(this, this.panel_listSelect.getXPosInScreen(0) + listMargin, this.panel_listSelect.getYPosInScreen(0) + listMargin, this.panel_listSelect.getComponentWidth() - (2 * listMargin), this.panel_listSelect.getComponentHeight() - (2 * listMargin), this.mc.thePlayer);
-		this.selectionList.registerScrollButtons(this.getNextButtonId(), this.getNextButtonId());
+		this.selectionList = new SelectionListTeleporter(this.panel_listSelect, listMargin, listMargin, this.panel_listSelect.getComponentWidth() - (2 * listMargin), this.panel_listSelect.getComponentHeight() - (2 * listMargin), this.mc, this, this.mc.thePlayer);
 	}
 	
 	// ####################################################################################################
@@ -274,10 +272,13 @@ public class GuiTeleporter extends GuiScreenConsolePanel<ConsoleTeleporter> impl
 			else if(guiButton == this.button_overwrite) {
 				this.overwite();
 			}
-			else {
-				this.selectionList.actionPerformed(guiButton);
-			}
 		}
+	}
+	
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		this.selectionList.handleMouseInput(getMouseXFromEvent(), getMouseYFromEvent());
 	}
 	
 	@Override

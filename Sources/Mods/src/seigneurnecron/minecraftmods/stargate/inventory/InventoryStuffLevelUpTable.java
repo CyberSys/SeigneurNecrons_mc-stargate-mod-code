@@ -26,6 +26,16 @@ public class InventoryStuffLevelUpTable extends InventoryConsolePanel<ConsoleStu
 		super(tileEntity, console);
 	}
 	
+	// Getters :
+	
+	/**
+	 * Returns the item inserted in the stuff slot.
+	 * @return the item inserted in the stuff slot.
+	 */
+	public ItemStack getStuff() {
+		return this.stuff;
+	}
+	
 	// Setters :
 	
 	/**
@@ -53,10 +63,7 @@ public class InventoryStuffLevelUpTable extends InventoryConsolePanel<ConsoleStu
 	
 	@Override
 	public ItemStack getStackInSlot(int index) {
-		if(index == 0) {
-			return this.stuff;
-		}
-		return null;
+		return (index == 0) ? this.stuff : null;
 	}
 	
 	@Override

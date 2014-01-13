@@ -11,16 +11,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 public abstract class GuiScreenTileEntity<T extends TileEntityBasic> extends GuiScreenBasic {
 	
 	// ####################################################################################################
-	// Lang constants :
-	// ####################################################################################################
-	
-	public static final String INV_NAME = "container.screenBasic";
-	
-	public static final String ENTER = INV_NAME + ".enter";
-	public static final String TAB = INV_NAME + ".tab";
-	public static final String ESC = INV_NAME + ".esc";
-	
-	// ####################################################################################################
 	// Data fields :
 	// ####################################################################################################
 	

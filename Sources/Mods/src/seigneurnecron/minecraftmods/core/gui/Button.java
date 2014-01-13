@@ -11,6 +11,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class Button extends GuiButton implements Component {
 	
+	// Constructors :
+	
 	/**
 	 * Create a new Button. <br />
 	 * Warning : the button must be added to a {@link ComponentContainer} using the addComponent(...) method, else the button will have the id 0.
@@ -38,6 +40,8 @@ public class Button extends GuiButton implements Component {
 		this(container, xPos, yPos, width, BUTTON_HEIGHT, text);
 	}
 	
+	// Component interface :
+	
 	@Override
 	public int getComponentWidth() {
 		return this.width;
@@ -47,6 +51,8 @@ public class Button extends GuiButton implements Component {
 	public int getComponentHeight() {
 		return this.height;
 	}
+	
+	// Methods :
 	
 	/**
 	 * Returns the name of the sound to play when the button is clicked.

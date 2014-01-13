@@ -1,9 +1,8 @@
 package seigneurnecron.minecraftmods.stargate.tileentity.console;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.src.ModLoader;
-import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.gui.GuiShieldConsole;
 import seigneurnecron.minecraftmods.stargate.network.packetmapping.StargateCommandPacketMapping;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
@@ -23,12 +22,8 @@ public class ConsoleStargateShield extends ConsoleStargate {
 	// Methods :
 	
 	@Override
-	public boolean openGui(World world, int x, int y, int z, EntityPlayer player) {
-		if(world.isRemote) {
-			ModLoader.openGUI(player, new GuiShieldConsole(this.tileEntity, player, this));
-		}
-		
-		return true;
+	protected GuiScreen getGui(EntityPlayer player) {
+		return new GuiShieldConsole(this.tileEntity, player, this);
 	}
 	
 	/**

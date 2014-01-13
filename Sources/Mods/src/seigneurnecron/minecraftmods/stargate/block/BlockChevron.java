@@ -45,7 +45,7 @@ public class BlockChevron extends BlockStargateSolidPart {
 		for(int i = 1; i <= 9; i++) {
 			this.naquadaIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + StargateMod.blockName_naquadahAlloy);
 			this.chevronIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + StargateMod.blockName_chevron);
-			this.chevronIcons[i - 1] = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111023_E() + "_" + i);
+			this.chevronIcons[i - 1] = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.getTextureName() + "_" + i);
 		}
 		
 		this.blockIcon = this.chevronIcons[6];

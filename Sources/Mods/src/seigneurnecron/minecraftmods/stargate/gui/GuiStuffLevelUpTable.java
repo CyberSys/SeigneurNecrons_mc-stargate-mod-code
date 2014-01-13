@@ -14,7 +14,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import seigneurnecron.minecraftmods.core.gui.Label;
-import seigneurnecron.minecraftmods.core.gui.ListProviderGui;
+import seigneurnecron.minecraftmods.core.gui.ListProviderSelectTwoLines;
 import seigneurnecron.minecraftmods.core.gui.Panel;
 import seigneurnecron.minecraftmods.stargate.gui.components.SelectionListPowerUp;
 import seigneurnecron.minecraftmods.stargate.gui.components.StargateButton;
@@ -29,7 +29,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Seigneur Necron
  */
 @SideOnly(Side.CLIENT)
-public class GuiStuffLevelUpTable extends GuiContainerConsolePanel<ContainerStuffLevelUpTable> implements ListProviderGui<PowerUp> {
+public class GuiStuffLevelUpTable extends GuiContainerConsolePanel<ContainerStuffLevelUpTable> implements ListProviderSelectTwoLines<PowerUp> {
 	
 	// ####################################################################################################
 	// Lang constants :
@@ -78,6 +78,10 @@ public class GuiStuffLevelUpTable extends GuiContainerConsolePanel<ContainerStuf
 	protected void updateComponents() {
 		super.updateComponents();
 		
+		if(!this.getList().contains(this.selectedPowerUp)) {
+			this.selectedPowerUp = null;
+		}
+		
 		int nbBooks = this.container.inventory.console.getNbBooks();
 		boolean booksOk = EnchantmentTools.isThereEnoughtBookCase(this.container.player, nbBooks);
 		boolean xpOk = EnchantmentTools.canPayEnchantCost(this.container.player, this.selectedPowerUp);
@@ -96,7 +100,7 @@ public class GuiStuffLevelUpTable extends GuiContainerConsolePanel<ContainerStuf
 	@Override
 	protected void drawForeground(int par1, int par2) {
 		super.drawForeground(par1, par2);
-		this.selectionList.drawScreen(par1, par2);
+		this.selectionList.drawList(par1, par2);
 	}
 	
 	@Override
@@ -118,7 +122,7 @@ public class GuiStuffLevelUpTable extends GuiContainerConsolePanel<ContainerStuf
 		
 		// Strings :
 		
-		this.string_magicPower = I18n.func_135053_a(MAGIC_POWER) + " : ";
+		this.string_magicPower = I18n.getString(MAGIC_POWER) + " : ";
 		
 		// Component sizes :
 		
@@ -129,12 +133,11 @@ public class GuiStuffLevelUpTable extends GuiContainerConsolePanel<ContainerStuf
 		
 		this.nextYPos = MARGIN;
 		this.label_magicPower = this.addComponent(new Label(this.panel_info, this.fontRenderer, MARGIN, this.nextYPos, labelWidth, ""));
-		this.button_enchant = this.addComponent(new StargateButton(this.panel_info, MARGIN, this.nextYPos, labelWidth, I18n.func_135053_a(ENCHANT)));
+		this.button_enchant = this.addComponent(new StargateButton(this.panel_info, MARGIN, this.nextYPos, labelWidth, I18n.getString(ENCHANT)));
 		
 		// List :
 		
-		this.selectionList = new SelectionListPowerUp(this, this.panel_list.getXPosInScreen(0) + listMargin, this.panel_list.getYPosInScreen(0) + listMargin, this.panel_list.getComponentWidth() - (2 * listMargin), this.panel_list.getComponentHeight() - (2 * listMargin), this.container.player);
-		this.selectionList.registerScrollButtons(this.getNextButtonId(), this.getNextButtonId());
+		this.selectionList = new SelectionListPowerUp(this.panel_list, listMargin, listMargin, this.panel_list.getComponentWidth() - (2 * listMargin), this.panel_list.getComponentHeight() - (2 * listMargin), this.mc, this, this.mc.thePlayer);
 	}
 	
 	// ####################################################################################################
@@ -147,10 +150,13 @@ public class GuiStuffLevelUpTable extends GuiContainerConsolePanel<ContainerStuf
 			if(guiButton == this.button_enchant) {
 				this.enchant();
 			}
-			else {
-				this.selectionList.actionPerformed(guiButton);
-			}
 		}
+	}
+	
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		this.selectionList.handleMouseInput(getMouseXFromEvent(), getMouseYFromEvent());
 	}
 	
 	protected void enchant() {

@@ -1,11 +1,10 @@
 package seigneurnecron.minecraftmods.stargate.tileentity.console;
 
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.network.packet.Packet;
-import net.minecraft.src.ModLoader;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.gui.GuiTeleporter;
 import seigneurnecron.minecraftmods.stargate.network.packetmapping.StargateCommandPacketMapping;
@@ -14,7 +13,7 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 /**
  * @author Seigneur Necron
  */
-public class ConsoleTeleporter extends Console {
+public class ConsoleTeleporter extends ConsoleScreen {
 	
 	// Constants :
 	
@@ -29,12 +28,8 @@ public class ConsoleTeleporter extends Console {
 	// Methods :
 	
 	@Override
-	public boolean openGui(World world, int x, int y, int z, EntityPlayer player) {
-		if(world.isRemote) {
-			ModLoader.openGUI(player, new GuiTeleporter(this.tileEntity, player, this));
-		}
-		
-		return true;
+	protected GuiScreen getGui(EntityPlayer player) {
+		return new GuiTeleporter(this.tileEntity, player, this);
 	}
 	
 	/**

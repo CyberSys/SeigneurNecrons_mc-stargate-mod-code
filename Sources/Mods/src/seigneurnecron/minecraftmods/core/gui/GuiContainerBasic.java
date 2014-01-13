@@ -15,9 +15,11 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import seigneurnecron.minecraftmods.core.inventory.ContainerBasic;
 import cpw.mods.fml.relauncher.Side;
@@ -176,6 +178,18 @@ public abstract class GuiContainerBasic<T extends ContainerBasic> extends GuiCon
 		if(boxColor != TRANSPARENT) {
 			drawRect(xPos + 1, yPos + 1, xPos + width - 1, yPos + height - 1, boxColor);
 		}
+	}
+	
+	@Override
+	public void addVertexWithUV(Tessellator tessellator, double x, double y, double z, double u, double v) {
+		// WARNING : This method is different from the GuiScreenBasic one.
+		tessellator.addVertexWithUV(x - this.guiLeft, y - this.guiTop, z, u, v);
+	}
+	
+	@Override
+	public void addVertex(Tessellator tessellator, double x, double y, double z) {
+		// WARNING : This method is different from the GuiScreenBasic one.
+		tessellator.addVertex(x - this.guiLeft, y - this.guiTop, z);
 	}
 	
 	@Override
@@ -348,6 +362,8 @@ public abstract class GuiContainerBasic<T extends ContainerBasic> extends GuiCon
 		this.panel_inventory = new Panel(this.panel_main, 0, this.panel_container.getBottom() + PANEL_MARGIN, panelWidth, this.container.inventoryHeight());
 		this.panel_toolBar = new Panel(this.panel_main, 0, this.panel_inventory.getBottom() + PANEL_MARGIN, panelWidth, this.container.toolBarHeight());
 		
+		this.slotPanels.clear();
+		
 		for(int i = 0; i < 9; i++) {
 			this.slotPanels.add(new Panel(this.panel_toolBar, firstSlotXPos + i * slotSizePlusMargin, firstSlotYPos, slotSizeWithBorder, slotSizeWithBorder));
 			
@@ -358,11 +374,11 @@ public abstract class GuiContainerBasic<T extends ContainerBasic> extends GuiCon
 		
 		// Labels :
 		
-		String invName = this.fontRenderer.trimStringToWidth(I18n.func_135053_a(this.container.inventory.getInvName()), labelWidth);
+		String invName = this.fontRenderer.trimStringToWidth(I18n.getString(this.container.inventory.getInvName()), labelWidth);
 		
 		this.label_container = this.addComponent(new Label(this.panel_container, this.fontRenderer, titleMargin, titleMargin, labelWidth, invName));
-		this.label_inventory = this.addComponent(new Label(this.panel_inventory, this.fontRenderer, titleMargin, titleMargin, labelWidth, I18n.func_135053_a(INVENTORY)));
-		this.label_toolBar = this.addComponent(new Label(this.panel_toolBar, this.fontRenderer, titleMargin, titleMargin, labelWidth, I18n.func_135053_a(TOOL_BAR)));
+		this.label_inventory = this.addComponent(new Label(this.panel_inventory, this.fontRenderer, titleMargin, titleMargin, labelWidth, I18n.getString(INVENTORY)));
+		this.label_toolBar = this.addComponent(new Label(this.panel_toolBar, this.fontRenderer, titleMargin, titleMargin, labelWidth, I18n.getString(TOOL_BAR)));
 	}
 	
 	/**
@@ -464,6 +480,22 @@ public abstract class GuiContainerBasic<T extends ContainerBasic> extends GuiCon
 	 */
 	protected boolean closeLikeInventory() {
 		return true;
+	}
+	
+	/**
+	 * Returns the X position of the mouse during the last mouse event.
+	 * @return the X position of the mouse during the last mouse event.
+	 */
+	protected final int getMouseXFromEvent() {
+		return Mouse.getEventX() * this.width / this.mc.displayWidth;
+	}
+	
+	/**
+	 * Returns the Y position of the mouse during the last mouse event.
+	 * @return the Y position of the mouse during the last mouse event.
+	 */
+	protected final int getMouseYFromEvent() {
+		return this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1;
 	}
 	
 	// ####################################################################################################
