@@ -23,7 +23,7 @@ public class BlockNaquadahOre extends BlockOre {
 		this.setResistance(StargateMod.RESISTANT_BLOCKS_RESISTANCE);
 		this.setStepSound(soundStoneFootstep);
 		this.setUnlocalizedName(name);
-		this.func_111022_d(name); // setIconName()
+		this.setTextureName(name);
 		this.setCreativeTab(StargateMod.stargateBlocksTab);
 		StargateMod.instance.registerBlock(this);
 	}
@@ -53,7 +53,7 @@ public class BlockNaquadahOre extends BlockOre {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		this.blockIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111023_E()); // getIconName()
+		this.blockIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.getTextureName());
 	}
 	
 }

@@ -11,6 +11,8 @@ import seigneurnecron.minecraftmods.core.SeigneurNecronMod;
  */
 public abstract class Sounds {
 	
+	// Methods :
+	
 	public void loadCustomSounds(SoundLoadEvent event) {
 		try {
 			Field[] fields = this.getClass().getFields();

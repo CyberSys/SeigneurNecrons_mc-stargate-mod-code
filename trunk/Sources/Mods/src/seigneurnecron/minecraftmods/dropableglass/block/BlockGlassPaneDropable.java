@@ -8,6 +8,8 @@ import net.minecraft.block.BlockPane;
  */
 public class BlockGlassPaneDropable extends BlockPane {
 	
+	// Constructors :
+	
 	public BlockGlassPaneDropable() {
 		super(Block.thinGlass.blockID, "glass", "glass_pane_top", Block.thinGlass.blockMaterial, true);
 		this.setHardness(Block.thinGlass.blockHardness);

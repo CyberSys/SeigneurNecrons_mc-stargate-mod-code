@@ -67,7 +67,7 @@ public class DhdPanel extends Panel {
 		}
 		
 		this.specialButton = this.addComponent(new DhdButton(this, this.fontRenderer, xOffset + ((nbXButtons - 1) * (buttonSize + DHD_MARGIN)), y2, buttonSize, GateAddress.SPECIAL_SYMBOL), false);
-		this.resetButton = this.addComponent(new StargateButton(this, xOffset + (resetButtonOffset * (buttonSize + DHD_MARGIN)), y2, resetButtonSize, I18n.func_135053_a(RESET)), false);
+		this.resetButton = this.addComponent(new StargateButton(this, xOffset + (resetButtonOffset * (buttonSize + DHD_MARGIN)), y2, resetButtonSize, I18n.getString(RESET)), false);
 	}
 	
 	public DhdPanel(ComponentContainer parent, FontRenderer fontRenderer, int xPos, int yPos, int width) {

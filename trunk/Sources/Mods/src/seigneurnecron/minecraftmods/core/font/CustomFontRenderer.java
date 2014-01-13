@@ -14,10 +14,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class CustomFontRenderer extends FontRenderer {
 	
+	// Constructors :
+	
 	public CustomFontRenderer(String textureFile) {
 		super(FMLClientHandler.instance().getClient().gameSettings, new ResourceLocation(textureFile), FMLClientHandler.instance().getClient().renderEngine, false);
-		ReloadableResourceManager resourceManager = (ReloadableResourceManager) FMLClientHandler.instance().getClient().func_110442_L();
-		resourceManager.func_110542_a(this);
+		ReloadableResourceManager resourceManager = (ReloadableResourceManager) FMLClientHandler.instance().getClient().getResourceManager();
+		resourceManager.registerReloadListener(this);
 	}
 	
 }

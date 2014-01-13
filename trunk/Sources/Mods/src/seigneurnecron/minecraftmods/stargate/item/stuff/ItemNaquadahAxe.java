@@ -18,7 +18,7 @@ public class ItemNaquadahAxe extends ItemAxe {
 	public ItemNaquadahAxe(String name) {
 		super(StargateMod.instance.getConfig().getItemId(name), StargateMod.naquadahToolMaterial);
 		this.setUnlocalizedName(name);
-		this.func_111206_d(name); // setIconName(name)
+		this.setTextureName(name);
 		this.setCreativeTab(StargateMod.stargateItemsTab);
 	}
 	
@@ -27,7 +27,7 @@ public class ItemNaquadahAxe extends ItemAxe {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		this.itemIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111208_A()); // getIconName()
+		this.itemIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.getIconString());
 	}
 	
 	@Override

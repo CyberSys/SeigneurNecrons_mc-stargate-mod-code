@@ -10,6 +10,7 @@ public class ItemSoul extends ItemStargate {
 	public ItemSoul(String name) {
 		super(name);
 		this.setMaxStackSize(1);
+		this.setCreativeTab(null);
 	}
 	
 }

@@ -18,7 +18,7 @@ public class ItemCustomFireBall extends ItemStargate {
 	
 	public ItemCustomFireBall(String name) {
 		super(name);
-		this.func_111206_d("fireball");
+		this.setTextureName("fireball");
 	}
 	
 	// Methods :
@@ -45,7 +45,7 @@ public class ItemCustomFireBall extends ItemStargate {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		this.itemIcon = iconRegister.registerIcon(this.func_111208_A()); // getIconName()
+		this.itemIcon = iconRegister.registerIcon(this.getIconString());
 	}
 	
 }

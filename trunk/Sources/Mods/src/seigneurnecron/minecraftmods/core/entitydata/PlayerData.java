@@ -9,13 +9,13 @@ import seigneurnecron.minecraftmods.core.mod.ModBase;
  */
 public abstract class PlayerData extends EntityData<EntityPlayer> {
 	
-	// Constructor :
+	// Constructors :
 	
 	protected PlayerData(EntityPlayer player) {
 		super(player);
 	}
 	
-	// Packet system :
+	// Methods :
 	
 	@Override
 	protected void sendPacketToClients(Packet packet) {

@@ -17,7 +17,7 @@ public abstract class BlockStargate extends Block {
 	protected BlockStargate(String name, Material material) {
 		super(StargateMod.instance.getConfig().getBlockId(name), material);
 		this.setUnlocalizedName(name);
-		this.func_111022_d(name); // setIconName()
+		this.setTextureName(name);
 		this.setCreativeTab(StargateMod.stargateBlocksTab);
 		StargateMod.instance.registerBlock(this);
 	}
@@ -31,7 +31,7 @@ public abstract class BlockStargate extends Block {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		this.blockIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111023_E()); // getIconName()
+		this.blockIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.getTextureName());
 	}
 	
 }

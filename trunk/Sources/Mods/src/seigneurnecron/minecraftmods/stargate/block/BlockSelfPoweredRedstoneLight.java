@@ -17,7 +17,7 @@ public class BlockSelfPoweredRedstoneLight extends BlockStargate {
 		this.setLightValue(1.0F);
 		this.setHardness(0.3F);
 		this.setStepSound(soundGlassFootstep);
-		this.func_111022_d("redstone_lamp_on");
+		this.setTextureName("redstone_lamp_on");
 	}
 	
 	// Methods :
@@ -25,7 +25,7 @@ public class BlockSelfPoweredRedstoneLight extends BlockStargate {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister par1IconRegister) {
-		this.blockIcon = par1IconRegister.registerIcon(this.func_111023_E());
+		this.blockIcon = par1IconRegister.registerIcon(this.getTextureName());
 	}
 	
 }

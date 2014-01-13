@@ -11,6 +11,8 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class IntegerField extends TextField {
 	
+	// Constructors :
+	
 	public IntegerField(ComponentContainer container, FontRenderer par1FontRenderer, int xPos, int yPos, int width, int height, int value) {
 		super(container, par1FontRenderer, xPos, yPos, width, height, String.valueOf(value));
 	}
@@ -22,6 +24,8 @@ public class IntegerField extends TextField {
 	public IntegerField(ComponentContainer container, FontRenderer par1FontRenderer, int xPos, int yPos, int width) {
 		this(container, par1FontRenderer, xPos, yPos, width, FIELD_HEIGHT, 0);
 	}
+	
+	// Methods :
 	
 	@Override
 	public boolean textboxNormalKeyTyped(char character, int key) {

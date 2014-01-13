@@ -17,6 +17,8 @@ public final class GuiConstants {
 	public static final int GREEN = 0xFF44DD44;
 	public static final int YELLOW = 0xFFDDCC44;
 	public static final int RED = 0xFFDD4444;
+	public static final int PURPLE = 0xFFDD00DD;
+	public static final int ORANGE = 0xFFEE7700;
 	
 	public static final int LIGHT_BLUE = 0xFFAACCEE;
 	public static final int LIGHT_GREEN = 0xFF80FF20;

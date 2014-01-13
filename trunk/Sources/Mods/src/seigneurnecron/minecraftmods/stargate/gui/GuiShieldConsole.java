@@ -11,7 +11,6 @@ import static seigneurnecron.minecraftmods.core.gui.GuiConstants.RED;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import seigneurnecron.minecraftmods.core.gui.GuiScreenTileEntity;
 import seigneurnecron.minecraftmods.core.gui.IntegerField;
 import seigneurnecron.minecraftmods.core.gui.Label;
 import seigneurnecron.minecraftmods.core.gui.Panel;
@@ -155,13 +154,13 @@ public class GuiShieldConsole extends GuiStargateConsole<ConsoleStargateShield> 
 		
 		// Strings :
 		
-		this.string_currentCode = I18n.func_135053_a(CURRENT_CODE) + " : ";
-		this.string_shieldOn = I18n.func_135053_a(SHIELD_ON);
-		this.string_shieldOff = I18n.func_135053_a(SHIELD_OFF);
-		this.string_shieldDisconnected = I18n.func_135053_a(SHIELD_DISCONNECTED);
-		this.string_autoShieldOn = I18n.func_135053_a(AUTO_SHIELD_ON);
-		this.string_autoShieldOff = I18n.func_135053_a(AUTO_SHIELD_OFF);
-		this.string_autoShieldDisconnected = I18n.func_135053_a(AUTO_SHIELD_DISCONNECTED);
+		this.string_currentCode = I18n.getString(CURRENT_CODE) + " : ";
+		this.string_shieldOn = I18n.getString(SHIELD_ON);
+		this.string_shieldOff = I18n.getString(SHIELD_OFF);
+		this.string_shieldDisconnected = I18n.getString(SHIELD_DISCONNECTED);
+		this.string_autoShieldOn = I18n.getString(AUTO_SHIELD_ON);
+		this.string_autoShieldOff = I18n.getString(AUTO_SHIELD_OFF);
+		this.string_autoShieldDisconnected = I18n.getString(AUTO_SHIELD_DISCONNECTED);
 		
 		int code = (this.stargateConnected) ? this.stargate.getCode() : 0;
 		
@@ -173,22 +172,22 @@ public class GuiShieldConsole extends GuiStargateConsole<ConsoleStargateShield> 
 		// Fields and buttons :
 		
 		this.nextYPos = MARGIN;
-		this.label_invName = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(INV_NAME), true));
+		this.label_invName = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, I18n.getString(INV_NAME), true));
 		this.label_currentCode = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, ""));
 		this.field_code = this.addComponent(new IntegerField(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, fieldSize, code));
 		this.nextYPos -= BUTTON_HEIGHT;
-		this.button_code = this.addComponent(new StargateButton(this.panel_main, fieldSize + (2 * MARGIN), this.nextYPos, fieldSize, I18n.func_135053_a(CHANGE_CODE)));
+		this.button_code = this.addComponent(new StargateButton(this.panel_main, fieldSize + (2 * MARGIN), this.nextYPos, fieldSize, I18n.getString(CHANGE_CODE)));
 		
 		this.nextYPos += BONUS_MARGIN;
 		this.label_autoShield = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, ""));
-		this.button_autoShield = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(AUTO_SHIELD_SWITCH) + I18n.func_135053_a(GuiScreenTileEntity.TAB)));
+		this.button_autoShield = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.getString(AUTO_SHIELD_SWITCH) + I18n.getString(KEY_TAB)));
 		
 		this.nextYPos += BONUS_MARGIN;
 		this.label_shield = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, ""));
-		this.button_shield = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(SHIELD_SWITCH) + I18n.func_135053_a(GuiScreenTileEntity.ENTER)));
+		this.button_shield = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.getString(SHIELD_SWITCH) + I18n.getString(KEY_ENTER)));
 		
 		this.nextYPos += BONUS_MARGIN;
-		this.button_done = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.done") + I18n.func_135053_a(GuiScreenTileEntity.ESC)));
+		this.button_done = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.getString(GUI_DONE) + I18n.getString(KEY_ESC)));
 	}
 	
 	// ####################################################################################################

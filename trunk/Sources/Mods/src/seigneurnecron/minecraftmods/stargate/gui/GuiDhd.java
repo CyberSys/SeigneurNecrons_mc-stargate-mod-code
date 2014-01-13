@@ -16,9 +16,8 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
-import seigneurnecron.minecraftmods.core.gui.GuiScreenTileEntity;
 import seigneurnecron.minecraftmods.core.gui.Label;
-import seigneurnecron.minecraftmods.core.gui.ListProviderGui;
+import seigneurnecron.minecraftmods.core.gui.ListProviderSelectTwoLines;
 import seigneurnecron.minecraftmods.core.gui.Panel;
 import seigneurnecron.minecraftmods.core.gui.TextField;
 import seigneurnecron.minecraftmods.core.mod.ModBase;
@@ -43,7 +42,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Seigneur Necron
  */
 @SideOnly(Side.CLIENT)
-public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements ListProviderGui<Stargate> {
+public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements ListProviderSelectTwoLines<Stargate> {
 	
 	// ####################################################################################################
 	// Lang constants :
@@ -160,7 +159,7 @@ public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements Li
 	@Override
 	protected void drawForeground(int par1, int par2) {
 		super.drawForeground(par1, par2);
-		this.selectionList.drawScreen(par1, par2);
+		this.selectionList.drawList(par1, par2);
 		this.addressBar1.drawScreen();
 		this.addressBar2.drawScreen();
 	}
@@ -189,16 +188,16 @@ public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements Li
 		
 		// Strings :
 		
-		String string_name = I18n.func_135053_a(NAME) + " : ";
-		String string_address = I18n.func_135053_a(ADDRESS) + " : ";
+		String string_name = I18n.getString(NAME) + " : ";
+		String string_address = I18n.getString(ADDRESS) + " : ";
 		
-		this.string_activate = I18n.func_135053_a(ACTIVATE) + I18n.func_135053_a(GuiScreenTileEntity.ENTER);
-		this.string_close = I18n.func_135053_a(CLOSE) + I18n.func_135053_a(GuiScreenTileEntity.ENTER);
-		this.string_tab = I18n.func_135053_a(TAB);
-		this.string_earth = I18n.func_135053_a(EARTH);
-		this.string_hell = I18n.func_135053_a(HELL);
-		this.string_end = I18n.func_135053_a(END);
-		this.string_all = I18n.func_135053_a(ALL);
+		this.string_activate = I18n.getString(ACTIVATE) + I18n.getString(KEY_ENTER);
+		this.string_close = I18n.getString(CLOSE) + I18n.getString(KEY_ENTER);
+		this.string_tab = I18n.getString(TAB);
+		this.string_earth = I18n.getString(EARTH);
+		this.string_hell = I18n.getString(HELL);
+		this.string_end = I18n.getString(END);
+		this.string_all = I18n.getString(ALL);
 		
 		// Component sizes :
 		
@@ -222,12 +221,12 @@ public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements Li
 		// Fields and buttons :
 		
 		this.nextYPos = MARGIN;
-		this.label_invName = this.addComponent(new Label(this.panel_information, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a(INV_NAME), true));
+		this.label_invName = this.addComponent(new Label(this.panel_information, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_main, I18n.getString(INV_NAME), true));
 		this.label_address1 = this.addComponent(new Label(this.panel_information, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_main, string_address), false);
 		this.addressBar1 = this.addComponent(new AddressBar(this.panel_information, this.stargateFontRenderer, fieldOffset, this.nextYPos, fieldSize));
 		this.label_name1 = this.addComponent(new Label(this.panel_information, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_main, string_name), false);
 		this.field_name1 = this.addComponent(new TextField(this.panel_information, this.fontRenderer, fieldOffset, this.nextYPos, fieldSize));
-		this.button_addThis = this.addComponent(new StargateButton(this.panel_information, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a(ADD_THIS)));
+		this.button_addThis = this.addComponent(new StargateButton(this.panel_information, MARGIN, this.nextYPos, buttonSize_main, I18n.getString(ADD_THIS)));
 		
 		this.nextYPos = MARGIN;
 		this.dhdPanel = this.addComponent(new DhdPanel(this.panel_main, this.stargateFontRenderer, MARGIN, this.nextYPos, buttonSize_main, (3 * BUTTON_HEIGHT) + (2 * DHD_MARGIN) + this.offset));
@@ -235,8 +234,8 @@ public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements Li
 		this.addressBar2 = this.addComponent(new AddressBar(this.panel_main, this.stargateFontRenderer, fieldOffset, this.nextYPos, fieldSize));
 		this.label_name2 = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_main, string_name), false);
 		this.field_name2 = this.addComponent(new TextField(this.panel_main, this.fontRenderer, fieldOffset, this.nextYPos, fieldSize));
-		this.button_activate = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a(this.string_activate)));
-		this.button_cancel = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize_main, I18n.func_135053_a("gui.cancel") + I18n.func_135053_a(GuiScreenTileEntity.ESC)));
+		this.button_activate = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize_main, I18n.getString(this.string_activate)));
+		this.button_cancel = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize_main, I18n.getString(GUI_CANCEL) + I18n.getString(KEY_ESC)));
 		
 		this.nextYPos = MARGIN;
 		this.label_tab = this.addComponent(new Label(this.panel_listButtons, this.fontRenderer, MARGIN, this.nextYPos, buttonSize_listButtons, "", true));
@@ -244,14 +243,13 @@ public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements Li
 		this.button_hell = this.addComponent(new StargateButton(this.panel_listButtons, buttonSize_listButtons_1 + (2 * MARGIN), this.nextYPos, buttonSize_listButtons_1, this.string_hell), false);
 		this.button_end = this.addComponent(new StargateButton(this.panel_listButtons, (2 * buttonSize_listButtons_1) + (3 * MARGIN), this.nextYPos, buttonSize_listButtons_1, this.string_end), false);
 		this.button_all = this.addComponent(new StargateButton(this.panel_listButtons, (3 * buttonSize_listButtons_1) + (4 * MARGIN), this.nextYPos, buttonSize_listButtons_1, this.string_all));
-		this.button_delete = this.addComponent(new StargateButton(this.panel_listButtons, MARGIN, this.nextYPos, buttonSize_listButtons_2, I18n.func_135053_a(DELETE)), false);
-		this.button_overwrite = this.addComponent(new StargateButton(this.panel_listButtons, buttonSize_listButtons_2 + (2 * MARGIN), this.nextYPos, buttonSize_listButtons_2, I18n.func_135053_a(OVERWRITE)), false);
-		this.button_add = this.addComponent(new StargateButton(this.panel_listButtons, (2 * buttonSize_listButtons_2) + (3 * MARGIN), this.nextYPos, buttonSize_listButtons_2, I18n.func_135053_a(ADD)));
+		this.button_delete = this.addComponent(new StargateButton(this.panel_listButtons, MARGIN, this.nextYPos, buttonSize_listButtons_2, I18n.getString(DELETE)), false);
+		this.button_overwrite = this.addComponent(new StargateButton(this.panel_listButtons, buttonSize_listButtons_2 + (2 * MARGIN), this.nextYPos, buttonSize_listButtons_2, I18n.getString(OVERWRITE)), false);
+		this.button_add = this.addComponent(new StargateButton(this.panel_listButtons, (2 * buttonSize_listButtons_2) + (3 * MARGIN), this.nextYPos, buttonSize_listButtons_2, I18n.getString(ADD)));
 		
 		// List :
 		
-		this.selectionList = new SelectionListStargate(this, this.panel_listSelect.getXPosInScreen(0) + listMargin, this.panel_listSelect.getYPosInScreen(0) + listMargin, this.panel_listSelect.getComponentWidth() - (2 * listMargin), this.panel_listSelect.getComponentHeight() - (2 * listMargin), this.mc.thePlayer);
-		this.selectionList.registerScrollButtons(this.getNextButtonId(), this.getNextButtonId());
+		this.selectionList = new SelectionListStargate(this.panel_listSelect, listMargin, listMargin, this.panel_listSelect.getComponentWidth() - (2 * listMargin), this.panel_listSelect.getComponentHeight() - (2 * listMargin), this.mc, this, this.mc.thePlayer);
 		
 		// Dhd :
 		
@@ -296,7 +294,6 @@ public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements Li
 				this.overwite();
 			}
 			else {
-				this.selectionList.actionPerformed(guiButton);
 				boolean fieldChanged = this.dhdPanel.actionPerformed(guiButton);
 				
 				if(fieldChanged) {
@@ -304,6 +301,12 @@ public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements Li
 				}
 			}
 		}
+	}
+	
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		this.selectionList.handleMouseInput(getMouseXFromEvent(), getMouseYFromEvent());
 	}
 	
 	@Override

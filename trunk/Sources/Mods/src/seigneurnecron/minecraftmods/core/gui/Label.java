@@ -70,7 +70,7 @@ public class Label extends Panel {
 		this.setColor(color);
 	}
 	
-	// Display :
+	// Methods :
 	
 	public void drawScreen() {
 		if(this.centered) {

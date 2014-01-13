@@ -13,7 +13,7 @@ import seigneurnecron.minecraftmods.stargate.tools.enums.GateState;
 /**
  * @author Seigneur Necron
  */
-public abstract class ConsoleStargate extends Console {
+public abstract class ConsoleStargate extends ConsoleScreen {
 	
 	// NBTTags names :
 	
@@ -23,7 +23,7 @@ public abstract class ConsoleStargate extends Console {
 	private static final String Z_GATE = "zGate";
 	
 	// Constants :
-
+	
 	/**
 	 * The maximum range in which a DHD can connect to a gate.
 	 */

@@ -5,6 +5,8 @@ package seigneurnecron.minecraftmods.customsigns.proxy;
  */
 public class CustomSignsCommonProxy {
 	
+	// Methods :
+	
 	public void registerRenderers() {
 		// Empty, server side.
 	}

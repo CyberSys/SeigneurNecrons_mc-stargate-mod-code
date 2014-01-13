@@ -101,7 +101,7 @@ public class TileEntitySignCustomRenderer extends TileEntitySpecialRenderer {
 			texture = DEFAULT_TEXTURE;
 		}
 		
-		this.func_110628_a(texture);
+		this.bindTexture(texture);
 		
 		/* ########## End of modified code part ########## */
 		

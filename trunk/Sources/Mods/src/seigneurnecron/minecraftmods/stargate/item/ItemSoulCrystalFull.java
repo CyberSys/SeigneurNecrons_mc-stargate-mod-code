@@ -29,7 +29,7 @@ public class ItemSoulCrystalFull extends ItemSoulCrystal {
 	
 	public static final int DEFAULT_SPAWN_COUNT = 4;
 	public static final int DEFAULT_MAX_MOB = 8;
-	public static final int DEFAULT_NEEDED_SOUL = 100;
+	public static final int DEFAULT_NEEDED_SOUL = 200;
 	public static final double DEFAULT_SOUL_DROP_PROBA = 0.5;
 	
 	// Fields :
@@ -49,8 +49,8 @@ public class ItemSoulCrystalFull extends ItemSoulCrystal {
 	
 	@SuppressWarnings("unchecked")
 	public ItemSoulCrystalFull(Class<? extends EntityLiving> clazz, int spawnCount, int maxMob, int neededSouls, double soulDropProba) {
-		super(StargateMod.itemName_crystalSoul + EntityList.classToStringMapping.get(clazz));
-		this.func_111206_d(StargateMod.itemName_crystalSoul); // setIconName(name)
+		super(StargateMod.itemName_crystalSoul + EntityList.classToStringMapping.get(clazz), "SF");
+		this.setTextureName(StargateMod.itemName_crystalSoul);
 		
 		if(spawnCount <= 0 || maxMob <= 0 || neededSouls <= 0 || soulDropProba <= 0 || soulDropProba > 1) {
 			throw new IllegalArgumentException("0 < spawnCount, 0 < maxMob, 0 < neededSouls, 0 < soulDropProba <= 1");

@@ -1,5 +1,11 @@
 package seigneurnecron.minecraftmods.core.gui;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
+
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -7,38 +13,121 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Seigneur Necron
  */
 @SideOnly(Side.CLIENT)
-public abstract class SelectionList<T extends Object> extends CustomGuiScrollingList {
-	
-	// Fields :
-	
-	protected final ListProviderGui<T> gui;
+public abstract class SelectionList<T extends ListProviderSelect<? extends Object>> extends ScrollableList<T> {
 	
 	// Constructors :
 	
-	protected SelectionList(ListProviderGui<T> gui, int xPos, int yPos, int width, int height) {
-		super(xPos, yPos, width, height);
-		this.gui = gui;
+	protected SelectionList(ComponentContainer parent, int xPos, int yPos, int width, int height, Minecraft minecraft, T listProvider) {
+		super(parent, xPos, yPos, width, height, minecraft, listProvider);
 	}
 	
 	// Methods :
 	
 	@Override
-	protected int getSize() {
-		return this.gui.getList().size();
-	}
-	
-	@Override
-	protected void elementClicked(int index, boolean doubleClick) {
-		this.gui.setSelectedIndex(index);
+	protected void drawSlots(int mouseX, int mouseY) {
+		Tessellator tessellator = Tessellator.instance;
 		
-		if(doubleClick) {
-			this.gui.onElementDoubleClicked();
+		int listLeft = 0;
+		int listRight = this.getContentWidth();
+		
+		int shiftedTop = 2 - (int) this.scrollDistance;
+		
+		for(int index = 0; index < this.getSize(); ++index) {
+			int top = shiftedTop + index * this.slotHeight - 2;
+			
+			if(top < this.height && top + this.slotHeight > 0) {
+				if(this.isSelected(index)) {
+					int borderLeft = listLeft;
+					int borderRight = listRight;
+					int borderTop = top;
+					int borderBottom = top + this.slotHeight;
+					
+					int panelLeft = borderLeft + 1;
+					int panelRight = borderRight - 1;
+					int panelTop = borderTop + 1;
+					int panelBottom = borderBottom - 1;
+					
+					if(borderTop < 0) {
+						borderTop = 0;
+						panelTop = 0;
+					}
+					
+					if(borderBottom > this.height) {
+						borderBottom = this.height;
+						panelBottom = this.height;
+					}
+					
+					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+					GL11.glDisable(GL11.GL_TEXTURE_2D);
+					tessellator.startDrawingQuads();
+					tessellator.setColorOpaque_I(0x808080);
+					this.addVertexWithUV(tessellator, borderLeft, borderBottom, 0, 0, 1);
+					this.addVertexWithUV(tessellator, borderRight, borderBottom, 0, 1, 1);
+					this.addVertexWithUV(tessellator, borderRight, borderTop, 0, 1, 0);
+					this.addVertexWithUV(tessellator, borderLeft, borderTop, 0, 0, 0);
+					tessellator.setColorOpaque_I(0x000000);
+					this.addVertexWithUV(tessellator, panelLeft, panelBottom, 0, 0, 1);
+					this.addVertexWithUV(tessellator, panelRight, panelBottom, 0, 1, 1);
+					this.addVertexWithUV(tessellator, panelRight, panelTop, 0, 1, 0);
+					this.addVertexWithUV(tessellator, panelLeft, panelTop, 0, 0, 0);
+					tessellator.draw();
+					GL11.glEnable(GL11.GL_TEXTURE_2D);
+				}
+				
+				this.drawSlotContent(index, listLeft, top);
+			}
 		}
 	}
 	
-	@Override
+	/**
+	 * Indicates whether the element at the given index is selected.
+	 * @param index - the index of the element.
+	 * @return true if the element is selected, else false.
+	 */
 	protected boolean isSelected(int index) {
-		return this.gui.getSelectedIndex() == index;
+		return this.listProvider.getSelectedIndex() == index;
+	}
+	
+	/**
+	 * Defines what happens when the element at the given index is clicked.
+	 * @param index - the index of the element.
+	 * @param doubleClick - whether the element was double clicked.
+	 */
+	protected void elementClicked(int index, boolean doubleClick) {
+		this.listProvider.setSelectedIndex(index);
+		
+		if(doubleClick) {
+			this.listProvider.onElementDoubleClicked();
+		}
+	}
+	
+	/**
+	 * Draws a slot.
+	 * @param index - the index of the slot.
+	 * @param left - the X position of the slot.
+	 * @param top - the Y position of the slot.
+	 */
+	protected abstract void drawSlotContent(int index, int left, int top);
+	
+	@Override
+	protected void handleMouseInputInner(int mouseX, int mouseY) {
+		super.handleMouseInputInner(mouseX, mouseY);
+		
+		if(Mouse.isButtonDown(0) && Mouse.getEventDX() == 0 && Mouse.getEventDY() == 0) {
+			int listLength = this.getSize();
+			int scrollBarXStart = this.width - 6;
+			int boxLeft = 0;
+			int boxRight = scrollBarXStart - 1;
+			int mouseYWithScroll = mouseY + (int) this.scrollDistance;
+			int index = mouseYWithScroll / this.slotHeight;
+			
+			if(mouseX >= boxLeft && mouseX <= boxRight && mouseYWithScroll >= 0 && index >= 0 && index < listLength) {
+				boolean doubleClicked = index == this.selectedIndex && Minecraft.getSystemTime() - this.lastClickTime < 250L;
+				this.elementClicked(index, doubleClicked);
+				this.selectedIndex = index;
+				this.lastClickTime = Minecraft.getSystemTime();
+			}
+		}
 	}
 	
 }

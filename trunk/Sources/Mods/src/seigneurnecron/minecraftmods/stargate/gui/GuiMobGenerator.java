@@ -65,7 +65,7 @@ public class GuiMobGenerator extends GuiContainerOneLine<ContainerMobGenerator> 
 		int panelWidth_info = totalWidth - panelWidth_main - PANEL_MARGIN;
 		int labelWidth = panelWidth_info - (2 * MARGIN);
 		
-		List<String> strings = this.fontRenderer.listFormattedStringToWidth(I18n.func_135053_a(INFO), labelWidth);
+		List<String> strings = this.fontRenderer.listFormattedStringToWidth(I18n.getString(INFO), labelWidth);
 		
 		int panelYPos = (this.height - panelHeight) / 2;
 		int panelXPos_info = (this.width - totalWidth) / 2;

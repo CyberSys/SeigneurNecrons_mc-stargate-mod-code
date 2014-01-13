@@ -1,6 +1,7 @@
 package seigneurnecron.minecraftmods.stargate;
 
-import static seigneurnecron.minecraftmods.stargate.tileentity.console.Console.CONSOLE_NAMES_PREFIX;
+import static seigneurnecron.minecraftmods.stargate.tileentity.console.Console.CONSOLE_INFO_PREFIX;
+import static seigneurnecron.minecraftmods.stargate.tileentity.console.Console.CONSOLE_NAME_PREFIX;
 
 import java.util.ArrayList;
 
@@ -41,7 +42,6 @@ import net.minecraftforge.common.EnumHelper;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import seigneurnecron.minecraftmods.core.SeigneurNecronMod;
 import seigneurnecron.minecraftmods.core.entity.EntityCustomFishHook;
-import seigneurnecron.minecraftmods.core.gui.GuiScreenTileEntity;
 import seigneurnecron.minecraftmods.core.mod.ModBase;
 import seigneurnecron.minecraftmods.stargate.block.BlockChevron;
 import seigneurnecron.minecraftmods.stargate.block.BlockChevronOn;
@@ -76,6 +76,7 @@ import seigneurnecron.minecraftmods.stargate.gui.GuiMobGenerator;
 import seigneurnecron.minecraftmods.stargate.gui.GuiScreenConsolePanel;
 import seigneurnecron.minecraftmods.stargate.gui.GuiShieldConsole;
 import seigneurnecron.minecraftmods.stargate.gui.GuiShieldRemote;
+import seigneurnecron.minecraftmods.stargate.gui.GuiSoulCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.gui.GuiStargateControl;
 import seigneurnecron.minecraftmods.stargate.gui.GuiStuffLevelUpTable;
 import seigneurnecron.minecraftmods.stargate.gui.GuiTeleporter;
@@ -138,11 +139,11 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 
-// FIXME - Verifier toutes les classes des mods core, customsigns et dropableglass (Constants, Fields, Constructors...)
-
-// FIXME - Terminer les interfaces ConsoleBase, StuffLevelUpTable, SoulCrystalFactory et DefaultConsole.
+// FIXME - Terminer l'interface DefaultConsole.
 
 // FIXME - Faire le fichier de texture pour la StargateFont.
+
+// FIXME - Voir s'il est possible de recuperer dinamiquement les textures de la pancarte.
 
 // FIXME - Mettre a jour les numero de version, dans les sources ET dans les fichiers d'info.
 
@@ -162,7 +163,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 	
 	public static final String MOD_ID = "seigneur_necron_stargate_mod";
 	public static final String MOD_NAME = "SeigneurNecron's Stargate Mod";
-	public static final String VERSION = "[1.6.2] v3.1.5 [core v1.1.0]";
+	public static final String VERSION = "[1.6.4] v3.1.5 [core v1.1.0]";
 	
 	public static final String CHANEL_TILE_ENTITY = "SNSM_TileEntity";
 	public static final String CHANEL_COMMANDS = "SNSM_Commands";
@@ -503,48 +504,48 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		item_customFireBall = new ItemCustomFireBall(itemName_customFireBall);
 		item_customExplosiveFireBall = new ItemCustomExplosiveFireBall(itemName_customExplosiveFireBall);
 		
-		item_crystal = new ItemCrystal(itemName_crystal);
-		item_crystalStargate = new ItemCrystal(itemName_crystalStargate);
-		item_crystalStargateInterface = new ItemCrystal(itemName_crystalStargateInterface);
-		item_crystalDhd = new ItemCrystal(itemName_crystalDhd);
-		item_crystalShield = new ItemCrystal(itemName_crystalShield);
-		item_crystalTeleporter = new ItemCrystal(itemName_crystalTeleporter);
-		item_crystalScanner = new ItemCrystal(itemName_crystalScanner);
-		item_crystalEnchantment = new ItemCrystal(itemName_crystalEnchantment);
-		item_crystalStuffData = new ItemCrystal(itemName_crystalStuffData);
-		item_crystalSoulData = new ItemCrystal(itemName_crystalSoulData);
-		item_crystalSoulEmpty = new ItemSoulCrystal(itemName_crystalSoulEmpty);
+		item_crystal = new ItemCrystal(itemName_crystal, "Cr");
+		item_crystalStargate = new ItemCrystal(itemName_crystalStargate, "SGC");
+		item_crystalStargateInterface = new ItemCrystal(itemName_crystalStargateInterface, "SGI");
+		item_crystalDhd = new ItemCrystal(itemName_crystalDhd, "DHD");
+		item_crystalShield = new ItemCrystal(itemName_crystalShield, "Sh");
+		item_crystalTeleporter = new ItemCrystal(itemName_crystalTeleporter, "Te");
+		item_crystalScanner = new ItemCrystal(itemName_crystalScanner, "Sc");
+		item_crystalEnchantment = new ItemCrystal(itemName_crystalEnchantment, "En");
+		item_crystalStuffData = new ItemCrystal(itemName_crystalStuffData, "DSt");
+		item_crystalSoulData = new ItemCrystal(itemName_crystalSoulData, "DSo");
+		item_crystalSoulEmpty = new ItemSoulCrystal(itemName_crystalSoulEmpty, "SE");
 		
 		final int D1 = ItemSoulCrystalFull.DEFAULT_SPAWN_COUNT;
 		final int D2 = ItemSoulCrystalFull.DEFAULT_MAX_MOB;
 		final int D3 = ItemSoulCrystalFull.DEFAULT_NEEDED_SOUL;
 		final double D4 = ItemSoulCrystalFull.DEFAULT_SOUL_DROP_PROBA;
 		
-		item_crystalSoulChicken = new ItemSoulCrystalFull(EntityChicken.class, D1, D2, 200, D4);
-		item_crystalSoulCow = new ItemSoulCrystalFull(EntityCow.class, D1, D2, 200, D4);
-		item_crystalSoulMooshroom = new ItemSoulCrystalFull(EntityMooshroom.class, D1, D2, 200, D4);
-		item_crystalSoulPig = new ItemSoulCrystalFull(EntityPig.class, D1, D2, 200, D4);
-		item_crystalSoulSheep = new ItemSoulCrystalFull(EntitySheep.class, D1, D2, 200, D4);
-		item_crystalSoulOcelot = new ItemSoulCrystalFull(EntityOcelot.class);
-		item_crystalSoulWolf = new ItemSoulCrystalFull(EntityWolf.class);
-		item_crystalSoulIronGolem = new ItemSoulCrystalFull(EntityIronGolem.class, 2, 4, D3, D4);
-		item_crystalSoulSnowman = new ItemSoulCrystalFull(EntitySnowman.class, 2, 6, D3, D4);
-		item_crystalSoulBlaze = new ItemSoulCrystalFull(EntityBlaze.class);
+		item_crystalSoulChicken = new ItemSoulCrystalFull(EntityChicken.class);
+		item_crystalSoulCow = new ItemSoulCrystalFull(EntityCow.class);
+		item_crystalSoulMooshroom = new ItemSoulCrystalFull(EntityMooshroom.class, D1, D2, 100, D4);
+		item_crystalSoulPig = new ItemSoulCrystalFull(EntityPig.class);
+		item_crystalSoulSheep = new ItemSoulCrystalFull(EntitySheep.class);
+		item_crystalSoulOcelot = new ItemSoulCrystalFull(EntityOcelot.class, D1, D2, 100, D4);
+		item_crystalSoulWolf = new ItemSoulCrystalFull(EntityWolf.class, D1, D2, 100, D4);
+		item_crystalSoulIronGolem = new ItemSoulCrystalFull(EntityIronGolem.class, 2, 4, 100, D4);
+		item_crystalSoulSnowman = new ItemSoulCrystalFull(EntitySnowman.class, 2, 6, 100, D4);
+		item_crystalSoulBlaze = new ItemSoulCrystalFull(EntityBlaze.class, D1, D2, 100, D4);
 		item_crystalSoulCreeper = new ItemSoulCrystalFull(EntityCreeper.class);
 		item_crystalSoulEnderman = new ItemSoulCrystalFull(EntityEnderman.class, 2, 4, D3, D4);
-		item_crystalSoulSilverfish = new ItemSoulCrystalFull(EntitySilverfish.class);
+		item_crystalSoulSilverfish = new ItemSoulCrystalFull(EntitySilverfish.class, D1, D2, 50, 1);
 		item_crystalSoulSkeleton = new ItemSoulCrystalFull(EntitySkeleton.class);
 		item_crystalSoulSpider = new ItemSoulCrystalFull(EntitySpider.class);
 		item_crystalSoulCaveSpider = new ItemSoulCrystalFull(EntityCaveSpider.class);
 		item_crystalSoulZombie = new ItemSoulCrystalFull(EntityZombie.class);
 		item_crystalSoulPigZombie = new ItemSoulCrystalFull(EntityPigZombie.class);
 		item_crystalSoulSquid = new ItemSoulCrystalFull(EntitySquid.class);
-		item_crystalSoulGhast = new ItemSoulCrystalFull(EntityGhast.class, 1, 2, D3, D4);
+		item_crystalSoulGhast = new ItemSoulCrystalFull(EntityGhast.class, 1, 2, 100, 1);
 		item_crystalSoulSlime = new ItemSoulCrystalFull(EntitySlime.class);
-		item_crystalSoulMagmaCube = new ItemSoulCrystalFull(EntityMagmaCube.class);
-		item_crystalSoulBat = new ItemSoulCrystalFull(EntityBat.class, 6, 12, D3, D4);
-		item_crystalSoulVillager = new ItemSoulCrystalFull(EntityVillager.class, 1, D2, D3, D4);
-		item_crystalSoulHorse = new ItemSoulCrystalFull(EntityHorse.class, 2, D2, D3, D4);
+		item_crystalSoulMagmaCube = new ItemSoulCrystalFull(EntityMagmaCube.class, D1, D2, 100, D4);
+		item_crystalSoulBat = new ItemSoulCrystalFull(EntityBat.class, 6, 12, 100, D4);
+		item_crystalSoulVillager = new ItemSoulCrystalFull(EntityVillager.class, 1, D2, 50, 1);
+		item_crystalSoulHorse = new ItemSoulCrystalFull(EntityHorse.class, 2, D2, 50, 1);
 	}
 	
 	protected void registerConsoles() {
@@ -853,9 +854,6 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		this.addName(item_crystalSoulHorse, "Horse soul crystal", "Cristal d'ame de cheval");
 		
 		// Inventory :
-		this.addName(GuiScreenTileEntity.ENTER, " (ENTER)", " (ENTRER)");
-		this.addName(GuiScreenTileEntity.TAB, " (TAB)", " (TAB)");
-		this.addName(GuiScreenTileEntity.ESC, " (ESC)", " (ECHAP)");
 		
 		this.addName(GuiScreenConsolePanel.DESTINATION, "Destination", "Destination");
 		this.addName(GuiScreenConsolePanel.NAME, "Name", "Nom");
@@ -917,6 +915,10 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		this.addName(GuiConsoleBase.INFO, "Insert crystals to configure the console. Basic crystals are crafted with diamonds. You can configure crystals with redstone...", "Inserez des crystaux pour configurer la console. Les crystaux basiques sont fabriques a partir de diamant. Vous pouvez configurer les crystaux avec de la redstone...");
 		
 		this.addName(InventorySoulCrystalFactory.INV_NAME, "Soul crystal factory", "Table de creation de cristaux d'ame");
+		this.addName(GuiSoulCrystalFactory.CREATE, "Create", "Creer");
+		this.addName(GuiSoulCrystalFactory.SOULS, "Souls", "Ames");
+		this.addName(GuiSoulCrystalFactory.CYSTAL_READY, "Soul crystal cready.", "Cristal d'ame pret.");
+		this.addName(GuiSoulCrystalFactory.INSERT_CRYSTAL, "Insert an empty soul crystal.", "Inserer un crystal d'ame vide.");
 		
 		this.addName(InventoryMobGenerator.INV_NAME, "Mob generator", "Generateur de mobs");
 		this.addName(GuiMobGenerator.INFO, "The mob generator needs a soul crystal and redstone power to function.", "Le generateur de mob a besoin d'un cristal d'ame et de courant redstone pour fonctionner.");
@@ -927,12 +929,19 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		this.addName(GuiStuffLevelUpTable.LEVELS, "Levels", "Niveaux");
 		this.addName(GuiStuffLevelUpTable.ENCHANT, "Enchant", "Enchanter");
 		
-		this.addName(CONSOLE_NAMES_PREFIX + CONSOLE_DEFAULT, "Default console", "Console par defaut");
-		this.addName(CONSOLE_NAMES_PREFIX + CONSOLE_TELEPORTER, "Teleporter", "Teleporteur");
-		this.addName(CONSOLE_NAMES_PREFIX + CONSOLE_STARGATE_DHD, "Dhd", "Dhd");
-		this.addName(CONSOLE_NAMES_PREFIX + CONSOLE_STARGATE_SHIELD, "Stargate Shield", "Console de bouclier");
-		this.addName(CONSOLE_NAMES_PREFIX + CONSOLE_STUFF_LEVEL_UP_TABLE, "Stuff level up table", "Table d'amelioration d'equipement");
-		this.addName(CONSOLE_NAMES_PREFIX + CONSOLE_SOUL_CRYSTAL_FACTORY, "Soul crystal factory", "Table de creation de cristaux d'ame");
+		this.addName(CONSOLE_NAME_PREFIX + CONSOLE_DEFAULT, "Default console", "Console par defaut");
+		this.addName(CONSOLE_NAME_PREFIX + CONSOLE_TELEPORTER, "Teleporter", "Teleporteur");
+		this.addName(CONSOLE_NAME_PREFIX + CONSOLE_STARGATE_DHD, "Dhd", "Dhd");
+		this.addName(CONSOLE_NAME_PREFIX + CONSOLE_STARGATE_SHIELD, "Stargate Shield", "Console de bouclier");
+		this.addName(CONSOLE_NAME_PREFIX + CONSOLE_STUFF_LEVEL_UP_TABLE, "Stuff level up table", "Table d'amelioration d'equipement");
+		this.addName(CONSOLE_NAME_PREFIX + CONSOLE_SOUL_CRYSTAL_FACTORY, "Soul crystal factory", "Table de creation de cristaux d'ame");
+		
+		this.addName(CONSOLE_INFO_PREFIX + CONSOLE_DEFAULT, "This console provides you a list of valid crystal sets", "Cette console vous affiche la liste des combinaisons de cristaux valides.");
+		this.addName(CONSOLE_INFO_PREFIX + CONSOLE_TELEPORTER, "This console allows you to teleport yourself to another teleporter. It also allows you to acces the list of registered teleporters and to add/modify/delete elements in this list.", "Cette console vous permet de vous teleporter vers un autre teleporteur. Elle vous permet egalement de consulter la liste des teleporteurs enregistres, ainsi que d'y ajouter, modifier ou supprimer des elements.");
+		this.addName(CONSOLE_INFO_PREFIX + CONSOLE_STARGATE_DHD, "This console allows you to activate/deactivate a stargate. It also allows you to acces the list of registered stargates and to add/modify/delete elements in this list.", "Cette console vous permet d'activer ou de desactiver une porte des etoiles. Elle vous permet egalement de consulter la liste des portes enregistres, ainsi que d'y ajouter, modifier ou supprimer des elements.");
+		this.addName(CONSOLE_INFO_PREFIX + CONSOLE_STARGATE_SHIELD, "This console allows you to activate/deactivate the shield of a stargate. It also allows you to enable/disable the auto shield mode and to change the code which is used to deactivate the shield from the other side.", "Cette console vous permet d'activer ou de desactiver le bouclier d'une porte des etoiles. Elle vous permet egalement d'activer ou de desactiver le mode bouclier automatique et de changer le code permettant de desactiver le bouclier depuis l'autre cote.");
+		this.addName(CONSOLE_INFO_PREFIX + CONSOLE_STUFF_LEVEL_UP_TABLE, "This console allows you to upgrade you stuff by choosing the enchantments you want to add.", "Cette console vous permet d'ameliorer votre equipement en choisissant les enchantements que vous vouler ajouter.");
+		this.addName(CONSOLE_INFO_PREFIX + CONSOLE_SOUL_CRYSTAL_FACTORY, "This console allows you to spend the souls you have collected to create crystals which can spawn monsters when inserted in a mob generator.", "Cette console vous permet d'utiliser les ames que vous avez recolte pour creer des cristaux pouvant faire aparaitre des monstres s'ils sont inseres dans un generateur de mobs.");
 		
 		// Damage sources :
 		this.addName("death.attack." + CustomDamageSource.KAWOOSH.getDamageType(), "%1$s tried to swim into the kawoosh.", "%1$s a essaye de nager dans le kawoosh.");

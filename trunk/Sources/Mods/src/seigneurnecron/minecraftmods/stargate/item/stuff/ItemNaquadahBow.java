@@ -24,7 +24,7 @@ public class ItemNaquadahBow extends ItemBow {
 	public ItemNaquadahBow(String name) {
 		super(StargateMod.instance.getConfig().getItemId(name));
 		this.setUnlocalizedName(name);
-		this.func_111206_d(name); // setIconName(name)
+		this.setTextureName(name);
 		this.setMaxDamage(0);
 		this.setCreativeTab(StargateMod.stargateItemsTab);
 	}
@@ -34,10 +34,10 @@ public class ItemNaquadahBow extends ItemBow {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		this.itemIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111208_A()); // getIconName()
+		this.itemIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.getIconString());
 		
 		for(int i = 0; i < this.bowIcons.length; ++i) {
-			this.bowIcons[i] = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111208_A() + "_pulling" + i);
+			this.bowIcons[i] = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.getIconString() + "_pulling" + i);
 		}
 	}
 	

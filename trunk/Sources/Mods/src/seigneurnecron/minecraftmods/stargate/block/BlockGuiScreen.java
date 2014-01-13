@@ -2,9 +2,9 @@ package seigneurnecron.minecraftmods.stargate.block;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.src.ModLoader;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -27,7 +27,7 @@ public abstract class BlockGuiScreen extends BlockContainerNaquadah {
 		
 		if(tileEntity != null && this.tileEntityOk(tileEntity)) {
 			if(world.isRemote) {
-				ModLoader.openGUI(player, this.getGuiScreen(tileEntity, player));
+				FMLClientHandler.instance().displayGuiScreen(player, this.getGuiScreen(tileEntity, player));
 			}
 			
 			return true;

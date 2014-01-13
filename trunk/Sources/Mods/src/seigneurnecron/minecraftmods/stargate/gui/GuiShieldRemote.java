@@ -122,10 +122,10 @@ public class GuiShieldRemote extends GuiScreenTileEntity<TileEntityStargateContr
 		
 		// Strings :
 		
-		String string_code = I18n.func_135053_a(CODE) + " : ";
+		String string_code = I18n.getString(CODE) + " : ";
 		
-		this.string_shieldOn = I18n.func_135053_a(SHIELD_ON);
-		this.string_shieldOff = I18n.func_135053_a(SHIELD_OFF);
+		this.string_shieldOn = I18n.getString(SHIELD_ON);
+		this.string_shieldOff = I18n.getString(SHIELD_OFF);
 		
 		int code = 0;
 		String address = this.tileEntity.getDestination().address;
@@ -145,14 +145,14 @@ public class GuiShieldRemote extends GuiScreenTileEntity<TileEntityStargateContr
 		// Fields and buttons :
 		
 		this.nextYPos = MARGIN;
-		this.label_invName = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(INV_NAME), true));
+		this.label_invName = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, I18n.getString(INV_NAME), true));
 		this.label_shield = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, buttonSize, ""));
 		this.label_code = this.addComponent(new Label(this.panel_main, this.fontRenderer, MARGIN, this.nextYPos, stringSize, string_code), false);
 		this.field_code = this.addComponent(new IntegerField(this.panel_main, this.fontRenderer, fieldOffset, this.nextYPos, fieldSize, code));
 		
-		this.button_code = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(SEND_CODE) + I18n.func_135053_a(GuiScreenTileEntity.ENTER)));
-		this.button_close = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a(CLOSE) + I18n.func_135053_a(GuiScreenTileEntity.TAB)));
-		this.button_done = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.func_135053_a("gui.done") + I18n.func_135053_a(GuiScreenTileEntity.ESC)));
+		this.button_code = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.getString(SEND_CODE) + I18n.getString(KEY_ENTER)));
+		this.button_close = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.getString(CLOSE) + I18n.getString(KEY_TAB)));
+		this.button_done = this.addComponent(new StargateButton(this.panel_main, MARGIN, this.nextYPos, buttonSize, I18n.getString(GUI_DONE) + I18n.getString(KEY_ESC)));
 	}
 	
 	// ####################################################################################################

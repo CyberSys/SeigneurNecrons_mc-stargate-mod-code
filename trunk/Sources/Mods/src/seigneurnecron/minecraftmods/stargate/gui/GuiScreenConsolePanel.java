@@ -17,16 +17,16 @@ public abstract class GuiScreenConsolePanel<T extends Console> extends GuiScreen
 	// Lang constants :
 	// ####################################################################################################
 	
-	public static final String INV_NAME = "container.base";
+	public static final String INV_NAME_PANEL = "container.panel";
 	
-	public static final String DESTINATION = INV_NAME + ".destination";
-	public static final String NAME = INV_NAME + ".name";
-	public static final String ADD_THIS = INV_NAME + ".addThis";
-	public static final String ADD = INV_NAME + ".add";
-	public static final String DELETE = INV_NAME + ".delete";
-	public static final String OVERWRITE = INV_NAME + ".overwrite";
-	public static final String TAB = INV_NAME + ".tab";
-	public static final String ALL = INV_NAME + ".all";
+	public static final String DESTINATION = INV_NAME_PANEL + ".destination";
+	public static final String NAME = INV_NAME_PANEL + ".name";
+	public static final String ADD_THIS = INV_NAME_PANEL + ".addThis";
+	public static final String ADD = INV_NAME_PANEL + ".add";
+	public static final String DELETE = INV_NAME_PANEL + ".delete";
+	public static final String OVERWRITE = INV_NAME_PANEL + ".overwrite";
+	public static final String TAB = INV_NAME_PANEL + ".tab";
+	public static final String ALL = INV_NAME_PANEL + ".all";
 	
 	// ####################################################################################################
 	// Data fields :

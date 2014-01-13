@@ -21,7 +21,7 @@ public class ItemNaquadahPickaxe extends ItemPickaxe {
 	public ItemNaquadahPickaxe(String name) {
 		super(StargateMod.instance.getConfig().getItemId(name), StargateMod.naquadahToolMaterial);
 		this.setUnlocalizedName(name);
-		this.func_111206_d(name); // setIconName(name)
+		this.setTextureName(name);
 		this.setCreativeTab(StargateMod.stargateItemsTab);
 	}
 	
@@ -45,7 +45,7 @@ public class ItemNaquadahPickaxe extends ItemPickaxe {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		this.itemIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111208_A()); // getIconName()
+		this.itemIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.getIconString());
 	}
 	
 	@Override

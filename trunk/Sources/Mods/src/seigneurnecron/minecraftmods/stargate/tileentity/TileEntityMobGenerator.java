@@ -117,7 +117,7 @@ public class TileEntityMobGenerator extends TileEntityContainerStargate<Inventor
 						EntityLiving entityLiving = (EntityLiving) entity;
 						
 						if(entityLiving.getCanSpawnHere()) {
-							entityLiving.func_110161_a(null); // initCreature(EntityLivingData)
+							entityLiving.onSpawnWithEgg(null);
 							this.worldObj.spawnEntityInWorld(entityLiving);
 							this.worldObj.playAuxSFX(2004, this.xCoord, this.yCoord, this.zCoord, 0);
 							entityLiving.spawnExplosionParticle();

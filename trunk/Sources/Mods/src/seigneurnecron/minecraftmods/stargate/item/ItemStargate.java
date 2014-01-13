@@ -16,7 +16,7 @@ public class ItemStargate extends Item {
 	public ItemStargate(String name) {
 		super(StargateMod.instance.getConfig().getItemId(name));
 		this.setUnlocalizedName(name);
-		this.func_111206_d(name); // setIconName(name)
+		this.setTextureName(name);
 		this.setCreativeTab(StargateMod.stargateItemsTab);
 	}
 	
@@ -25,7 +25,7 @@ public class ItemStargate extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void registerIcons(IconRegister iconRegister) {
-		this.itemIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.func_111208_A()); // getIconName()
+		this.itemIcon = iconRegister.registerIcon(StargateMod.instance.getAssetPrefix() + this.getIconString());
 	}
 	
 }
