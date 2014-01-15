@@ -139,18 +139,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 
-// FIXME - Terminer l'interface DefaultConsole.
-
-// FIXME - Faire le fichier de texture pour la StargateFont.
-
-// FIXME - Voir s'il est possible de recuperer dinamiquement les textures de la pancarte.
-
-// FIXME - Mettre a jour les numero de version, dans les sources ET dans les fichiers d'info.
-
-// FIXME - Refaire les zip de textures, les zip de mods et le readme. Penser a mettre a jour dropbox.
-
-// FIXME - Wiki.
-
 /**
  * SeigneurNecron's Stargate Mod main class.
  * @author Seigneur Necron
@@ -163,7 +151,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 	
 	public static final String MOD_ID = "seigneur_necron_stargate_mod";
 	public static final String MOD_NAME = "SeigneurNecron's Stargate Mod";
-	public static final String VERSION = "[1.6.4] v3.1.5 [core v1.1.0]";
+	public static final String VERSION = "[1.6.4] v3.2.0 [core v1.1.0]";
 	
 	public static final String CHANEL_TILE_ENTITY = "SNSM_TileEntity";
 	public static final String CHANEL_COMMANDS = "SNSM_Commands";
@@ -817,7 +805,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		
 		this.addName(item_crystal, "Crystal", "Cristal");
 		this.addName(item_crystalStargate, "Stargate control crystal", "Cristal de controle de porte des etoiles");
-		this.addName(item_crystalStargateInterface, "Stargate interface crystal", "Cristal d'interfaçage a la porte des etoiles");
+		this.addName(item_crystalStargateInterface, "Stargate interface crystal", "Cristal d'interfacage a la porte des etoiles");
 		this.addName(item_crystalDhd, "DHD control crystal", "Cristal de controle de DHD");
 		this.addName(item_crystalShield, "Shield crystal", "Cristal de bouclier");
 		this.addName(item_crystalTeleporter, "Teleporter crystal", "Cristal de teleporteur");

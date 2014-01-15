@@ -27,7 +27,7 @@ public final class WorldStargateData extends WorldDataList<StargateCoordinates> 
 	protected static WorldStargateData instance;
 	
 	private static World getWorld() {
-		return ModBase.getServerWorldForDimension(0);
+		return ModBase.getSideWorldForDimension(0);
 	}
 	
 	public static WorldStargateData getInstance() {
@@ -74,7 +74,7 @@ public final class WorldStargateData extends WorldDataList<StargateCoordinates> 
 			StargateCoordinates stargate = this.dataList.get(index);
 			
 			if(stargate != null) {
-				World world = ModBase.getServerWorldForDimension(stargate.dim);
+				World world = ModBase.getSideWorldForDimension(stargate.dim);
 				
 				if(world != null) {
 					TileEntity tileEntity = world.getBlockTileEntity(stargate.x, stargate.y, stargate.z);

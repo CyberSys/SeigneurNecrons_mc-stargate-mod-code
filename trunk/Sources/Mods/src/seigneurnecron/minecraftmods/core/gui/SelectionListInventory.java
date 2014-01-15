@@ -34,7 +34,7 @@ public abstract class SelectionListInventory<T extends Object> extends Selection
 	// Methods :
 	
 	@Override
-	protected int getSlotHeight() {
+	public int getSlotHeight() {
 		return 2 * (FIELD_HEIGHT + LIST_SLOT_MARGIN);
 	}
 	
@@ -43,7 +43,7 @@ public abstract class SelectionListInventory<T extends Object> extends Selection
 		T element = this.listProvider.getList().get(index);
 		
 		FontRenderer fontRenderer1 = this.listProvider.getFirstFontRenderer();
-		FontRenderer fontRenderer2 = this.listProvider.getFirstFontRenderer();
+		FontRenderer fontRenderer2 = this.listProvider.getSecondFontRenderer();
 		
 		int xPos = MARGIN;
 		int width = this.width - (2 * MARGIN);

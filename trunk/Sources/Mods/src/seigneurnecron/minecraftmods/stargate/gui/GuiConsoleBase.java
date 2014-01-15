@@ -1,16 +1,15 @@
 package seigneurnecron.minecraftmods.stargate.gui;
 
 import static seigneurnecron.minecraftmods.core.gui.GuiConstants.BACKGROUND_COLOR;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.GRAY;
 import static seigneurnecron.minecraftmods.core.gui.GuiConstants.LIGHT_BLUE;
 import static seigneurnecron.minecraftmods.core.gui.GuiConstants.MARGIN;
 import static seigneurnecron.minecraftmods.core.gui.GuiConstants.PANEL_MARGIN;
-
-import java.util.List;
-
 import net.minecraft.client.resources.I18n;
 import seigneurnecron.minecraftmods.core.gui.GuiContainerOneLine;
-import seigneurnecron.minecraftmods.core.gui.Label;
 import seigneurnecron.minecraftmods.core.gui.Panel;
+import seigneurnecron.minecraftmods.core.gui.ScrollableText;
+import seigneurnecron.minecraftmods.core.gui.TextProvider;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerConsoleBase;
 import seigneurnecron.minecraftmods.stargate.inventory.InventoryConsoleBase;
 import cpw.mods.fml.relauncher.Side;
@@ -34,6 +33,14 @@ public class GuiConsoleBase extends GuiContainerOneLine<ContainerConsoleBase> {
 	
 	protected Panel panel_info;
 	
+	protected ScrollableText scrollableText;
+	
+	// ####################################################################################################
+	// Data fields :
+	// ####################################################################################################
+	
+	protected TextProvider textProvider;
+	
 	// ####################################################################################################
 	// Constructors :
 	// ####################################################################################################
@@ -53,7 +60,12 @@ public class GuiConsoleBase extends GuiContainerOneLine<ContainerConsoleBase> {
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
+	protected void drawForeground(int par1, int par2) {
+		super.drawForeground(par1, par2);
+		this.scrollableText.drawList(par1, par2);
+	}
+	
+	@Override
 	protected void initComponents() {
 		// Component sizes :
 		
@@ -63,25 +75,34 @@ public class GuiConsoleBase extends GuiContainerOneLine<ContainerConsoleBase> {
 		int totalWidth = (int) (this.width * 0.9);
 		
 		int panelWidth_info = totalWidth - panelWidth_main - PANEL_MARGIN;
-		int labelWidth = panelWidth_info - (2 * MARGIN);
-		
-		List<String> strings = this.fontRenderer.listFormattedStringToWidth(I18n.getString(INFO), labelWidth);
 		
 		int panelYPos = (this.height - panelHeight) / 2;
 		int panelXPos_info = (this.width - totalWidth) / 2;
+		
+		int listMargin = 2;
+		int scrollableTextWidth = panelWidth_info - (2 * listMargin);
+		int scrollableTextHeight = panelHeight - (2 * listMargin);
 		
 		// Panels :
 		
 		this.panel_info = new Panel(this, panelXPos_info, panelYPos, panelWidth_info, panelHeight);
 		this.panel_main = new Panel(this, this.panel_info.getRight() + PANEL_MARGIN, panelYPos, panelWidth_main, panelHeight);
 		
-		// Labels :
+		// Scrollable text :
 		
-		this.nextYPos = MARGIN;
-		
-		for(String string : strings) {
-			this.addComponent(new Label(this.panel_info, this.fontRenderer, MARGIN, this.nextYPos, labelWidth, string));
-		}
+		this.textProvider = new TextProvider(this.fontRenderer);
+		this.scrollableText = new ScrollableText(this.panel_info, listMargin, listMargin, scrollableTextWidth, scrollableTextHeight, this.mc, this.textProvider, GRAY);
+		this.textProvider.update(I18n.getString(INFO), this.scrollableText.getContentWidth() - (2 * MARGIN));
+	}
+	
+	// ####################################################################################################
+	// User input :
+	// ####################################################################################################
+	
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		this.scrollableText.handleMouseInput(getMouseXFromEvent(), getMouseYFromEvent());
 	}
 	
 }

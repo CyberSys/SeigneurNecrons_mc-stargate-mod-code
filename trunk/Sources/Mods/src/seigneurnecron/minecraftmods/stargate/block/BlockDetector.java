@@ -82,7 +82,7 @@ public class BlockDetector extends BlockGuiScreen {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected GuiScreen getGuiScreen(TileEntity tileEntity, EntityPlayer player) {
+	public GuiScreen getGuiScreen(TileEntity tileEntity, EntityPlayer player) {
 		return new GuiDetector((TileEntityDetector) tileEntity);
 	}
 	

@@ -133,7 +133,7 @@ public class StargateEventHandler {
 						}
 						
 						if(!ok) {
-							playerData.addElementAndSync(new SoulCount(monsterId, 0));
+							playerData.addElementAndSync(new SoulCount(monsterId, 1));
 						}
 					}
 				}

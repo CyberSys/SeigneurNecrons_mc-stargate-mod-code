@@ -20,7 +20,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Seigneur Necron
  */
 @SideOnly(Side.CLIENT)
-public class TileEntitySignCustomRenderer extends TileEntitySpecialRenderer {
+public class TileEntitySignCustomRenderer extends TileEntitySpecialRenderer /*implements ResourceManagerReloadListener*/{
 	
 	private static final ResourceLocation DEFAULT_TEXTURE = new ResourceLocation("textures/entity/sign.png");
 	
@@ -40,6 +40,10 @@ public class TileEntitySignCustomRenderer extends TileEntitySpecialRenderer {
 		for(int i = 0; i < this.messages.length; i++) {
 			this.textures[i] = new ResourceLocation(this.signFolder + this.messages[i] + EXTENSION);
 		}
+		
+		// TODO - Uncoment this section to register to the resource manager.
+		//ReloadableResourceManager resourceManager = (ReloadableResourceManager) FMLClientHandler.instance().getClient().getResourceManager();
+		//resourceManager.registerReloadListener(this);
 	}
 	
 	public ResourceLocation getTextureFile(String[] signText) {
@@ -52,6 +56,11 @@ public class TileEntitySignCustomRenderer extends TileEntitySpecialRenderer {
 		}
 		return null;
 	}
+	
+	//	@Override
+	//	public void onResourceManagerReload(ResourceManager resourcemanager) {
+	//		// TODO - Get the sign textures for the current resource pack.
+	//	}
 	
 	/* ########## End of added code part ########## */
 	

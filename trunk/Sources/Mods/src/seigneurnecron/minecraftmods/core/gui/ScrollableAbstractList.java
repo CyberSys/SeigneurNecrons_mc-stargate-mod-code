@@ -15,6 +15,13 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public abstract class ScrollableAbstractList extends Panel {
 	
+	// Constants :
+
+	protected static final float NO_CLICK = -1.0F;
+	protected static final float OUT_OF_LIST = -2.0F;
+	protected static final int MIN_CURSOR_HEIGHT = 32;
+	protected static final int MIN_CURSOR_MARGIN = 8;
+	
 	// Fields :
 	
 	private final Minecraft minecraft;
@@ -40,19 +47,19 @@ public abstract class ScrollableAbstractList extends Panel {
 	 * Returns the number of elements in the list.
 	 * @return the number of elements in the list.
 	 */
-	protected abstract int getSize();
+	public abstract int getSize();
 	
 	/**
 	 * Returns the height of a slot.
 	 * @return the height of a slot.
 	 */
-	protected abstract int getSlotHeight();
+	public abstract int getSlotHeight();
 	
 	/**
 	 * Returns the width of the scroll bar.
 	 * @return the width of the scroll bar.
 	 */
-	protected int getScrollBarWidth() {
+	public int getScrollBarWidth() {
 		return 6;
 	}
 	
@@ -60,7 +67,7 @@ public abstract class ScrollableAbstractList extends Panel {
 	 * Returns the margin between the content and the scroll bar.
 	 * @return the margin between the content and the scroll bar.
 	 */
-	protected int getScrollBarMargin() {
+	public int getScrollBarMargin() {
 		return 1;
 	}
 	
@@ -68,7 +75,7 @@ public abstract class ScrollableAbstractList extends Panel {
 	 * Returns the width of the list.
 	 * @return the width of the list.
 	 */
-	protected int getContentWidth() {
+	public int getContentWidth() {
 		return this.width - this.getScrollBarWidth() - this.getScrollBarMargin();
 	}
 	
@@ -76,7 +83,7 @@ public abstract class ScrollableAbstractList extends Panel {
 	 * Returns the total height of the list.
 	 * @return the total height of the list.
 	 */
-	protected int getContentHeight() {
+	public int getContentHeight() {
 		return this.getSize() * this.slotHeight;
 	}
 	
@@ -84,7 +91,7 @@ public abstract class ScrollableAbstractList extends Panel {
 	 * Returns the height of the content that can't be displayed on the screen. Negative if the content is shorter than the list.
 	 * @return the height of the content that can't be displayed on the screen.
 	 */
-	protected int getMissingHeight() {
+	public int getMissingHeight() {
 		return this.getContentHeight() - this.height;
 	}
 	
@@ -112,24 +119,16 @@ public abstract class ScrollableAbstractList extends Panel {
 		this.drawScrollBar();
 	}
 	
+	/**
+	 * Update the scrolling state.
+	 * @param mouseX - the X position of the mouse, relative to the list.
+	 * @param mouseY - the Y position of the mouse, relative to the list.
+	 */
 	private void updateScrolling(int mouseX, int mouseY) {
-		int listLeft = 0;
-		int listRight = this.getContentWidth();
-		int scrollBarRight = this.width;
-		int scrollBarLeft = scrollBarRight - 6;
-		
 		if(Mouse.isButtonDown(0)) {
-			if(this.initialMouseClickY == -1.0F) {
-				boolean flag = true;
-				
-				if(mouseY >= 0 && mouseY <= this.height) {
-					int mouseYWithScroll = mouseY + (int) this.scrollDistance;
-					
-					if(mouseX >= listLeft && mouseX <= listRight && mouseYWithScroll < 0) {
-						flag = false;
-					}
-					
-					if(mouseX >= scrollBarLeft && mouseX <= scrollBarRight) {
+			if(this.initialMouseClickY == NO_CLICK) {
+				if(mouseX >= 0 && mouseX <= this.width && mouseY >= 0 && mouseY <= this.height) {
+					if(mouseX >= this.width - this.getScrollBarWidth() && mouseX <= this.width) {
 						this.scrollFactor = -1.0F;
 						int missingHeight = this.getMissingHeight();
 						
@@ -137,26 +136,26 @@ public abstract class ScrollableAbstractList extends Panel {
 							missingHeight = 1;
 						}
 						
-						int var13 = (int) ((float) (this.height * this.height) / (float) this.getContentHeight());
+						int cursorHeight = (int) ((float) (this.height * this.height) / (float) this.getContentHeight());
 						
-						if(var13 < 32) {
-							var13 = 32;
+						if(cursorHeight < MIN_CURSOR_HEIGHT) {
+							cursorHeight = MIN_CURSOR_HEIGHT;
 						}
 						
-						if(var13 > this.height - 8) {
-							var13 = this.height - 8;
+						if(cursorHeight > this.height - MIN_CURSOR_MARGIN) {
+							cursorHeight = this.height - MIN_CURSOR_MARGIN;
 						}
 						
-						this.scrollFactor /= (float) (this.height - var13) / (float) missingHeight;
+						this.scrollFactor /= (float) (this.height - cursorHeight) / (float) missingHeight;
 					}
 					else {
 						this.scrollFactor = 1.0F;
 					}
 					
-					this.initialMouseClickY = flag ? mouseY : -2.0F;
+					this.initialMouseClickY = mouseY;
 				}
 				else {
-					this.initialMouseClickY = -2.0F;
+					this.initialMouseClickY = OUT_OF_LIST;
 				}
 			}
 			else if(this.initialMouseClickY >= 0.0F) {
@@ -165,7 +164,7 @@ public abstract class ScrollableAbstractList extends Panel {
 			}
 		}
 		else {
-			this.initialMouseClickY = -1.0F;
+			this.initialMouseClickY = NO_CLICK;
 		}
 		
 		this.applyScrollLimits();
@@ -183,19 +182,19 @@ public abstract class ScrollableAbstractList extends Panel {
 	 */
 	protected void drawScrollBar() {
 		int scrollBarRight = this.width;
-		int scrollBarLeft = scrollBarRight - 6;
+		int scrollBarLeft = scrollBarRight - this.getScrollBarWidth();
 		
 		int missingHeight = this.getMissingHeight();
 		
 		if(missingHeight > 0) {
-			int cursorHeight = this.height * this.height / this.getContentHeight();
+			int cursorHeight = (int) ((float) (this.height * this.height) / (float) this.getContentHeight());
 			
-			if(cursorHeight < 32) {
-				cursorHeight = 32;
+			if(cursorHeight < MIN_CURSOR_HEIGHT) {
+				cursorHeight = MIN_CURSOR_HEIGHT;
 			}
 			
-			if(cursorHeight > this.height - 8) {
-				cursorHeight = this.height - 8;
+			if(cursorHeight > this.height - MIN_CURSOR_MARGIN) {
+				cursorHeight = this.height - MIN_CURSOR_MARGIN;
 			}
 			
 			int cursorTop = (int) this.scrollDistance * (this.height - cursorHeight) / missingHeight;

@@ -9,22 +9,27 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import seigneurnecron.minecraftmods.core.font.CustomFontRenderer;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
+import seigneurnecron.minecraftmods.stargate.block.BlockGuiScreen;
 import seigneurnecron.minecraftmods.stargate.entity.EntityCustomExplosiveFireBall;
 import seigneurnecron.minecraftmods.stargate.entity.EntityCustomFireBall;
 import seigneurnecron.minecraftmods.stargate.entity.EntityNapalm;
 import seigneurnecron.minecraftmods.stargate.entity.EntityNuke;
 import seigneurnecron.minecraftmods.stargate.gui.GuiConsoleBase;
 import seigneurnecron.minecraftmods.stargate.gui.GuiMobGenerator;
+import seigneurnecron.minecraftmods.stargate.gui.GuiShieldRemote;
 import seigneurnecron.minecraftmods.stargate.gui.GuiSoulCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.gui.GuiStuffLevelUpTable;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerConsoleBase;
-import seigneurnecron.minecraftmods.stargate.inventory.ContainerSoulCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerMobGenerator;
+import seigneurnecron.minecraftmods.stargate.inventory.ContainerSoulCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerStuffLevelUpTable;
+import seigneurnecron.minecraftmods.stargate.item.ItemShieldRemote;
 import seigneurnecron.minecraftmods.stargate.render.RenderCustomFireBall;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityMobGenerator;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.Console;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleScreen;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleSoulCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStuffLevelUpTable;
 import cpw.mods.fml.client.FMLClientHandler;
@@ -42,7 +47,7 @@ public class StargateClientProxy extends StargateCommonProxy {
 	
 	private FontRenderer stargateFontRenderer;
 	
-	// Methods :
+	// GuiContainer methods :
 	
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
@@ -77,6 +82,29 @@ public class StargateClientProxy extends StargateCommonProxy {
 		
 		return null;
 	}
+	
+	// GuiScreen methods :
+	
+	@Override
+	public void openGui(BlockGuiScreen block, EntityPlayer player, TileEntity tileEntity) {
+		FMLClientHandler.instance().displayGuiScreen(player, block.getGuiScreen(tileEntity, player));
+	}
+	
+	@Override
+	public void openGui(ItemShieldRemote item, World world, EntityPlayer player) {
+		TileEntityStargateControl stargate = item.getNearestActivatedGate(world, (int) player.posX, (int) player.posY, (int) player.posZ);
+		
+		if(stargate != null) {
+			FMLClientHandler.instance().displayGuiScreen(player, new GuiShieldRemote(stargate, player));
+		}
+	}
+	
+	@Override
+	public void openGui(ConsoleScreen console, EntityPlayer player) {
+		FMLClientHandler.instance().displayGuiScreen(player, console.getGui(player));
+	}
+	
+	// Registering methods :
 	
 	@Override
 	public void registerRenderers() {

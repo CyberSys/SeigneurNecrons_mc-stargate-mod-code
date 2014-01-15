@@ -48,7 +48,7 @@ public final class StargateChunkLoader implements LoadingCallback {
 	}
 	
 	public void registerGate(StargateCoordinates stargate) {
-		Ticket ticket = ForgeChunkManager.requestTicket(StargateMod.instance, ModBase.getServerWorldForDimension(stargate.dim), Type.NORMAL);
+		Ticket ticket = ForgeChunkManager.requestTicket(StargateMod.instance, ModBase.getSideWorldForDimension(stargate.dim), Type.NORMAL);
 		
 		if(ticket != null) {
 			this.registeredGates.put(stargate, ticket);

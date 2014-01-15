@@ -87,7 +87,7 @@ public class BlockStargateControl extends BlockGuiScreen {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	protected GuiScreen getGuiScreen(TileEntity tileEntity, EntityPlayer player) {
+	public GuiScreen getGuiScreen(TileEntity tileEntity, EntityPlayer player) {
 		return new GuiStargateControl((TileEntityStargateControl) tileEntity);
 	}
 	

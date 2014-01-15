@@ -4,7 +4,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import cpw.mods.fml.client.FMLClientHandler;
+import seigneurnecron.minecraftmods.stargate.StargateMod;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -26,10 +26,7 @@ public abstract class BlockGuiScreen extends BlockContainerNaquadah {
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		
 		if(tileEntity != null && this.tileEntityOk(tileEntity)) {
-			if(world.isRemote) {
-				FMLClientHandler.instance().displayGuiScreen(player, this.getGuiScreen(tileEntity, player));
-			}
-			
+			StargateMod.proxy.openGui(this, player, tileEntity);
 			return true;
 		}
 		
@@ -39,6 +36,6 @@ public abstract class BlockGuiScreen extends BlockContainerNaquadah {
 	protected abstract boolean tileEntityOk(TileEntity tileEntity);
 	
 	@SideOnly(Side.CLIENT)
-	protected abstract GuiScreen getGuiScreen(TileEntity tileEntity, EntityPlayer player);
+	public abstract GuiScreen getGuiScreen(TileEntity tileEntity, EntityPlayer player);
 	
 }

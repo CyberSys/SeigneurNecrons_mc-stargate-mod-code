@@ -3,8 +3,10 @@ package seigneurnecron.minecraftmods.stargate.tileentity.console;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
+import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
-import cpw.mods.fml.client.FMLClientHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Seigneur Necron
@@ -21,13 +23,11 @@ public abstract class ConsoleScreen extends Console {
 	
 	@Override
 	public boolean openGui(World world, int x, int y, int z, EntityPlayer player) {
-		if(world.isRemote) {
-			FMLClientHandler.instance().displayGuiScreen(player, this.getGui(player));
-		}
-		
+		StargateMod.proxy.openGui(this, player);
 		return true;
 	}
 	
-	protected abstract GuiScreen getGui(EntityPlayer player);
+	@SideOnly(Side.CLIENT)
+	public abstract GuiScreen getGui(EntityPlayer player);
 	
 }

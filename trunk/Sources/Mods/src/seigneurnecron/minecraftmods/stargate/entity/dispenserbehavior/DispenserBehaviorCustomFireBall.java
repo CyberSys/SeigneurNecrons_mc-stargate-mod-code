@@ -35,7 +35,7 @@ public class DispenserBehaviorCustomFireBall extends BehaviorDefaultDispenseItem
 		double motionY = random.nextGaussian() * 0.05D + enumfacing.getFrontOffsetY();
 		double motionZ = random.nextGaussian() * 0.05D + enumfacing.getFrontOffsetZ();
 		
-		world.spawnEntityInWorld(new EntityCustomFireBall(world, x, y, z, motionX, motionY, motionZ));
+		world.spawnEntityInWorld(getProjectile(world, x, y, z, motionX, motionY, motionZ));
 		itemStack.splitStack(1);
 		return itemStack;
 	}

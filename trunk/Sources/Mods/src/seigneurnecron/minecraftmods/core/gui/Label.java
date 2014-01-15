@@ -3,10 +3,13 @@ package seigneurnecron.minecraftmods.core.gui;
 import static seigneurnecron.minecraftmods.core.gui.GuiConstants.FIELD_HEIGHT;
 import static seigneurnecron.minecraftmods.core.gui.GuiConstants.WHITE;
 import net.minecraft.client.gui.FontRenderer;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Seigneur Necron
  */
+@SideOnly(Side.CLIENT)
 public class Label extends Panel {
 	
 	// Fields :
