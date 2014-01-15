@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
@@ -17,6 +18,9 @@ import seigneurnecron.minecraftmods.stargate.item.ItemCrystal;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 
 import com.google.common.collect.ImmutableList;
+
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Seigneur Necron
@@ -82,6 +86,30 @@ public abstract class Console {
 	
 	public static String getConsoleName(Class<? extends Console> clazz) {
 		return consoleToNameMap.get(clazz);
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static String getTranslatedConsoleName(Class<? extends Console> clazz) {
+		String consoleName = getConsoleName(clazz);
+		
+		if(consoleName != null) {
+			return I18n.getString(CONSOLE_NAME_PREFIX + consoleName);
+		}
+		else {
+			return null;
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static String getTranslatedConsoleInfo(Class<? extends Console> clazz) {
+		String consoleName = getConsoleName(clazz);
+		
+		if(consoleName != null) {
+			return I18n.getString(CONSOLE_INFO_PREFIX + consoleName);
+		}
+		else {
+			return null;
+		}
 	}
 	
 	public static ImmutableList<Entry<ArrayList<ItemCrystal>, Class<? extends Console>>> getValidCristalSets() {

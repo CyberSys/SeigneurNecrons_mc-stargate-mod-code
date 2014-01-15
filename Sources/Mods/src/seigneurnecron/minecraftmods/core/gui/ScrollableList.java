@@ -24,7 +24,7 @@ public abstract class ScrollableList<T extends ListProvider<? extends Object>> e
 	// Methods :
 	
 	@Override
-	protected int getSize() {
+	public int getSize() {
 		return this.listProvider.getList().size();
 	}
 	

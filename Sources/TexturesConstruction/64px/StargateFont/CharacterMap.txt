@@ -1,0 +1,13 @@
+
+ Glyphs 1 - 15 => Character 'a' - 'o' (x coordinate)
+ Glyphs 16 - 30 => Character 'A' - 'O' (z coordinate)
+ Glyphs 31 - 35 => Character 'v' - 'z' (y coordinate)
+ Glyphs 36 => Character '2' (dimension : End)
+ Glyphs 37 => Character '1' (dimension : Hell)
+ Glyphs 38 => Character '@' (special 9th symbol)
+ Glyphs At => Character '0' (dimension : Earth)
+
+ +-------+----------------------------------------------+----------------------------------------------+----------------+-------------+
+ | Char  |  a  b  c  d  e  f  g  h  i  j  k  l  m  n  o |  A  B  C  D  E  F  G  H  I  J  K  L  M  N  O |  v  w  x  y  z |  0  1  2  @ | 
+ | Glyph | 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 | 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 | 31 32 33 34 35 | At 37 36 38 | 
+ +-------+----------------------------------------------+----------------------------------------------+----------------+-------------+

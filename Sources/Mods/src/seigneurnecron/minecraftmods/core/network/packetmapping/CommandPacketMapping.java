@@ -44,7 +44,7 @@ public class CommandPacketMapping extends PacketMapping<Command> {
 			int y = input.readInt();
 			int z = input.readInt();
 			
-			World world = ModBase.getServerWorldForDimension(dim);
+			World world = ModBase.getSideWorldForDimension(dim);
 			
 			if(world != null) {
 				TileEntity tileEntity = world.getBlockTileEntity(x, y, z);

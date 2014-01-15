@@ -7,6 +7,8 @@ import seigneurnecron.minecraftmods.stargate.gui.GuiDhd;
 import seigneurnecron.minecraftmods.stargate.network.packetmapping.StargateCommandPacketMapping;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Seigneur Necron
@@ -22,7 +24,8 @@ public class ConsoleStargateDhd extends ConsoleStargate {
 	// Methods :
 	
 	@Override
-	protected GuiScreen getGui(EntityPlayer player) {
+	@SideOnly(Side.CLIENT)
+	public GuiScreen getGui(EntityPlayer player) {
 		return new GuiDhd(this.tileEntity, player, this);
 	}
 	

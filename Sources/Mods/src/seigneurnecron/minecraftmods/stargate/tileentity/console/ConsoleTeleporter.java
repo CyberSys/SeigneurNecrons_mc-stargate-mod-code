@@ -9,6 +9,8 @@ import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.gui.GuiTeleporter;
 import seigneurnecron.minecraftmods.stargate.network.packetmapping.StargateCommandPacketMapping;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Seigneur Necron
@@ -28,7 +30,8 @@ public class ConsoleTeleporter extends ConsoleScreen {
 	// Methods :
 	
 	@Override
-	protected GuiScreen getGui(EntityPlayer player) {
+	@SideOnly(Side.CLIENT)
+	public GuiScreen getGui(EntityPlayer player) {
 		return new GuiTeleporter(this.tileEntity, player, this);
 	}
 	

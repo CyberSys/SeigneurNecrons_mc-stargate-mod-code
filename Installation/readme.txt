@@ -1,4 +1,4 @@
-Installation [1.6.2] :
+Installation [1.6.4] :
 
 	I - Client :
 	
@@ -10,67 +10,76 @@ Installation [1.6.2] :
 			+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 			
 			1. Download the following files :
-				- Forge : "minecraftforge-universal-1.6.2-9.10.0.789.jar"
-				- Optifine : "OptiFine_1.6.2_HD_U_B4.zip"
+				- Forge : "forge-1.6.4-9.11.1.965-installer.jar"
+				- Optifine : "OptiFine_1.6.4_HD_U_C8.jar"
 			
-			2. Run "minecraftforge-universal-1.6.2-9.10.0.789.jar", check "Install client" and click Ok.
+			2. You have to run Minecraft 1.6.4 at least once before installing Forge 1.6.4 :
+				- Run the Minecraft Launcher
+				- Click "New Profile"
+				- Select the "release 1.6.4" version
+				- Click "Save profile"
+				- Select your new profile
+				- Click "Play".
 			
-			3. Navigate to your ".minecraft" folder :
+			3. Run "forge-1.6.4-9.11.1.965-installer.jar", check "Install client" and click "Ok".
+			
+			4. Navigate to your ".minecraft" folder :
 				- Windows : "%appdata%\.minecraft\"
 				- Mac OS X : "~/Library/Application Support/minecraft/"
 				- Linux : "~/.minecraft/"
 			
-			4. Navigate to the "versions" folder.
+			5. Copy "OptiFine_1.6.4_HD_U_C8.jar" in the mods folder.
+			
+			6. You can now test the installation :
+				- Run the Minecraft Launcher
+				- Click "New Profile"
+				- Select the "release 1.6.4-Forge9.11.1.965" version
+				- Click "Save Profile"
+				- Select your new profile
+				- Click "Play".
 			
 			+- DropBox ----------------------------------------------------------------------------------------------------------------------------------------------------------------+
-			| Step 5 to 7 : the "1.6.2-Forge9.10.0.789-Optifine_HD_U_B4" folder is available in "./InstallationFiles/ForgeAndOptifine/".                                               |
-			| Just copy-past it in the "versions" folder and skip to step 8.                                                                                                           |
+			| Step 6 : if minecraft fails to download a library, you can find it in "./InstallationFiles/libraries/".                                                                  |
+			| You can just copy-past the whole "libraries" folder in your ".minecraft" folder.                                                                                         |
 			+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 			
-			5. Make a copy of the "1.6.2-Forge9.10.0.789" folder and rename it to "1.6.2-Forge9.10.0.789-Optifine_HD_U_B4", then enter that folder and rename the files the same way :
-				- "1.6.2-Forge9.10.0.789.jar" -> "1.6.2-Forge9.10.0.789-Optifine_HD_U_B4.jar"
-				- "1.6.2-Forge9.10.0.789.json" -> "1.6.2-Forge9.10.0.789-Optifine_HD_U_B4.json"
+			7. Forge and Optifine are now installed together on your client. You can now add mods in the "mods" folder.
 			
-			6. Open "1.6.2-Forge9.10.0.789-Optifine_HD_U_B4.json" with a text editor and replace the id "1.6.2-Forge9.10.0.789" by "1.6.2-Forge9.10.0.789-Optifine_HD_U_B4".
-			
-			7. Copy all the content of "OptiFine_1.6.2_HD_U_B4.zip" in "1.6.2-Forge9.10.0.789-Optifine_HD_U_B4.jar" and delete the META-INF folder.
-			
-			+- DropBox ----------------------------------------------------------------------------------------------------------------------------------------------------------------+
-			| Step 8 : if mincraft fails to download a library, you can find it in "./InstallationFiles/libraries/".                                                                   |
-			| You can just copy-past the whole "libraries" folder in your ".minecraft" folder. But don't skip the whole step!                                                          |
-			+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-			
-			8. Run the Minecraft Launcher and create a new profile, tell it to use the "release 1.6.2-Forge9.10.0.789-Optifine_HD_U_B4" version.
-			Under Java settings, check JVM Arguments and add "-Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true" after "-Xmx1G" or whatever you may have.
-			(You can add some arguments to allocate more RAM to the client, for exemple : "-Xmx2G -Xms2G -Dfml.ignoreInvalidMinecraftCertificates=true -Dfml.ignorePatchDiscrepancies=true" allocates 2G to the client.)
-			Save Profile, select your new profile and Play the game!
-			
-			9. Forge and Optifine are now installed together on your client. You can now add mods in the "mods" folder.
+			8. (optional) If you want to allocate more RAM to the client :
+				- In the Minecraft Launcher, select your profile and click "Edit Profile"
+				- Under Java settings, check "JVM Arguments"
+				- In the field, tip for exemple "-Xmx2G -Xms2G" to allocates 2GB to the client.
+				- Click "Save Profile"
 		
-		B - How to install StargateMod :
+		B - How to install my mods :
 		
 			1. Navigate to your ".minecraft" folder.
 			
 			+- DropBox ----------------------------------------------------------------------------------------------------------------------------------------------------------------+
-			| Step 2 : the file "[1.6.2]SeigneurNecronStargateMod_v3.0.0.zip" is available in "./InstallationFiles/".                                                                  |
+			| Step 2 : the files are available in "./InstallationFiles/mods/".                                                                                                         |
 			+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 			
-			2. Put the file "[1.6.2]SeigneurNecronStargateMod_v3.0.0.zip" in the "mods" folder.
+			2. Download the folowing files and put them in the "mods" folder :
+				- Mod Core (required) : "[1.6.4]SeigneurNecronModCore_v1.1.0[forge 9.11.1.965].zip"
+				- Stargate Mod (optional) : "[1.6.4]SeigneurNecronStargateMod_v3.2.0[core 1.1.0].zip"
+				- Dropable Glass Mod (optional) : "[1.6.4]SeigneurNecronDropableGlassMod_v1.0.0[core 1.1.0].zip"
+				- Custom Signs Mod (optional) : "[1.6.4]SeigneurNecronCustomSignsMod_v1.0.0[core 1.1.0].zip"
 			
-			3. Start Minecraft with your Forge+Optifine profil. Enjoy !
+			3. Start Minecraft with your Forge 1.6.4 profile. Enjoy !
 		
-		C - How to install the texture pack :
+		C - How to install the 64px texture pack :
 		
 			1. Navigate to your ".minecraft" folder.
 			
 			+- DropBox ----------------------------------------------------------------------------------------------------------------------------------------------------------------+
-			| Step 2 : the file "[1.6.2]SeigneurNecronStargateMod_v3.0.0_Textures.zip" is available in "./InstallationFiles/".                                                         |
-			| TIP : the complete texture pack "NecronCraft 64.zip" is also available in "./InstallationFiles/".                                                                        |
+			| Step 2 : the files are available in "./InstallationFiles/resourcepacks/".                                                                                                |
 			+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 			
-			2. Put the file "[1.6.2]SeigneurNecronStargateMod_v3.0.0_Textures.zip" in the "resourcepacks" folder.
+			2. Download one of this files and put it in the "resourcepacks" folder :
+				- Complete pack : "[1.6.4]NecronCraft64_v3.2.0.zip"
+				- Mod textures only : "[1.6.4]SeigneurNecronModsTextures64_v3.2.0.zip"
 			
-			3. Start Minecraft with your Forge+Optifine profil. Enjoy !
+			3. Start Minecraft with your Forge 1.6.4 profile, with Optifine installed. Enjoy !
 	
 	II - Server :
 	
@@ -81,26 +90,29 @@ Installation [1.6.2] :
 			| Just skip to step 2.                                                                                                                                                     |
 			+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 			
-			1. Download the following file : "minecraftforge-installer-1.6.2-9.10.0.789.jar".
+			1. Download the following file : "forge-1.6.4-9.11.1.965-installer.jar".
+			
+			2. Run "forge-1.6.4-9.11.1.965-installer.jar", check "Install server", select the folder in which you want to install your server and click "Ok".
 			
 			+- DropBox ----------------------------------------------------------------------------------------------------------------------------------------------------------------+
 			| Step 2 : if mincraft forge fails to download a library, you can find it in "./InstallationFiles/libraries/".                                                             |
-			| You can just copy-past the whole "libraries" folder in your server folder. But don't skip the whole step!                                                                |
+			| You can just copy-past the whole "libraries" folder in your server folder.                                                                                               |
 			+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
-			
-			2. Run "minecraftforge-universal-1.6.2-9.10.0.789.jar", check "Install server", select the folder in which you want to install your server and click Ok.
 			
 			3. Forge is now installed on your server. You can now add mods in the "mods" folder.
 		
-		B - How to install StargateMod :
+		B - How to install my mods :
 		
 			1. Navigate to your server folder.
 			
 			+- DropBox ----------------------------------------------------------------------------------------------------------------------------------------------------------------+
-			| Step 2 : the file "[1.6.2]SeigneurNecronStargateMod_v3.0.0.zip" is available in "./InstallationFiles/".                                                                  |
+			| Step 2 : the files are available in "./InstallationFiles/mods/".                                                                                                         |
 			+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 			
-			2. Put the file "[1.6.2]SeigneurNecronStargateMod_v3.0.0.zip" in the "mods" folder.
+			2. Download the folowing files and put them in the "mods" folder :
+				- Mod Core (required) : "[1.6.4]SeigneurNecronModCore_v1.1.0[forge 9.11.1.965].zip"
+				- Stargate Mod (optional) : "[1.6.4]SeigneurNecronStargateMod_v3.2.0[core 1.1.0].zip"
+				- Dropable Glass Mod (optional) : "[1.6.4]SeigneurNecronDropableGlassMod_v1.0.0[core 1.1.0].zip"
 			
 			3. Start your server. Enjoy !
 	
@@ -113,9 +125,9 @@ Installation [1.6.2] :
 			| Just skip to step 2.                                                                                                                                                     |
 			+--------------------------------------------------------------------------------------------------------------------------------------------------------------------------+
 			
-			1. Download the following file : "minecraftforge-src-1.6.2-9.10.0.789.zip".
+			1. Download the following file : "forge-1.6.4-9.11.1.965-src.zip".
 			
-			2. Extract the content of "minecraftforge-src-1.6.2-9.10.0.789.zip" (a "forge" folder) where you whant to place your workspace.
+			2. Extract the content of "forge-1.6.4-9.11.1.965-src.zip" (a "forge" folder) where you want to place your workspace.
 			
 			3. Follow "README-MinecraftForge.txt" in that folder.
 			(You just have to launch a install script which will do all the work for you, and create an eclipse workspace in "forge/mcp/eclipse/".)

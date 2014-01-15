@@ -520,7 +520,7 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	 * @return the world containing the other gate.
 	 */
 	protected World getOtherWorld() {
-		return ModBase.getServerWorldForDimension(this.destination.dim);
+		return ModBase.getSideWorldForDimension(this.destination.dim);
 	}
 	
 	/**

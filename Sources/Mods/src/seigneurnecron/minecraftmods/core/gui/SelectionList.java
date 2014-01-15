@@ -15,6 +15,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public abstract class SelectionList<T extends ListProviderSelect<? extends Object>> extends ScrollableList<T> {
 	
+	// Constants :
+	
+	protected static final long MAX_DOUBLE_CLICK_TIME = 250L;
+	
 	// Constructors :
 	
 	protected SelectionList(ComponentContainer parent, int xPos, int yPos, int width, int height, Minecraft minecraft, T listProvider) {
@@ -27,9 +31,8 @@ public abstract class SelectionList<T extends ListProviderSelect<? extends Objec
 	protected void drawSlots(int mouseX, int mouseY) {
 		Tessellator tessellator = Tessellator.instance;
 		
-		int listLeft = 0;
-		int listRight = this.getContentWidth();
-		
+		int borderLeft = 0;
+		int borderRight = this.getContentWidth();
 		int shiftedTop = 2 - (int) this.scrollDistance;
 		
 		for(int index = 0; index < this.getSize(); ++index) {
@@ -37,8 +40,6 @@ public abstract class SelectionList<T extends ListProviderSelect<? extends Objec
 			
 			if(top < this.height && top + this.slotHeight > 0) {
 				if(this.isSelected(index)) {
-					int borderLeft = listLeft;
-					int borderRight = listRight;
 					int borderTop = top;
 					int borderBottom = top + this.slotHeight;
 					
@@ -74,7 +75,7 @@ public abstract class SelectionList<T extends ListProviderSelect<? extends Objec
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
 				}
 				
-				this.drawSlotContent(index, listLeft, top);
+				this.drawSlotContent(index, borderLeft, top);
 			}
 		}
 	}
@@ -102,7 +103,7 @@ public abstract class SelectionList<T extends ListProviderSelect<? extends Objec
 	}
 	
 	/**
-	 * Draws a slot.
+	 * Draws the content of a slot.
 	 * @param index - the index of the slot.
 	 * @param left - the X position of the slot.
 	 * @param top - the Y position of the slot.
@@ -113,16 +114,12 @@ public abstract class SelectionList<T extends ListProviderSelect<? extends Objec
 	protected void handleMouseInputInner(int mouseX, int mouseY) {
 		super.handleMouseInputInner(mouseX, mouseY);
 		
-		if(Mouse.isButtonDown(0) && Mouse.getEventDX() == 0 && Mouse.getEventDY() == 0) {
-			int listLength = this.getSize();
-			int scrollBarXStart = this.width - 6;
-			int boxLeft = 0;
-			int boxRight = scrollBarXStart - 1;
+		if(Mouse.isButtonDown(0) && Mouse.getEventDX() == 0 && Mouse.getEventDY() == 0 && Mouse.getEventDWheel() == 0) {
 			int mouseYWithScroll = mouseY + (int) this.scrollDistance;
 			int index = mouseYWithScroll / this.slotHeight;
 			
-			if(mouseX >= boxLeft && mouseX <= boxRight && mouseYWithScroll >= 0 && index >= 0 && index < listLength) {
-				boolean doubleClicked = index == this.selectedIndex && Minecraft.getSystemTime() - this.lastClickTime < 250L;
+			if(mouseX >= 0 && mouseX <= this.getContentWidth() && mouseY >= 0 && mouseY <= this.height && index >= 0 && index < this.getSize()) {
+				boolean doubleClicked = index == this.selectedIndex && Minecraft.getSystemTime() - this.lastClickTime < MAX_DOUBLE_CLICK_TIME;
 				this.elementClicked(index, doubleClicked);
 				this.selectedIndex = index;
 				this.lastClickTime = Minecraft.getSystemTime();

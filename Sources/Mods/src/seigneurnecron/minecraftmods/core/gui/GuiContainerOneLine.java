@@ -1,10 +1,13 @@
 package seigneurnecron.minecraftmods.core.gui;
 
 import seigneurnecron.minecraftmods.core.inventory.ContainerOneLine;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author Seigneur Necron
  */
+@SideOnly(Side.CLIENT)
 public abstract class GuiContainerOneLine<T extends ContainerOneLine<?>> extends GuiContainerBasic<T> {
 	
 	// ####################################################################################################

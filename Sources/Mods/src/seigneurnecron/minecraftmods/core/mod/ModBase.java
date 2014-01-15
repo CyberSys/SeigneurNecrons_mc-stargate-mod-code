@@ -5,7 +5,6 @@ import java.util.logging.Logger;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
-import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.dispenser.IBehaviorDispenseItem;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -14,16 +13,15 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.packet.Packet;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldServer;
 import net.minecraftforge.common.ForgeChunkManager;
 import net.minecraftforge.common.ForgeChunkManager.LoadingCallback;
 import net.minecraftforge.common.MinecraftForge;
 import seigneurnecron.minecraftmods.core.SeigneurNecronMod;
 import seigneurnecron.minecraftmods.core.SeigneurNecronModConfig;
-import cpw.mods.fml.client.FMLClientHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
+import seigneurnecron.minecraftmods.core.proxy.ModBaseCommonProxy;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.IWorldGenerator;
+import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -34,7 +32,6 @@ import cpw.mods.fml.common.network.Player;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
-import cpw.mods.fml.relauncher.Side;
 
 /**
  * A class which can be extended to make a mod main class. A lot of work is already done by that class and the {@link ModConfig} class. <br />
@@ -78,6 +75,11 @@ public abstract class ModBase<M extends ModBase, C extends ModConfig> {
 	protected void initAssetPrefix() {
 		this.assetPrefix = this.getModId().toLowerCase() + ":";
 	}
+	
+	// Proxy :
+	
+	@SidedProxy(clientSide = "seigneurnecron.minecraftmods.core.proxy.ModBaseClientProxy", serverSide = "seigneurnecron.minecraftmods.core.proxy.ModBaseCommonProxy")
+	public static ModBaseCommonProxy baseProxy;
 	
 	// Logger :
 	
@@ -331,49 +333,16 @@ public abstract class ModBase<M extends ModBase, C extends ModConfig> {
 		this.logger.log(level, message);
 	}
 	
-	// Utility methods - world :
-	
-	/**
-	 * Returns the server world corresponding to the given dimension id, if it exists.
-	 * @param dim - the dimension id.
-	 * @return the server world corresponding to the dimension id if it exists, else null.
-	 */
-	public static WorldServer getServerWorldForDimension(int dim) {
-		return FMLCommonHandler.instance().getMinecraftServerInstance().worldServerForDimension(dim);
-	}
-	
-	/**
-	 * Returns the client world corresponding to the given dimension id, if it exists.
-	 * @param dim - the dimension id.
-	 * @return the client world corresponding to the dimension id if it exists, else null.
-	 */
-	public static WorldClient getClientWorldForDimension(int dim) {
-		WorldClient world = FMLClientHandler.instance().getClient().theWorld;
-		
-		if(world != null && world.provider.dimensionId != dim) {
-			return null;
-		}
-		
-		return world;
-	}
+	// Utility methods :
 	
 	/**
 	 * Returns the world corresponding to that side and the given dimension id, if it exists.
 	 * @param dim - the dimension id.
 	 * @return the world corresponding to the side and the dimension id if it exists, else null.
 	 */
-	public static World getSideWorldForDimension(int dim) {
-		Side side = FMLCommonHandler.instance().getEffectiveSide();
-		
-		if(side == Side.SERVER) {
-			return getServerWorldForDimension(dim);
-		}
-		else {
-			return getClientWorldForDimension(dim);
-		}
+	public static final World getSideWorldForDimension(int dim) {
+		return baseProxy.getSideWorldForDimension(dim);
 	}
-	
-	// Utility methods - packets :
 	
 	/**
 	 * Sends a packet from the client to the server.

@@ -8,13 +8,16 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
+import seigneurnecron.minecraftmods.stargate.block.BlockGuiScreen;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerConsoleBase;
-import seigneurnecron.minecraftmods.stargate.inventory.ContainerSoulCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerMobGenerator;
+import seigneurnecron.minecraftmods.stargate.inventory.ContainerSoulCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerStuffLevelUpTable;
+import seigneurnecron.minecraftmods.stargate.item.ItemShieldRemote;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityMobGenerator;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.Console;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleScreen;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleSoulCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStuffLevelUpTable;
 import cpw.mods.fml.common.network.IGuiHandler;
@@ -41,7 +44,7 @@ public class StargateCommonProxy implements IGuiHandler {
 		return extendedEntityData.remove(key);
 	}
 	
-	// Methods :
+	// GuiContainer methods :
 	
 	@Override
 	public Object getClientGuiElement(int id, EntityPlayer player, World world, int x, int y, int z) {
@@ -81,6 +84,22 @@ public class StargateCommonProxy implements IGuiHandler {
 		
 		return null;
 	}
+	
+	// GuiScreen methods :
+	
+	public void openGui(BlockGuiScreen block, EntityPlayer player, TileEntity tileEntity) {
+		// Nothing here.
+	}
+	
+	public void openGui(ItemShieldRemote item, World world, EntityPlayer player) {
+		// Nothing here.
+	}
+	
+	public void openGui(ConsoleScreen console, EntityPlayer player) {
+		// Nothing here.
+	}
+	
+	// Registering methods :
 	
 	public void registerRenderers() {
 		// Empty server side.

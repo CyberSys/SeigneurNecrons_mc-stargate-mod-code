@@ -7,10 +7,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
-import seigneurnecron.minecraftmods.stargate.gui.GuiShieldRemote;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStargate;
-import cpw.mods.fml.client.FMLClientHandler;
 
 /**
  * @author Seigneur Necron
@@ -27,21 +25,14 @@ public class ItemShieldRemote extends ItemStargate {
 	
 	@Override
 	public ItemStack onItemRightClick(ItemStack itemStack, World world, EntityPlayer player) {
-		if(world.isRemote) {
-			TileEntityStargateControl stargate = this.getNearestActivatedGate(world, (int) player.posX, (int) player.posY, (int) player.posZ);
-			
-			if(stargate != null) {
-				FMLClientHandler.instance().displayGuiScreen(player, new GuiShieldRemote(stargate, player));
-			}
-		}
-		
+		StargateMod.proxy.openGui(this, world, player);
 		return itemStack;
 	}
 	
 	/**
 	 * Searches for stargates in the area and returns the nearest one.
 	 */
-	protected TileEntityStargateControl getNearestActivatedGate(World world, int xCoord, int yCoord, int zCoord) {
+	public TileEntityStargateControl getNearestActivatedGate(World world, int xCoord, int yCoord, int zCoord) {
 		final int maxRange = ConsoleStargate.MAX_RANGE;
 		
 		// Searches all the control units within range.
