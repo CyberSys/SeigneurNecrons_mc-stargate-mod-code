@@ -1,7 +1,6 @@
 package seigneurnecron.minecraftmods.stargate.inventory;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 import seigneurnecron.minecraftmods.stargate.item.ItemSoulCrystalFull;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.SoulCount;
@@ -19,11 +18,6 @@ public class ContainerSoulCrystalFactory extends ContainerConsolePanel<Inventory
 	}
 	
 	// Methods :
-	
-	@Override
-	protected Slot getNewSlot(int index, int xPos, int yPos) {
-		return new SlotSoulCrystal(this.inventory, index, xPos, yPos);
-	}
 	
 	@Override
 	public boolean enchantItem(EntityPlayer player, int index) {

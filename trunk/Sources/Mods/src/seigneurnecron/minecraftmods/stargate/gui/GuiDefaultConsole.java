@@ -9,7 +9,6 @@ import static seigneurnecron.minecraftmods.core.gui.GuiConstants.MARGIN;
 import static seigneurnecron.minecraftmods.core.gui.GuiConstants.PANEL_MARGIN;
 import static seigneurnecron.minecraftmods.stargate.inventory.InventoryConsoleBase.NB_CRYSTALS;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -25,6 +24,9 @@ import seigneurnecron.minecraftmods.stargate.item.ItemCrystal;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.Console;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleDefault;
+
+import com.google.common.collect.Multiset;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -32,7 +34,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Seigneur Necron
  */
 @SideOnly(Side.CLIENT)
-public class GuiDefaultConsole extends GuiScreenConsolePanel<ConsoleDefault> implements ListProviderSelectTwoLines<Entry<ArrayList<ItemCrystal>, Class<? extends Console>>> {
+public class GuiDefaultConsole extends GuiScreenConsolePanel<ConsoleDefault> implements ListProviderSelectTwoLines<Entry<Multiset<ItemCrystal>, Class<? extends Console>>> {
 	
 	// ####################################################################################################
 	// Lang constants :
@@ -59,8 +61,8 @@ public class GuiDefaultConsole extends GuiScreenConsolePanel<ConsoleDefault> imp
 	// Data fields :
 	// ####################################################################################################
 	
-	protected List<Entry<ArrayList<ItemCrystal>, Class<? extends Console>>> consoles = Console.getValidCristalSets();
-	protected Entry<ArrayList<ItemCrystal>, Class<? extends Console>> selectedConsole = null;
+	protected List<Entry<Multiset<ItemCrystal>, Class<? extends Console>>> consoles = Console.getValidCristalSets();
+	protected Entry<Multiset<ItemCrystal>, Class<? extends Console>> selectedConsole = null;
 	
 	protected TextProvider textProvider;
 	
@@ -77,18 +79,11 @@ public class GuiDefaultConsole extends GuiScreenConsolePanel<ConsoleDefault> imp
 	// ####################################################################################################
 	
 	@Override
-	protected void drawBackground(int par1, int par2, float par3) {
-		super.drawBackground(par1, par2, par3);
+	protected void drawBackground(int mouseX, int mouseY, float timeSinceLastTick) {
+		super.drawBackground(mouseX, mouseY, timeSinceLastTick);
 		this.panel_list.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
 		this.panel_information.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
 		this.panel_description.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
-	}
-	
-	@Override
-	protected void drawForeground(int par1, int par2) {
-		super.drawForeground(par1, par2);
-		this.selectionList.drawList(par1, par2);
-		this.scrollableText.drawList(par1, par2);
 	}
 	
 	@Override
@@ -114,6 +109,8 @@ public class GuiDefaultConsole extends GuiScreenConsolePanel<ConsoleDefault> imp
 		int labelWidth = this.panel_information.getComponentWidth() - (2 * MARGIN);
 		
 		int listMargin = 2;
+		int listWidth = this.panel_list.getComponentWidth() - (2 * listMargin);
+		int listHeight = this.panel_list.getComponentHeight() - (2 * listMargin);
 		int scrollableTextWidth = this.panel_description.getComponentWidth() - (2 * listMargin);
 		int scrollableTextHeight = this.panel_description.getComponentHeight() - (2 * listMargin);
 		
@@ -128,28 +125,15 @@ public class GuiDefaultConsole extends GuiScreenConsolePanel<ConsoleDefault> imp
 		
 		// List :
 		
-		this.selectionList = new SelectionListConsole(this.panel_list, listMargin, listMargin, this.panel_list.getComponentWidth() - (2 * listMargin), this.panel_list.getComponentHeight() - (2 * listMargin), this.mc, this, this.mc.thePlayer);
+		this.selectionList = this.addComponent(new SelectionListConsole(this.panel_list, listMargin, listMargin, listWidth, listHeight, this.mc, this, this.mc.thePlayer));
 		
 		// Scrollable text :
 		
 		this.textProvider = new TextProvider(this.fontRenderer);
-		this.scrollableText = new ScrollableText(this.panel_description, listMargin, listMargin, scrollableTextWidth, scrollableTextHeight, this.mc, this.textProvider, GRAY);
+		this.scrollableText = this.addComponent(new ScrollableText(this.panel_description, listMargin, listMargin, scrollableTextWidth, scrollableTextHeight, this.mc, this.textProvider, GRAY));
 		this.textProvider.setWidth(this.scrollableText.getContentWidth() - (2 * MARGIN));
-	}
-	
-	// ####################################################################################################
-	// User input :
-	// ####################################################################################################
-	
-	@Override
-	public void handleMouseInput() {
-		super.handleMouseInput();
 		
-		int mouseX = getMouseXFromEvent();
-		int mouseY = getMouseYFromEvent();
-		
-		this.selectionList.handleMouseInput(mouseX, mouseY);
-		this.scrollableText.handleMouseInput(mouseX, mouseY);
+		this.updateInfo();
 	}
 	
 	// ####################################################################################################
@@ -158,13 +142,20 @@ public class GuiDefaultConsole extends GuiScreenConsolePanel<ConsoleDefault> imp
 	
 	protected void updateInfo() {
 		if(this.selectedConsole != null) {
-			List<ItemCrystal> crystals = this.selectedConsole.getKey();
+			Multiset<ItemCrystal> crystals = this.selectedConsole.getKey();
 			Class<? extends Console> console = this.selectedConsole.getValue();
 			
 			this.label_console.setText(Console.getTranslatedConsoleName(console));
+			int i = 0;
 			
-			for(int i = 0; i < NB_CRYSTALS; i++) {
-				this.crystalsLabels[i].setText((i < crystals.size()) ? crystals.get(i).getStatName() : "-");
+			for(com.google.common.collect.Multiset.Entry<ItemCrystal> crystal : crystals.entrySet()) {
+				for(int j = 0; j < crystal.getCount(); j++) {
+					this.crystalsLabels[i++].setText(crystal.getElement().getStatName());
+				}
+			}
+			
+			while(i < NB_CRYSTALS) {
+				this.crystalsLabels[i++].setText("-");
 			}
 			
 			this.textProvider.setText(Console.getTranslatedConsoleInfo(console));
@@ -185,7 +176,7 @@ public class GuiDefaultConsole extends GuiScreenConsolePanel<ConsoleDefault> imp
 	// ####################################################################################################
 	
 	@Override
-	public List<Entry<ArrayList<ItemCrystal>, Class<? extends Console>>> getList() {
+	public List<Entry<Multiset<ItemCrystal>, Class<? extends Console>>> getList() {
 		return this.consoles;
 	}
 	
@@ -204,7 +195,7 @@ public class GuiDefaultConsole extends GuiScreenConsolePanel<ConsoleDefault> imp
 		}
 	}
 	
-	protected void setSelectedConsole(Entry<ArrayList<ItemCrystal>, Class<? extends Console>> console) {
+	protected void setSelectedConsole(Entry<Multiset<ItemCrystal>, Class<? extends Console>> console) {
 		this.selectedConsole = console;
 		this.updateInfo();
 	}

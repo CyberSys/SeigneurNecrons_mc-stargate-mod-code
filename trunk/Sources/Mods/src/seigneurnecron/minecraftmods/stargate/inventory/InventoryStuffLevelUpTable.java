@@ -29,8 +29,8 @@ public class InventoryStuffLevelUpTable extends InventoryConsolePanel<ConsoleStu
 	// Getters :
 	
 	/**
-	 * Returns the item inserted in the stuff slot.
-	 * @return the item inserted in the stuff slot.
+	 * Returns the item stack inserted in the stuff slot.
+	 * @return the item stack inserted in the stuff slot.
 	 */
 	public ItemStack getStuff() {
 		return this.stuff;
@@ -40,7 +40,7 @@ public class InventoryStuffLevelUpTable extends InventoryConsolePanel<ConsoleStu
 	
 	/**
 	 * Updates the stuff slot.
-	 * @param stuff - the new item to put in the slot.
+	 * @param stuff - the new item stack to put in the slot.
 	 */
 	private void setStuff(ItemStack stuff) {
 		if(!ItemStack.areItemStacksEqual(this.stuff, stuff)) {
@@ -74,7 +74,7 @@ public class InventoryStuffLevelUpTable extends InventoryConsolePanel<ConsoleStu
 	}
 	
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack itemstack) {
+	public boolean isItemValidForSlot(int index, ItemStack itemStack) {
 		return true;
 	}
 	

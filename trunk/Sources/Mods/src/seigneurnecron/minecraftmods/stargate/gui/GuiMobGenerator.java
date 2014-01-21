@@ -1,16 +1,15 @@
 package seigneurnecron.minecraftmods.stargate.gui;
 
 import static seigneurnecron.minecraftmods.core.gui.GuiConstants.BACKGROUND_COLOR;
+import static seigneurnecron.minecraftmods.core.gui.GuiConstants.GRAY;
 import static seigneurnecron.minecraftmods.core.gui.GuiConstants.LIGHT_BLUE;
 import static seigneurnecron.minecraftmods.core.gui.GuiConstants.MARGIN;
 import static seigneurnecron.minecraftmods.core.gui.GuiConstants.PANEL_MARGIN;
-
-import java.util.List;
-
 import net.minecraft.client.resources.I18n;
 import seigneurnecron.minecraftmods.core.gui.GuiContainerOneLine;
-import seigneurnecron.minecraftmods.core.gui.Label;
 import seigneurnecron.minecraftmods.core.gui.Panel;
+import seigneurnecron.minecraftmods.core.gui.ScrollableText;
+import seigneurnecron.minecraftmods.core.gui.TextProvider;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerMobGenerator;
 import seigneurnecron.minecraftmods.stargate.inventory.InventoryMobGenerator;
 import cpw.mods.fml.relauncher.Side;
@@ -34,6 +33,14 @@ public class GuiMobGenerator extends GuiContainerOneLine<ContainerMobGenerator> 
 	
 	protected Panel panel_info;
 	
+	protected ScrollableText scrollableText;
+	
+	// ####################################################################################################
+	// Data fields :
+	// ####################################################################################################
+	
+	protected TextProvider textProvider;
+	
 	// ####################################################################################################
 	// Constructors :
 	// ####################################################################################################
@@ -47,25 +54,20 @@ public class GuiMobGenerator extends GuiContainerOneLine<ContainerMobGenerator> 
 	// ####################################################################################################
 	
 	@Override
-	protected void drawBackground(int par1, int par2, float par3) {
-		super.drawBackground(par1, par2, par3);
+	protected void drawBackground(int mouseX, int mouseY, float timeSinceLastTick) {
+		super.drawBackground(mouseX, mouseY, timeSinceLastTick);
 		this.panel_info.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	protected void initComponents() {
-		// Component sizes :
+		// Panel sizes :
 		
 		int panelWidth_main = this.container.mainPanelWidth();
 		int panelHeight = this.container.mainPanelHeight();
 		
 		int totalWidth = (int) (this.width * 0.9);
-		
 		int panelWidth_info = totalWidth - panelWidth_main - PANEL_MARGIN;
-		int labelWidth = panelWidth_info - (2 * MARGIN);
-		
-		List<String> strings = this.fontRenderer.listFormattedStringToWidth(I18n.getString(INFO), labelWidth);
 		
 		int panelYPos = (this.height - panelHeight) / 2;
 		int panelXPos_info = (this.width - totalWidth) / 2;
@@ -75,13 +77,17 @@ public class GuiMobGenerator extends GuiContainerOneLine<ContainerMobGenerator> 
 		this.panel_info = new Panel(this, panelXPos_info, panelYPos, panelWidth_info, panelHeight);
 		this.panel_main = new Panel(this, this.panel_info.getRight() + PANEL_MARGIN, panelYPos, panelWidth_main, panelHeight);
 		
-		// Labels :
+		// Component sizes :
 		
-		this.nextYPos = MARGIN;
+		int listMargin = 2;
+		int scrollableTextWidth = this.panel_info.getComponentWidth() - (2 * listMargin);
+		int scrollableTextHeight = this.panel_info.getComponentHeight() - (2 * listMargin);
 		
-		for(String string : strings) {
-			this.addComponent(new Label(this.panel_info, this.fontRenderer, MARGIN, this.nextYPos, labelWidth, string));
-		}
+		// Scrollable text :
+		
+		this.textProvider = new TextProvider(this.fontRenderer);
+		this.scrollableText = this.addComponent(new ScrollableText(this.panel_info, listMargin, listMargin, scrollableTextWidth, scrollableTextHeight, this.mc, this.textProvider, GRAY));
+		this.textProvider.update(I18n.getString(INFO), this.scrollableText.getContentWidth() - (2 * MARGIN));
 	}
 	
 }

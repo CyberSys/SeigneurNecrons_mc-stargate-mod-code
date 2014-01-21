@@ -51,11 +51,14 @@ public class StargateCoordinates extends BlockCoordinates<StargateCoordinates> {
 	}
 	
 	@Override
+	public String toString() {
+		return super.toString() + " " + this.address;
+	}
+	
+	// Comparable interface :
+	
+	@Override
 	public int compareTo(StargateCoordinates other) {
-		if(other == null) {
-			return 1;
-		}
-		
 		if(this.address == null) {
 			return (other.address == null) ? 0 : -1;
 		}
@@ -65,11 +68,6 @@ public class StargateCoordinates extends BlockCoordinates<StargateCoordinates> {
 		}
 		
 		return this.address.compareTo(other.address);
-	}
-	
-	@Override
-	public String toString() {
-		return super.toString() + " " + this.address;
 	}
 	
 	// Loadable interface :

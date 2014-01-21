@@ -21,4 +21,28 @@ public interface Component {
 	 */
 	public int getComponentHeight();
 	
+	/**
+	 * Returns the component X position in the parent container.
+	 * @return the component X position in the parent container.
+	 */
+	public int getXPos();
+	
+	/**
+	 * Returns the component Y position in the parent container.
+	 * @return the component Y position in the parent container.
+	 */
+	public int getYPos();
+	
+	/**
+	 * Returns the component right side position in the parent container.
+	 * @return the component right side position in the parent container.
+	 */
+	public int getRight();
+	
+	/**
+	 * Returns the component bottom position in the parent container.
+	 * @return the component bottom position in the parent container.
+	 */
+	public int getBottom();
+	
 }

@@ -77,10 +77,10 @@ public class Label extends Panel {
 	
 	public void drawScreen() {
 		if(this.centered) {
-			this.drawCenteredText(this.fontRenderer, this.text, this.height - this.fontRenderer.FONT_HEIGHT, this.color);
+			this.drawCenteredText(this.fontRenderer, this.text, (this.height - this.fontRenderer.FONT_HEIGHT) / 2 + 1, this.color);
 		}
 		else {
-			this.drawText(this.fontRenderer, this.text, 0, this.height - this.fontRenderer.FONT_HEIGHT, this.color);
+			this.drawText(this.fontRenderer, this.text, 0, (this.height - this.fontRenderer.FONT_HEIGHT) / 2 + 1, this.color);
 		}
 	}
 }

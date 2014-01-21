@@ -70,6 +70,7 @@ public abstract class GuiContainerBasic<T extends ContainerBasic> extends GuiCon
 	
 	private final List<TextField> fieldList = new LinkedList<TextField>();
 	private final List<Label> labelList = new LinkedList<Label>();
+	private final List<ScrollableAbstractList> scrollPaneList = new LinkedList<ScrollableAbstractList>();
 	
 	// ####################################################################################################
 	// Constructors :
@@ -91,6 +92,26 @@ public abstract class GuiContainerBasic<T extends ContainerBasic> extends GuiCon
 	
 	@Override
 	public int getComponentHeight() {
+		return this.height;
+	}
+	
+	@Override
+	public int getXPos() {
+		return 0;
+	}
+	
+	@Override
+	public int getYPos() {
+		return 0;
+	}
+	
+	@Override
+	public int getRight() {
+		return this.width;
+	}
+	
+	@Override
+	public int getBottom() {
 		return this.height;
 	}
 	
@@ -213,6 +234,10 @@ public abstract class GuiContainerBasic<T extends ContainerBasic> extends GuiCon
 			Label label = (Label) component;
 			this.labelList.add(label);
 		}
+		else if(component instanceof ScrollableAbstractList) {
+			ScrollableAbstractList scrollPane = (ScrollableAbstractList) component;
+			this.scrollPaneList.add(scrollPane);
+		}
 		
 		if(incrementYPos) {
 			this.nextYPos += component.getComponentHeight() + MARGIN;
@@ -249,11 +274,11 @@ public abstract class GuiContainerBasic<T extends ContainerBasic> extends GuiCon
 	}
 	
 	@Override
-	public final void drawScreen(int par1, int par2, float par3) {
+	public final void drawScreen(int mouseX, int mouseY, float timeSinceLastTick) {
 		// WARNING : This method is is different from the GuiScreenBasic one.
 		if(this.isGuiValid()) {
 			this.updateComponents();
-			super.drawScreen(par1, par2, par3);
+			super.drawScreen(mouseX, mouseY, timeSinceLastTick);
 		}
 		else {
 			this.close();
@@ -261,15 +286,15 @@ public abstract class GuiContainerBasic<T extends ContainerBasic> extends GuiCon
 	}
 	
 	@Override
-	protected final void drawGuiContainerBackgroundLayer(float par1, int par2, int par3) {
+	protected final void drawGuiContainerBackgroundLayer(float timeSinceLastTick, int mouseX, int mouseY) {
 		// WARNING : This method is not in GuiScreenBasic.
-		this.drawBackground(par2, par3, par1);
+		this.drawBackground(mouseX, mouseY, timeSinceLastTick);
 	}
 	
 	@Override
-	protected final void drawGuiContainerForegroundLayer(int par1, int par2) {
+	protected final void drawGuiContainerForegroundLayer(int mouseX, int mouseY) {
 		// WARNING : This method is not in GuiScreenBasic.
-		super.drawGuiContainerForegroundLayer(par1, par2);
+		super.drawGuiContainerForegroundLayer(mouseX, mouseY);
 		
 		for(GuiTextField field : this.fieldList) {
 			field.drawTextBox();
@@ -279,7 +304,11 @@ public abstract class GuiContainerBasic<T extends ContainerBasic> extends GuiCon
 			label.drawScreen();
 		}
 		
-		this.drawForeground(par1, par2);
+		for(ScrollableAbstractList scrollPane : this.scrollPaneList) {
+			scrollPane.drawList(mouseX, mouseY);
+		}
+		
+		this.drawForeground(mouseX, mouseY);
 	}
 	
 	/**
@@ -292,7 +321,7 @@ public abstract class GuiContainerBasic<T extends ContainerBasic> extends GuiCon
 	/**
 	 * Draw the background.
 	 */
-	protected void drawBackground(int par1, int par2, float par3) {
+	protected void drawBackground(int mouseX, int mouseY, float timeSinceLastTick) {
 		// WARNING : This method is different from the GuiScreenBasic one.
 		this.panel_container.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
 		this.panel_inventory.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
@@ -306,7 +335,7 @@ public abstract class GuiContainerBasic<T extends ContainerBasic> extends GuiCon
 	/**
 	 * Draw the forground. No need to draw fields, labels and buttons, it's already done.
 	 */
-	protected void drawForeground(int par1, int par2) {
+	protected void drawForeground(int mouseX, int mouseY) {
 		// Nothing here.
 	}
 	
@@ -322,6 +351,7 @@ public abstract class GuiContainerBasic<T extends ContainerBasic> extends GuiCon
 		this.buttonList.clear();
 		this.fieldList.clear();
 		this.labelList.clear();
+		this.scrollPaneList.clear();
 		
 		this.xSize = this.container.mainPanelWidth();
 		this.ySize = this.container.mainPanelHeight();
@@ -398,6 +428,18 @@ public abstract class GuiContainerBasic<T extends ContainerBasic> extends GuiCon
 		
 		for(GuiTextField field : this.fieldList) {
 			field.mouseClicked(x, y, button);
+		}
+	}
+	
+	@Override
+	public void handleMouseInput() {
+		super.handleMouseInput();
+		
+		int mouseX = getMouseXFromEvent();
+		int mouseY = getMouseYFromEvent();
+		
+		for(ScrollableAbstractList scrollPane : this.scrollPaneList) {
+			scrollPane.handleMouseInput(mouseX, mouseY);
 		}
 	}
 	

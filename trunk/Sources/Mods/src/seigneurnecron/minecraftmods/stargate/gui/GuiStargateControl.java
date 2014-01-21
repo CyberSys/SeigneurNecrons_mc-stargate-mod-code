@@ -86,14 +86,14 @@ public class GuiStargateControl extends GuiScreenTileEntity<TileEntityStargateCo
 	// ####################################################################################################
 	
 	@Override
-	protected void drawBackground(int par1, int par2, float par3) {
-		super.drawBackground(par1, par2, par3);
+	protected void drawBackground(int mouseX, int mouseY, float timeSinceLastTick) {
+		super.drawBackground(mouseX, mouseY, timeSinceLastTick);
 		this.panel_main.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
 	}
 	
 	@Override
-	protected void drawForeground(int par1, int par2) {
-		super.drawForeground(par1, par2);
+	protected void drawForeground(int mouseX, int mouseY) {
+		super.drawForeground(mouseX, mouseY);
 		this.addressBar1.drawScreen();
 		this.addressBar2.drawScreen();
 	}

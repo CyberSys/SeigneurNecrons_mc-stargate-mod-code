@@ -17,7 +17,7 @@ import seigneurnecron.minecraftmods.stargate.tools.loadable.PowerUp;
 /**
  * @author Seigneur Necron
  */
-public class ConsoleStuffLevelUpTable extends ConsoleConatainer<InventoryStuffLevelUpTable> {
+public class ConsoleStuffLevelUpTable extends ConsoleContainer<InventoryStuffLevelUpTable> {
 	
 	// NBTTags names :
 	

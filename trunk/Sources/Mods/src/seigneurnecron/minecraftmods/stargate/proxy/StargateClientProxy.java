@@ -15,22 +15,28 @@ import seigneurnecron.minecraftmods.stargate.entity.EntityCustomFireBall;
 import seigneurnecron.minecraftmods.stargate.entity.EntityNapalm;
 import seigneurnecron.minecraftmods.stargate.entity.EntityNuke;
 import seigneurnecron.minecraftmods.stargate.gui.GuiConsoleBase;
+import seigneurnecron.minecraftmods.stargate.gui.GuiCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.gui.GuiMobGenerator;
 import seigneurnecron.minecraftmods.stargate.gui.GuiShieldRemote;
 import seigneurnecron.minecraftmods.stargate.gui.GuiSoulCrystalFactory;
+import seigneurnecron.minecraftmods.stargate.gui.GuiStargateFactory;
 import seigneurnecron.minecraftmods.stargate.gui.GuiStuffLevelUpTable;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerConsoleBase;
+import seigneurnecron.minecraftmods.stargate.inventory.ContainerCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerMobGenerator;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerSoulCrystalFactory;
+import seigneurnecron.minecraftmods.stargate.inventory.ContainerStargateFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerStuffLevelUpTable;
 import seigneurnecron.minecraftmods.stargate.item.ItemShieldRemote;
 import seigneurnecron.minecraftmods.stargate.render.RenderCustomFireBall;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityMobGenerator;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.Console;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleScreen;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleSoulCrystalFactory;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStargateFactory;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStuffLevelUpTable;
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -57,6 +63,9 @@ public class StargateClientProxy extends StargateCommonProxy {
 			if(tileEntity instanceof TileEntityMobGenerator) {
 				return new GuiMobGenerator(new ContainerMobGenerator(player, ((TileEntityMobGenerator) tileEntity).getInventory()));
 			}
+			else if(tileEntity instanceof TileEntityCrystalFactory) {
+				return new GuiCrystalFactory(new ContainerCrystalFactory(player, ((TileEntityCrystalFactory) tileEntity).getInventory()));
+			}
 			else if(tileEntity instanceof TileEntityConsoleBase) {
 				TileEntityConsoleBase tileEntityConsoleBase = (TileEntityConsoleBase) tileEntity;
 				
@@ -68,12 +77,13 @@ public class StargateClientProxy extends StargateCommonProxy {
 					
 					if(console != null) {
 						if(console instanceof ConsoleStuffLevelUpTable) {
-							ConsoleStuffLevelUpTable consoleStuffLevelUpTable = (ConsoleStuffLevelUpTable) console;
-							return new GuiStuffLevelUpTable(new ContainerStuffLevelUpTable(player, consoleStuffLevelUpTable.getInventory()));
+							return new GuiStuffLevelUpTable(new ContainerStuffLevelUpTable(player, ((ConsoleStuffLevelUpTable) console).getInventory()));
 						}
 						else if(console instanceof ConsoleSoulCrystalFactory) {
-							ConsoleSoulCrystalFactory consoleSoulCrystalFactory = (ConsoleSoulCrystalFactory) console;
-							return new GuiSoulCrystalFactory(new ContainerSoulCrystalFactory(player, consoleSoulCrystalFactory.getInventory()));
+							return new GuiSoulCrystalFactory(new ContainerSoulCrystalFactory(player, ((ConsoleSoulCrystalFactory) console).getInventory()));
+						}
+						else if(console instanceof ConsoleStargateFactory) {
+							return new GuiStargateFactory(new ContainerStargateFactory(player, ((ConsoleStargateFactory) console).getInventory()));
 						}
 					}
 				}

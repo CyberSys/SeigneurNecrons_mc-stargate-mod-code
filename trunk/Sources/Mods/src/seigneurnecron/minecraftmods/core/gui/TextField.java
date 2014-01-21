@@ -24,6 +24,8 @@ public class TextField extends GuiTextField implements Component {
 	
 	protected final int width;
 	protected final int height;
+	protected final int xPos;
+	protected final int yPos;
 	
 	// Constructors :
 	
@@ -33,6 +35,8 @@ public class TextField extends GuiTextField implements Component {
 		this.setText(text);
 		this.width = width;
 		this.height = height;
+		this.xPos = xPos;
+		this.yPos = yPos;
 	}
 	
 	public TextField(ComponentContainer container, FontRenderer par1FontRenderer, int xPos, int yPos, int width, int height) {
@@ -53,7 +57,7 @@ public class TextField extends GuiTextField implements Component {
 		return Reflection.getBoolean(GuiTextField.class, this, SeigneurNecronMod.instance.getConfig().guiTextField_isEnabled);
 	}
 	
-	// Methods :
+	// Component interface :
 	
 	@Override
 	public int getComponentWidth() {
@@ -64,6 +68,28 @@ public class TextField extends GuiTextField implements Component {
 	public int getComponentHeight() {
 		return this.height;
 	}
+	
+	@Override
+	public int getXPos() {
+		return this.xPos;
+	}
+	
+	@Override
+	public int getYPos() {
+		return this.yPos;
+	}
+	
+	@Override
+	public int getRight() {
+		return this.xPos + this.width;
+	}
+	
+	@Override
+	public int getBottom() {
+		return this.yPos + this.height;
+	}
+	
+	// Methods :
 	
 	@Override
 	public boolean textboxKeyTyped(char character, int key) {

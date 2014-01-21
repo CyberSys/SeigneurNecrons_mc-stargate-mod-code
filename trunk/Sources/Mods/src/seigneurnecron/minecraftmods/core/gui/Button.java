@@ -11,6 +11,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class Button extends GuiButton implements Component {
 	
+	// Fields :
+	
+	protected final int xPos;
+	protected final int yPos;
+	
 	// Constructors :
 	
 	/**
@@ -25,6 +30,8 @@ public class Button extends GuiButton implements Component {
 	 */
 	public Button(ComponentContainer container, int xPos, int yPos, int width, int height, String text) {
 		super(0, container.getXPosInScreen(xPos), container.getYPosInScreen(yPos), width, height, text);
+		this.xPos = xPos;
+		this.yPos = yPos;
 	}
 	
 	/**
@@ -50,6 +57,26 @@ public class Button extends GuiButton implements Component {
 	@Override
 	public int getComponentHeight() {
 		return this.height;
+	}
+	
+	@Override
+	public int getXPos() {
+		return this.xPos;
+	}
+	
+	@Override
+	public int getYPos() {
+		return this.yPos;
+	}
+	
+	@Override
+	public int getRight() {
+		return this.xPos + this.width;
+	}
+	
+	@Override
+	public int getBottom() {
+		return this.yPos + this.height;
 	}
 	
 	// Methods :

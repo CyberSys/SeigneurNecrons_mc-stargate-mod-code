@@ -42,18 +42,22 @@ public class Panel implements ComponentContainer {
 		return this.height;
 	}
 	
+	@Override
 	public int getXPos() {
 		return this.xPos;
 	}
 	
+	@Override
 	public int getYPos() {
 		return this.yPos;
 	}
 	
+	@Override
 	public int getRight() {
 		return this.xPos + this.width;
 	}
 	
+	@Override
 	public int getBottom() {
 		return this.yPos + this.height;
 	}

@@ -34,6 +34,17 @@ public abstract class ContainerBasic<T extends InventoryBasic> extends Container
 	protected abstract void init();
 	
 	/**
+	 * Create a new slot to add to the container.
+	 * @param index - the index of the slot in the inventory.
+	 * @param xPos - the X position of the slot in the gui.
+	 * @param yPos - the Y position of the slot in the gui.
+	 * @return a new slot to add to the container.
+	 */
+	protected Slot getNewSlot(int index, int xPos, int yPos) {
+		return new SlotBasic(this.inventory, index, xPos, yPos);
+	}
+	
+	/**
 	 * Commonly used vanilla code that adds the player's inventory, modified to be parameterizable.
 	 * @param inventoryPlayer - player's inventory.
 	 */
@@ -178,66 +189,113 @@ public abstract class ContainerBasic<T extends InventoryBasic> extends Container
 	}
 	
 	@Override
-	public ItemStack transferStackInSlot(EntityPlayer player, int slot) {
-		ItemStack stack = null;
-		Slot slotObject = (Slot) this.inventorySlots.get(slot);
+	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
+		ItemStack itemstack = null;
+		Slot slot = (Slot) this.inventorySlots.get(index);
 		
-		// Check that the slot exists and contains an item stack.
-		if(slotObject != null && slotObject.getHasStack()) {
-			ItemStack stackInSlot = slotObject.getStack();
-			stack = stackInSlot.copy();
+		if(slot != null && slot.getHasStack()) {
+			ItemStack stackInSlot = slot.getStack();
+			itemstack = stackInSlot.copy();
 			
 			int inventorySize = this.inventory.getSizeInventory();
 			
-			// Merges the item into player inventory since its in the tileEntity.
-			if(slot < inventorySize) {
-				if(!this.mergeItemStack(stackInSlot, inventorySize, inventorySize + 36, true)) {
+			// If the item stack is in the container inventory, try to merge it in the player inventory.
+			if(index < inventorySize) {
+				if(!this.mergeItemStack(stackInSlot, inventorySize, this.inventorySlots.size(), true)) {
 					return null;
 				}
 			}
-			// Places it into the tileEntity if possible since its in the player inventory.
-			else {
-				int maxStackSize = this.inventory.getInventoryStackLimit();
-				boolean succes = false;
-				
-				for(int i = 0; i < inventorySize; i++) {
-					Slot s = (Slot) this.inventorySlots.get(i);
-					
-					if(!s.getHasStack() && s.isItemValid(stackInSlot)) {
-						if(stackInSlot.stackSize <= maxStackSize) {
-							s.putStack(stackInSlot.copy());
-							stackInSlot.stackSize = 0;
-						}
-						else {
-							s.putStack(new ItemStack(stackInSlot.itemID, maxStackSize, stackInSlot.getItemDamage()));
-							stackInSlot.stackSize -= maxStackSize;
-						}
-						
-						succes = true;
-						break;
-					}
-				}
-				
-				if(!succes) {
-					return null;
-				}
-			}
-			
-			if(stackInSlot.stackSize == 0) {
-				slotObject.putStack(null);
-			}
-			else {
-				slotObject.onSlotChanged();
-			}
-			
-			if(stackInSlot.stackSize == stack.stackSize) {
+			// If the item stack is in the player inventory, try to merge it in the container inventory.
+			else if(!this.mergeItemStack(stackInSlot, 0, inventorySize, false)) {
 				return null;
 			}
 			
-			slotObject.onPickupFromSlot(player, stackInSlot);
+			if(stackInSlot.stackSize == 0) {
+				slot.putStack((ItemStack) null);
+			}
+			else {
+				slot.onSlotChanged();
+			}
 		}
 		
-		return stack;
+		return itemstack;
+	}
+	
+	/**
+	 * Improved version of container.mergeItemStack(...) : checks slot.getSlotStackLimit() and slot.isItemValid(itemStack). <br />
+	 * Merges provided ItemStack with the first avaliable ones in the container/player inventory.
+	 */
+	@Override
+	protected boolean mergeItemStack(ItemStack itemStack, int beginIndex, int endIndex, boolean startByTheEnd) {
+		boolean succes = false;
+		int index = (startByTheEnd) ? (endIndex - 1) : beginIndex;
+		
+		if(itemStack.isStackable()) {
+			while(itemStack.stackSize > 0 && (!startByTheEnd && index < endIndex || startByTheEnd && index >= beginIndex)) {
+				Slot slot = (Slot) this.inventorySlots.get(index);
+				ItemStack itemstackInSlot = slot.getStack();
+				
+				if(itemstackInSlot != null && itemstackInSlot.itemID == itemStack.itemID && (!itemStack.getHasSubtypes() || itemStack.getItemDamage() == itemstackInSlot.getItemDamage()) && ItemStack.areItemStackTagsEqual(itemStack, itemstackInSlot)) {
+					int totalSize = itemstackInSlot.stackSize + itemStack.stackSize;
+					int maxStackSize = Math.min(itemStack.getMaxStackSize(), slot.getSlotStackLimit());
+					
+					if(totalSize <= maxStackSize) {
+						itemStack.stackSize = 0;
+						itemstackInSlot.stackSize = totalSize;
+						slot.onSlotChanged();
+						succes = true;
+					}
+					else if(itemstackInSlot.stackSize < maxStackSize) {
+						itemStack.stackSize -= maxStackSize - itemstackInSlot.stackSize;
+						itemstackInSlot.stackSize = maxStackSize;
+						slot.onSlotChanged();
+						succes = true;
+					}
+				}
+				
+				if(startByTheEnd) {
+					--index;
+				}
+				else {
+					++index;
+				}
+			}
+		}
+		
+		if(itemStack.stackSize > 0) {
+			index = (startByTheEnd) ? (endIndex - 1) : beginIndex;
+			
+			while(itemStack.stackSize > 0 && (!startByTheEnd && index < endIndex || startByTheEnd && index >= beginIndex)) {
+				Slot slot = (Slot) this.inventorySlots.get(index);
+				ItemStack itemstackInSlot = slot.getStack();
+				
+				if(itemstackInSlot == null && slot.isItemValid(itemStack)) {
+					int maxStackSize = slot.getSlotStackLimit();
+					ItemStack newItemStack = itemStack.copy();
+					
+					if(itemStack.stackSize <= maxStackSize) {
+						itemStack.stackSize = 0;
+					}
+					else {
+						newItemStack.stackSize = maxStackSize;
+						itemStack.stackSize -= maxStackSize;
+					}
+					
+					slot.putStack(newItemStack);
+					slot.onSlotChanged();
+					succes = true;
+				}
+				
+				if(startByTheEnd) {
+					--index;
+				}
+				else {
+					++index;
+				}
+			}
+		}
+		
+		return succes;
 	}
 	
 }
