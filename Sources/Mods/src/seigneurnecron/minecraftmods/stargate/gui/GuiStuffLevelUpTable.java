@@ -91,16 +91,10 @@ public class GuiStuffLevelUpTable extends GuiContainerConsolePanel<ContainerStuf
 	}
 	
 	@Override
-	protected void drawBackground(int par1, int par2, float par3) {
-		super.drawBackground(par1, par2, par3);
+	protected void drawBackground(int mouseX, int mouseY, float timeSinceLastTick) {
+		super.drawBackground(mouseX, mouseY, timeSinceLastTick);
 		this.panel_list.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
 		this.panel_info.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
-	}
-	
-	@Override
-	protected void drawForeground(int par1, int par2) {
-		super.drawForeground(par1, par2);
-		this.selectionList.drawList(par1, par2);
 	}
 	
 	@Override
@@ -128,6 +122,8 @@ public class GuiStuffLevelUpTable extends GuiContainerConsolePanel<ContainerStuf
 		
 		int labelWidth = this.panel_info.getComponentWidth() - (2 * MARGIN);
 		int listMargin = 2;
+		int listWidth = this.panel_list.getComponentWidth() - (2 * listMargin);
+		int listHeight = this.panel_list.getComponentHeight() - (2 * listMargin);
 		
 		// Components :
 		
@@ -137,7 +133,7 @@ public class GuiStuffLevelUpTable extends GuiContainerConsolePanel<ContainerStuf
 		
 		// List :
 		
-		this.selectionList = new SelectionListPowerUp(this.panel_list, listMargin, listMargin, this.panel_list.getComponentWidth() - (2 * listMargin), this.panel_list.getComponentHeight() - (2 * listMargin), this.mc, this, this.mc.thePlayer);
+		this.selectionList = this.addComponent(new SelectionListPowerUp(this.panel_list, listMargin, listMargin, listWidth, listHeight, this.mc, this, this.mc.thePlayer));
 	}
 	
 	// ####################################################################################################
@@ -151,12 +147,6 @@ public class GuiStuffLevelUpTable extends GuiContainerConsolePanel<ContainerStuf
 				this.enchant();
 			}
 		}
-	}
-	
-	@Override
-	public void handleMouseInput() {
-		super.handleMouseInput();
-		this.selectionList.handleMouseInput(getMouseXFromEvent(), getMouseYFromEvent());
 	}
 	
 	protected void enchant() {

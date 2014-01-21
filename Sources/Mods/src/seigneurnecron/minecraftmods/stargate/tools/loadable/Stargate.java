@@ -60,10 +60,6 @@ public class Stargate implements Loadable<Stargate> {
 	
 	@Override
 	public int compareTo(Stargate other) {
-		if(other == null) {
-			return 1;
-		}
-		
 		if(this.address == null) {
 			return (other.address == null) ? 0 : -1;
 		}

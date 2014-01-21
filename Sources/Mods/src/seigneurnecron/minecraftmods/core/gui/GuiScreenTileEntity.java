@@ -29,6 +29,7 @@ public abstract class GuiScreenTileEntity<T extends TileEntityBasic> extends Gui
 	// Interface definition :
 	// ####################################################################################################
 	
+	// FIXME - test this.
 	/*
 	@Override
 	protected boolean isGuiValid() {

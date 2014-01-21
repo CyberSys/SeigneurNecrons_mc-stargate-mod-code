@@ -134,8 +134,8 @@ public class GuiShieldConsole extends GuiStargateConsole<ConsoleStargateShield> 
 	}
 	
 	@Override
-	protected void drawBackground(int par1, int par2, float par3) {
-		super.drawBackground(par1, par2, par3);
+	protected void drawBackground(int mouseX, int mouseY, float timeSinceLastTick) {
+		super.drawBackground(mouseX, mouseY, timeSinceLastTick);
 		this.panel_main.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
 	}
 	

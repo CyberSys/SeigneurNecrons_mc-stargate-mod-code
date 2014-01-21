@@ -38,7 +38,7 @@ public class GuiSoulCrystalFactory extends GuiContainerConsolePanel<ContainerSou
 	public static final String CREATE = InventoryStuffLevelUpTable.INV_NAME + ".create";
 	public static final String SOULS = InventoryStuffLevelUpTable.INV_NAME + ".souls";
 	public static final String INSERT_CRYSTAL = InventoryStuffLevelUpTable.INV_NAME + ".insertCrystal";
-	public static final String CYSTAL_READY = InventoryStuffLevelUpTable.INV_NAME + ".crystalReady";
+	public static final String CRYSTAL_READY = InventoryStuffLevelUpTable.INV_NAME + ".crystalReady";
 	
 	// ####################################################################################################
 	// Interface fields :
@@ -61,9 +61,8 @@ public class GuiSoulCrystalFactory extends GuiContainerConsolePanel<ContainerSou
 	// Data fields :
 	// ####################################################################################################
 	
-	protected SoulCount selectedSoulCount = null;
-	
 	protected PlayerSoulCountData playerData;
+	protected SoulCount selectedSoulCount = null;
 	
 	// ####################################################################################################
 	// Constructors :
@@ -89,16 +88,10 @@ public class GuiSoulCrystalFactory extends GuiContainerConsolePanel<ContainerSou
 	}
 	
 	@Override
-	protected void drawBackground(int par1, int par2, float par3) {
-		super.drawBackground(par1, par2, par3);
+	protected void drawBackground(int mouseX, int mouseY, float timeSinceLastTick) {
+		super.drawBackground(mouseX, mouseY, timeSinceLastTick);
 		this.panel_list.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
 		this.panel_info.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
-	}
-	
-	@Override
-	protected void drawForeground(int par1, int par2) {
-		super.drawForeground(par1, par2);
-		this.selectionList.drawList(par1, par2);
 	}
 	
 	@Override
@@ -121,12 +114,14 @@ public class GuiSoulCrystalFactory extends GuiContainerConsolePanel<ContainerSou
 		// Strings :
 		
 		this.string_insertCrystal = I18n.getString(INSERT_CRYSTAL);
-		this.string_crystalReady = I18n.getString(CYSTAL_READY);
+		this.string_crystalReady = I18n.getString(CRYSTAL_READY);
 		
 		// Component sizes :
 		
 		int labelWidth = this.panel_info.getComponentWidth() - (2 * MARGIN);
 		int listMargin = 2;
+		int listWidth = this.panel_list.getComponentWidth() - (2 * listMargin);
+		int listHeight = this.panel_list.getComponentHeight() - (2 * listMargin);
 		
 		// Components :
 		
@@ -136,7 +131,7 @@ public class GuiSoulCrystalFactory extends GuiContainerConsolePanel<ContainerSou
 		
 		// List :
 		
-		this.selectionList = new SelectionListSoul(this.panel_list, listMargin, listMargin, this.panel_list.getComponentWidth() - (2 * listMargin), this.panel_list.getComponentHeight() - (2 * listMargin), this.mc, this, this.mc.thePlayer);
+		this.selectionList = this.addComponent(new SelectionListSoul(this.panel_list, listMargin, listMargin, listWidth, listHeight, this.mc, this, this.mc.thePlayer));
 	}
 	
 	// ####################################################################################################
@@ -150,12 +145,6 @@ public class GuiSoulCrystalFactory extends GuiContainerConsolePanel<ContainerSou
 				this.create();
 			}
 		}
-	}
-	
-	@Override
-	public void handleMouseInput() {
-		super.handleMouseInput();
-		this.selectionList.handleMouseInput(getMouseXFromEvent(), getMouseYFromEvent());
 	}
 	
 	protected void create() {

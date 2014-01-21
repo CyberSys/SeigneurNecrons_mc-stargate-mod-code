@@ -3,8 +3,8 @@ package seigneurnecron.minecraftmods.stargate.tileentity.console;
 import static seigneurnecron.minecraftmods.stargate.inventory.InventoryConsoleBase.NB_CRYSTALS;
 
 import java.lang.reflect.Constructor;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
@@ -17,7 +17,9 @@ import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.item.ItemCrystal;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 
+import com.google.common.collect.HashMultiset;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Multiset;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -33,10 +35,10 @@ public abstract class Console {
 	public static final String CONSOLE_NAME_PREFIX = CONSOLE_PREFIX + "name.";
 	public static final String CONSOLE_INFO_PREFIX = CONSOLE_PREFIX + "info.";
 	
-	private static Map<ArrayList<ItemCrystal>, Class<? extends Console>> crystalsToConsoleMap = new HashMap<ArrayList<ItemCrystal>, Class<? extends Console>>();
+	private static Map<Multiset<ItemCrystal>, Class<? extends Console>> crystalsToConsoleMap = new HashMap<Multiset<ItemCrystal>, Class<? extends Console>>();
 	private static Map<Class<? extends Console>, String> consoleToNameMap = new HashMap<Class<? extends Console>, String>();
 	
-	public static void registerConsole(ArrayList<ItemCrystal> crystals, Class<? extends Console> console, String name) {
+	public static void registerConsole(Multiset<ItemCrystal> crystals, Class<? extends Console> console, String name) {
 		if(crystals != null && crystals.size() <= NB_CRYSTALS) {
 			if(!crystalsToConsoleMap.containsKey(crystals)) {
 				crystalsToConsoleMap.put(crystals, console);
@@ -54,7 +56,17 @@ public abstract class Console {
 		}
 	}
 	
-	public static Class<? extends Console> getConsoleClass(ArrayList<ItemCrystal> crystals) {
+	public static Class<? extends Console> getConsoleClass(List<ItemCrystal> crystals) {
+		Multiset<ItemCrystal> set = HashMultiset.create();
+		
+		for(ItemCrystal crystal : crystals) {
+			set.add(crystal);
+		}
+		
+		return getConsoleClass(set);
+	}
+	
+	public static Class<? extends Console> getConsoleClass(Multiset<ItemCrystal> crystals) {
 		Class<? extends Console> clazz = crystalsToConsoleMap.get(crystals);
 		
 		if(clazz == null) {
@@ -80,7 +92,7 @@ public abstract class Console {
 		return null;
 	}
 	
-	public static Console getConsole(ArrayList<ItemCrystal> crystals, TileEntityConsoleBase tileEntity) {
+	public static Console getConsole(List<ItemCrystal> crystals, TileEntityConsoleBase tileEntity) {
 		return getConsole(getConsoleClass(crystals), tileEntity);
 	}
 	
@@ -112,7 +124,7 @@ public abstract class Console {
 		}
 	}
 	
-	public static ImmutableList<Entry<ArrayList<ItemCrystal>, Class<? extends Console>>> getValidCristalSets() {
+	public static ImmutableList<Entry<Multiset<ItemCrystal>, Class<? extends Console>>> getValidCristalSets() {
 		return ImmutableList.copyOf(crystalsToConsoleMap.entrySet());
 	}
 	

@@ -5,6 +5,7 @@ import seigneurnecron.minecraftmods.core.tileentity.TileEntityBasic;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityChevron;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityDetector;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityMobGenerator;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
@@ -34,6 +35,7 @@ public class StargateTileEntityPacketMapping extends TileEntityPacketMapping<Til
 		this.register(TileEntityDetector.class);
 		this.register(TileEntityMobGenerator.class);
 		this.register(TileEntityStargateControl.class);
+		this.register(TileEntityCrystalFactory.class);
 		this.register(TileEntityStargatePart.class);
 	}
 	

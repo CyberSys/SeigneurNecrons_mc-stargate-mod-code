@@ -13,7 +13,7 @@ public class InventorySoulCrystalFactory extends InventoryConsolePanel<ConsoleSo
 	
 	// Constants :
 	
-	public static final String INV_NAME = "container.crystalFactory";
+	public static final String INV_NAME = "container.soulCrystalFactory";
 	
 	// Fields :
 	
@@ -21,11 +21,6 @@ public class InventorySoulCrystalFactory extends InventoryConsolePanel<ConsoleSo
 	 * The unique inventory slot, where you can insert a soul crystal.
 	 */
 	private ItemStack crystal;
-	
-	/**
-	 * The container binded with that inventory.
-	 */
-	public ContainerStuffLevelUpTable container;
 	
 	// Constructors :
 	
@@ -36,8 +31,8 @@ public class InventorySoulCrystalFactory extends InventoryConsolePanel<ConsoleSo
 	// Getters :
 	
 	/**
-	 * Returns the item inserted in the crystal slot.
-	 * @return the item inserted in the crystal slot.
+	 * Returns the item stack inserted in the crystal slot.
+	 * @return the item stack inserted in the crystal slot.
 	 */
 	public ItemStack getCrystal() {
 		return this.crystal;
@@ -47,7 +42,7 @@ public class InventorySoulCrystalFactory extends InventoryConsolePanel<ConsoleSo
 	
 	/**
 	 * Updates the crystal slot.
-	 * @param crystal - the new item to insert in the crystal slot.
+	 * @param crystal - the new item stack to insert in the crystal slot.
 	 */
 	public void setCrystal(ItemStack crystal) {
 		if(!ItemStack.areItemStacksEqual(this.crystal, crystal)) {
@@ -85,8 +80,8 @@ public class InventorySoulCrystalFactory extends InventoryConsolePanel<ConsoleSo
 	}
 	
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack itemstack) {
-		return itemstack.getItem() instanceof ItemSoulCrystal;
+	public boolean isItemValidForSlot(int index, ItemStack itemStack) {
+		return itemStack.getItem() instanceof ItemSoulCrystal;
 	}
 	
 }

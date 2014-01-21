@@ -157,6 +157,16 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	 */
 	private static final int[][] CHEVRONS = { {-1, 4}, {-5, 7}, {-9, 6}, {-9, -6}, {-5, -7}, {-1, -4}, {1, 0}, {-12, 3}, {-12, -3}};
 	
+	/**
+	 * The number of naquadah alloy blocks in a stargate.
+	 */
+	public static final int NB_NAQUADAH_ALLOY_BLOCKS = 58;
+	
+	/**
+	 * The number of chevron blocks in a stargate.
+	 */
+	public static final int NB_CHEVRON = 9;
+	
 	// Fields :
 	
 	/**
@@ -832,7 +842,7 @@ public class TileEntityStargateControl extends TileEntityStargate {
 	 * @param side - the gate orientation.
 	 * @return true if the gate was successfully built, else false.
 	 */
-	public static boolean constructGate(World world, int xCoord, int yCoord, int zCoord, int side) {
+	public static boolean constructGate(World world, int xCoord, int yCoord, int zCoord, int side, boolean dropBlocks) {
 		// Initialization.
 		StargateMod.instance.log("Building a gate for testing...");
 		
@@ -869,6 +879,11 @@ public class TileEntityStargateControl extends TileEntityStargate {
 					int z = zCoord + (zAxis * j);
 					int blockIndex = Math.abs(j) - nbAirBlocks;
 					int blockId = getBlockIdFromPattern(i, blockIndex);
+					
+					// Destroys the block if needed.
+					if(dropBlocks) {
+						world.destroyBlock(x, y, z, true);
+					}
 					
 					// Builds the gate.
 					world.setBlock(x, y, z, blockId);

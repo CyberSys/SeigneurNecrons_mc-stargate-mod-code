@@ -10,15 +10,19 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.block.BlockGuiScreen;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerConsoleBase;
+import seigneurnecron.minecraftmods.stargate.inventory.ContainerCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerMobGenerator;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerSoulCrystalFactory;
+import seigneurnecron.minecraftmods.stargate.inventory.ContainerStargateFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerStuffLevelUpTable;
 import seigneurnecron.minecraftmods.stargate.item.ItemShieldRemote;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
+import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityMobGenerator;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.Console;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleScreen;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleSoulCrystalFactory;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStargateFactory;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStuffLevelUpTable;
 import cpw.mods.fml.common.network.IGuiHandler;
 
@@ -59,6 +63,9 @@ public class StargateCommonProxy implements IGuiHandler {
 			if(tileEntity instanceof TileEntityMobGenerator) {
 				return new ContainerMobGenerator(player, ((TileEntityMobGenerator) tileEntity).getInventory());
 			}
+			else if(tileEntity instanceof TileEntityCrystalFactory) {
+				return new ContainerCrystalFactory(player, ((TileEntityCrystalFactory) tileEntity).getInventory());
+			}
 			else if(tileEntity instanceof TileEntityConsoleBase) {
 				TileEntityConsoleBase tileEntityConsoleBase = (TileEntityConsoleBase) tileEntity;
 				
@@ -70,12 +77,13 @@ public class StargateCommonProxy implements IGuiHandler {
 					
 					if(console != null) {
 						if(console instanceof ConsoleStuffLevelUpTable) {
-							ConsoleStuffLevelUpTable consoleStuffLevelUpTable = (ConsoleStuffLevelUpTable) console;
-							return new ContainerStuffLevelUpTable(player, consoleStuffLevelUpTable.getInventory());
+							return new ContainerStuffLevelUpTable(player, ((ConsoleStuffLevelUpTable) console).getInventory());
 						}
 						else if(console instanceof ConsoleSoulCrystalFactory) {
-							ConsoleSoulCrystalFactory consoleSoulCrystalFactory = (ConsoleSoulCrystalFactory) console;
-							return new ContainerSoulCrystalFactory(player, consoleSoulCrystalFactory.getInventory());
+							return new ContainerSoulCrystalFactory(player, ((ConsoleSoulCrystalFactory) console).getInventory());
+						}
+						else if(console instanceof ConsoleStargateFactory) {
+							return new ContainerStargateFactory(player, ((ConsoleStargateFactory) console).getInventory());
 						}
 					}
 				}

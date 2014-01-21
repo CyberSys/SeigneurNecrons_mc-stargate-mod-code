@@ -34,8 +34,8 @@ public class InventoryConsoleBase extends InventoryOneLine<TileEntityConsoleBase
 	// Getters :
 	
 	/**
-	 * Returns the item inserted in the crystal slot.
-	 * @return the item inserted in the crystal slot.
+	 * Returns the item stack inserted in the crystal slot.
+	 * @return the item stack inserted in the crystal slot.
 	 */
 	public ItemStack getCrystal(int i) {
 		if(i < 0 || i >= this.crystals.length) {
@@ -48,8 +48,8 @@ public class InventoryConsoleBase extends InventoryOneLine<TileEntityConsoleBase
 	// Setters :
 	
 	/**
-	 * Updates the crystal slot (informs clients).
-	 * @param crystal - the new item to insert in the crystal slot.
+	 * Updates the crystal slot.
+	 * @param crystal - the new item stack to insert in the crystal slot.
 	 */
 	protected void setCrystal(int i, ItemStack crystal) {
 		if(i < 0 || i >= this.crystals.length) {
@@ -109,8 +109,8 @@ public class InventoryConsoleBase extends InventoryOneLine<TileEntityConsoleBase
 	}
 	
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack itemstack) {
-		return itemstack.getItem() instanceof ItemCrystal;
+	public boolean isItemValidForSlot(int index, ItemStack itemStack) {
+		return itemStack.getItem() instanceof ItemCrystal;
 	}
 	
 }

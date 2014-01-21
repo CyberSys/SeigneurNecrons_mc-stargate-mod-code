@@ -57,10 +57,6 @@ public class SoulCount implements Loadable<SoulCount> {
 	
 	@Override
 	public int compareTo(SoulCount other) {
-		if(other == null) {
-			return 1;
-		}
-		
 		return this.id - other.id;
 	}
 	

@@ -28,10 +28,10 @@ public abstract class InventoryBasic<T extends TileEntity> implements IInventory
 	// Methods :
 	
 	/**
-	 * Indicates how many slots must be displayed in the gui, and droped when the container is destroyed. The default value is the size of the inventory.
-	 * @return the number of slots that must be displayed in the gui.
+	 * Indicates how many slots are normal ones. The default value is the size of the inventory.
+	 * @return the number of normal slots.
 	 */
-	public int nbSlotToDisplay() {
+	public int getNbNormalSlots() {
 		return this.getSizeInventory();
 	}
 	
@@ -41,7 +41,7 @@ public abstract class InventoryBasic<T extends TileEntity> implements IInventory
 	public void dropContent() {
 		Random rand = new Random();
 		
-		for(int i = 0; i < this.nbSlotToDisplay(); ++i) {
+		for(int i = 0; i < this.getSizeInventory(); ++i) {
 			ItemStack itemstack = this.getStackInSlot(i);
 			
 			if(itemstack != null) {
@@ -66,6 +66,15 @@ public abstract class InventoryBasic<T extends TileEntity> implements IInventory
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Index sensitive version of getInventoryStackLimit().
+	 * @param index - the index of the inventory slot.
+	 * @return the maximum stack size for the inventory slot.
+	 */
+	public int getInventoryStackLimit(int index) {
+		return this.getInventoryStackLimit();
 	}
 	
 	@Override

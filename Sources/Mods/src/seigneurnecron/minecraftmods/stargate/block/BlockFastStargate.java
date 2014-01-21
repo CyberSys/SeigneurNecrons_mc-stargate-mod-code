@@ -39,13 +39,17 @@ public class BlockFastStargate extends BlockNaquadahMade {
 			
 			world.setBlockToAir(x, y, z);
 			this.addDecoration(world, x, y, z, side, xAxis, zAxis);
-			TileEntityStargateControl.constructGate(world, x, y + 10, z, side);
+			TileEntityStargateControl.constructGate(world, x, y + 10, z, side, this.dropBlocks());
 		}
 		return true;
 	}
 	
 	protected void addDecoration(World world, int xCoord, int yCoord, int zCoord, int side, int xAxis, int zAxis) {
 		// Nothing to do in that version.
+	}
+	
+	protected boolean dropBlocks() {
+		return true;
 	}
 	
 	@Override

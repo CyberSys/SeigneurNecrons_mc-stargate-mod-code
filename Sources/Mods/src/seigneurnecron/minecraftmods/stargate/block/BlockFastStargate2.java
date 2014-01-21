@@ -5,6 +5,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
+import seigneurnecron.minecraftmods.stargate.inventory.InventoryConsoleBase;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 
 /**
@@ -69,6 +70,11 @@ public class BlockFastStargate2 extends BlockFastStargate {
 	}
 	
 	@Override
+	protected boolean dropBlocks() {
+		return false;
+	}
+	
+	@Override
 	protected void addDecoration(World world, int xCoord, int yCoord, int zCoord, int side, int xAxis, int zAxis) {
 		int x, y, z;
 		
@@ -89,16 +95,18 @@ public class BlockFastStargate2 extends BlockFastStargate {
 		x = xCoord + (zAxis * this.getDhdDistance());
 		z = zCoord + (xAxis * this.getDhdDistance());
 		
-		y = yCoord;
-		world.setBlock(x, y, z, StargateMod.block_consoleBase.blockID, side, 3);
-		
-		y++;
+		y = yCoord + 1;
 		world.setBlock(x, y, z, StargateMod.block_consolePanel.blockID, side, 3);
+		
+		y--;
+		world.setBlock(x, y, z, StargateMod.block_consoleBase.blockID, side, 3);
 		
 		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		
 		if(tileEntity instanceof TileEntityConsoleBase) {
-			((TileEntityConsoleBase) tileEntity).getInventory().setInventorySlotContents(0, new ItemStack(StargateMod.item_crystalDhd));
+			InventoryConsoleBase inventory = ((TileEntityConsoleBase) tileEntity).getInventory();
+			inventory.setInventorySlotContents(0, new ItemStack(StargateMod.item_crystalStargateInterface));
+			inventory.setInventorySlotContents(1, new ItemStack(StargateMod.item_crystalDhd));
 		}
 		
 		if(this.dhdLight()) {

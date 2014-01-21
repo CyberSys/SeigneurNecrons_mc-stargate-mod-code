@@ -6,7 +6,7 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 /**
  * @author Seigneur Necron
  */
-public class ConsoleSoulCrystalFactory extends ConsoleConatainer<InventorySoulCrystalFactory> {
+public class ConsoleSoulCrystalFactory extends ConsoleContainer<InventorySoulCrystalFactory> {
 	
 	// Constructors :
 	

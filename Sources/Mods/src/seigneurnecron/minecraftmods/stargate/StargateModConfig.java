@@ -19,22 +19,25 @@ public class StargateModConfig extends ModConfig<StargateMod> {
 	@Config(comment = "Determines if players can craft naquadah alloy.")
 	public boolean canCraftNaquadahAlloy = true;
 	
-	@Config(comment = "Determines if players can craft stargates ! (Needs canCraftNaquadahAlloy = true)")
+	@Config(comment = "Determines if players can craft stargates ! (Requires canCraftNaquadahAlloy = true)")
 	public boolean canCraftStargate = true;
 	
-	@Config(comment = "Determines if players can craft stargate shield consoles. (Needs canCraftNaquadahAlloy & canCraftStargate = true)")
+	@Config(comment = "Determines if players can craft stargate shield consoles. (Requires canCraftNaquadahAlloy & canCraftStargate = true)")
 	public boolean canCraftStargateShield = true;
 	
-	@Config(comment = "Determines if players can craft teleporters. (Needs canCraftNaquadahAlloy = true)")
+	@Config(comment = "Determines if players can craft the fast stargate block. (Requires canCraftNaquadahAlloy & canCraftStargate = true)")
+	public boolean canCraftFastStargate = true;
+	
+	@Config(comment = "Determines if players can craft teleporters. (Requires canCraftNaquadahAlloy = true)")
 	public boolean canCraftTeleporter = true;
 	
-	@Config(comment = "Determines if players can craft detectors. (Needs canCraftNaquadahAlloy = true)")
+	@Config(comment = "Determines if players can craft detectors. (Requires canCraftNaquadahAlloy = true)")
 	public boolean canCraftDetector = true;
 	
-	@Config(comment = "Determines if players can craft mob generators. (Needs canCraftNaquadahAlloy = true)")
+	@Config(comment = "Determines if players can craft mob generators. (Requires canCraftNaquadahAlloy = true)")
 	public boolean canCraftMobGenerator = true;
 	
-	@Config(comment = "Determines if players can craft stuff level up tables. (Needs canCraftNaquadahAlloy = true)")
+	@Config(comment = "Determines if players can craft stuff level up tables. (Requires canCraftNaquadahAlloy = true)")
 	public boolean canCraftStuffLevelUpTable = true;
 	
 	@Config(comment = "Determines if players can craft self powered redstone lights.")
@@ -46,13 +49,13 @@ public class StargateModConfig extends ModConfig<StargateMod> {
 	@Config(comment = "Determines if players can craft fireballs.")
 	public boolean canCraftFireBalls = true;
 	
-	@Config(comment = "Determines if players can craft the (cheated) fire staff. (Needs canCraftToolsAndArmors = true)")
+	@Config(comment = "Determines if players can craft the (cheated) fire staff. (Requires canCraftToolsAndArmors = true)")
 	public boolean canCraftFireStaff = true;
 	
 	@Config(comment = "Determines if players can craft explosive fireballs.")
 	public boolean canCraftExplosiveFireBalls = true;
 	
-	@Config(comment = "Determines if players can craft the (over-cheated) explosive fire staff. (Needs canCraftToolsAndArmors & canCraftFireStaff & canCraftExplosiveFireBalls = true)")
+	@Config(comment = "Determines if players can craft the (over-cheated) explosive fire staff. (Requires canCraftToolsAndArmors & canCraftFireStaff & canCraftExplosiveFireBalls = true)")
 	public boolean canCraftExplosiveFireStaff = true;
 	
 	@Config(comment = "Determines if explosive fireballs can destroy blocks.")

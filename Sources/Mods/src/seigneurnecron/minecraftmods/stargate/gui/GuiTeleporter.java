@@ -105,10 +105,9 @@ public class GuiTeleporter extends GuiScreenConsolePanel<ConsoleTeleporter> impl
 	
 	protected boolean displayAll = false;
 	
+	protected PlayerTeleporterData playerData;
 	protected List<Teleporter> teleporters = new LinkedList<Teleporter>();
 	protected Teleporter selectedTeleporter = null;
-	
-	protected PlayerTeleporterData playerData;
 	
 	// ####################################################################################################
 	// Constructors :
@@ -125,18 +124,12 @@ public class GuiTeleporter extends GuiScreenConsolePanel<ConsoleTeleporter> impl
 	// ####################################################################################################
 	
 	@Override
-	protected void drawBackground(int par1, int par2, float par3) {
-		super.drawBackground(par1, par2, par3);
+	protected void drawBackground(int mouseX, int mouseY, float timeSinceLastTick) {
+		super.drawBackground(mouseX, mouseY, timeSinceLastTick);
 		this.panel_listSelect.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
 		this.panel_listButtons.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
 		this.panel_information.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
 		this.panel_main.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
-	}
-	
-	@Override
-	protected void drawForeground(int par1, int par2) {
-		super.drawForeground(par1, par2);
-		this.selectionList.drawList(par1, par2);
 	}
 	
 	@Override
@@ -203,6 +196,8 @@ public class GuiTeleporter extends GuiScreenConsolePanel<ConsoleTeleporter> impl
 		int buttonSize_listButtons_2 = (this.panel_listButtons.getComponentWidth() - (4 * MARGIN)) / 3;
 		
 		int listMargin = 2;
+		int listWidth = this.panel_listSelect.getComponentWidth() - (2 * listMargin);
+		int listHeight = this.panel_listSelect.getComponentHeight() - (2 * listMargin);
 		
 		// Components :
 		
@@ -238,7 +233,7 @@ public class GuiTeleporter extends GuiScreenConsolePanel<ConsoleTeleporter> impl
 		
 		// List :
 		
-		this.selectionList = new SelectionListTeleporter(this.panel_listSelect, listMargin, listMargin, this.panel_listSelect.getComponentWidth() - (2 * listMargin), this.panel_listSelect.getComponentHeight() - (2 * listMargin), this.mc, this, this.mc.thePlayer);
+		this.selectionList = this.addComponent(new SelectionListTeleporter(this.panel_listSelect, listMargin, listMargin, listWidth, listHeight, this.mc, this, this.mc.thePlayer));
 	}
 	
 	// ####################################################################################################
@@ -273,12 +268,6 @@ public class GuiTeleporter extends GuiScreenConsolePanel<ConsoleTeleporter> impl
 				this.overwite();
 			}
 		}
-	}
-	
-	@Override
-	public void handleMouseInput() {
-		super.handleMouseInput();
-		this.selectionList.handleMouseInput(getMouseXFromEvent(), getMouseYFromEvent());
 	}
 	
 	@Override

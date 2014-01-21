@@ -120,10 +120,9 @@ public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements Li
 	
 	protected Dimension selectedDimension;
 	
+	protected PlayerStargateData playerData;
 	protected List<Stargate> stargates = new LinkedList<Stargate>();
 	protected Stargate selectedStargate = null;
-	
-	protected PlayerStargateData playerData;
 	
 	// ####################################################################################################
 	// Constructors :
@@ -148,8 +147,8 @@ public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements Li
 	}
 	
 	@Override
-	protected void drawBackground(int par1, int par2, float par3) {
-		super.drawBackground(par1, par2, par3);
+	protected void drawBackground(int mouseX, int mouseY, float timeSinceLastTick) {
+		super.drawBackground(mouseX, mouseY, timeSinceLastTick);
 		this.panel_listSelect.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
 		this.panel_listButtons.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
 		this.panel_information.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
@@ -157,9 +156,8 @@ public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements Li
 	}
 	
 	@Override
-	protected void drawForeground(int par1, int par2) {
-		super.drawForeground(par1, par2);
-		this.selectionList.drawList(par1, par2);
+	protected void drawForeground(int mouseX, int mouseY) {
+		super.drawForeground(mouseX, mouseY);
 		this.addressBar1.drawScreen();
 		this.addressBar2.drawScreen();
 	}
@@ -217,6 +215,8 @@ public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements Li
 		int buttonSize_listButtons_2 = (this.panel_listButtons.getComponentWidth() - (4 * MARGIN)) / 3;
 		
 		int listMargin = 2;
+		int listWidth = this.panel_listSelect.getComponentWidth() - (2 * listMargin);
+		int listHeight = this.panel_listSelect.getComponentHeight() - (2 * listMargin);
 		
 		// Fields and buttons :
 		
@@ -249,7 +249,7 @@ public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements Li
 		
 		// List :
 		
-		this.selectionList = new SelectionListStargate(this.panel_listSelect, listMargin, listMargin, this.panel_listSelect.getComponentWidth() - (2 * listMargin), this.panel_listSelect.getComponentHeight() - (2 * listMargin), this.mc, this, this.mc.thePlayer);
+		this.selectionList = this.addComponent(new SelectionListStargate(this.panel_listSelect, listMargin, listMargin, listWidth, listHeight, this.mc, this, this.mc.thePlayer));
 		
 		// Dhd :
 		
@@ -301,12 +301,6 @@ public class GuiDhd extends GuiStargateConsole<ConsoleStargateDhd> implements Li
 				}
 			}
 		}
-	}
-	
-	@Override
-	public void handleMouseInput() {
-		super.handleMouseInput();
-		this.selectionList.handleMouseInput(getMouseXFromEvent(), getMouseYFromEvent());
 	}
 	
 	@Override

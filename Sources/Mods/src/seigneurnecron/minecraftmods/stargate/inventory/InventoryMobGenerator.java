@@ -30,8 +30,8 @@ public class InventoryMobGenerator extends InventoryOneLine<TileEntityMobGenerat
 	// Getters :
 	
 	/**
-	 * Returns the item inserted in the crystal slot.
-	 * @return the item inserted in the crystal slot.
+	 * Returns the item stack inserted in the crystal slot.
+	 * @return the item stack inserted in the crystal slot.
 	 */
 	public ItemStack getCrystal() {
 		return this.crystal;
@@ -40,8 +40,8 @@ public class InventoryMobGenerator extends InventoryOneLine<TileEntityMobGenerat
 	// Setters :
 	
 	/**
-	 * Updates the crystal slot (informs clients).
-	 * @param crystal - the new item to insert in the crystal slot.
+	 * Updates the crystal slot.
+	 * @param crystal - the new item stack to insert in the crystal slot.
 	 */
 	protected void setCrystal(ItemStack crystal) {
 		if(!ItemStack.areItemStacksEqual(this.crystal, crystal)) {
@@ -83,8 +83,8 @@ public class InventoryMobGenerator extends InventoryOneLine<TileEntityMobGenerat
 	}
 	
 	@Override
-	public boolean isItemValidForSlot(int index, ItemStack itemstack) {
-		return itemstack.getItem() instanceof ItemSoulCrystalFull;
+	public boolean isItemValidForSlot(int index, ItemStack itemStack) {
+		return itemStack.getItem() instanceof ItemSoulCrystalFull;
 	}
 	
 }

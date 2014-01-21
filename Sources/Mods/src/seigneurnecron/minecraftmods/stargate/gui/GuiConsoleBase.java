@@ -54,15 +54,9 @@ public class GuiConsoleBase extends GuiContainerOneLine<ContainerConsoleBase> {
 	// ####################################################################################################
 	
 	@Override
-	protected void drawBackground(int par1, int par2, float par3) {
-		super.drawBackground(par1, par2, par3);
+	protected void drawBackground(int mouseX, int mouseY, float timeSinceLastTick) {
+		super.drawBackground(mouseX, mouseY, timeSinceLastTick);
 		this.panel_info.drawBox(LIGHT_BLUE, BACKGROUND_COLOR);
-	}
-	
-	@Override
-	protected void drawForeground(int par1, int par2) {
-		super.drawForeground(par1, par2);
-		this.scrollableText.drawList(par1, par2);
 	}
 	
 	@Override
@@ -91,18 +85,8 @@ public class GuiConsoleBase extends GuiContainerOneLine<ContainerConsoleBase> {
 		// Scrollable text :
 		
 		this.textProvider = new TextProvider(this.fontRenderer);
-		this.scrollableText = new ScrollableText(this.panel_info, listMargin, listMargin, scrollableTextWidth, scrollableTextHeight, this.mc, this.textProvider, GRAY);
+		this.scrollableText = this.addComponent(new ScrollableText(this.panel_info, listMargin, listMargin, scrollableTextWidth, scrollableTextHeight, this.mc, this.textProvider, GRAY));
 		this.textProvider.update(I18n.getString(INFO), this.scrollableText.getContentWidth() - (2 * MARGIN));
-	}
-	
-	// ####################################################################################################
-	// User input :
-	// ####################################################################################################
-	
-	@Override
-	public void handleMouseInput() {
-		super.handleMouseInput();
-		this.scrollableText.handleMouseInput(getMouseXFromEvent(), getMouseYFromEvent());
 	}
 	
 }
