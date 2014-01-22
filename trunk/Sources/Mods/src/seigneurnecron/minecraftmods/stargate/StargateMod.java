@@ -149,22 +149,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 
-// FIXME - commit description :
-// Naquadah alloy crafting cost reduced.
-// The order of the crystals inserted into the console base doesn't matter anymore. (list -> multiset)
-// A lot of crafting recipes are now shapeless.
-// New block : Crystal factory - Crystals are no longer crafted with redstone, they are now configured using the crystal factory interface.
-// ItemCrystal now implements Comparable. Craftable crystals are now registered in an ordered set to be displayed in the crystal factory.
-// Crystals now have descriptions.
-// New console : Stargate factory - Allows to craft Fast Stargate v1 blocks. Can be disabled in the config file.
-// Fast Stargate v1 now drop the blocks before replacing them.
-// Fast Stargate v2 (and v3) now properly place crystals in the dhd.
-// Changed the way slots can be displayed in a container extending ContainerOneLine.
-// Improved the inventory shift+click handling methods.
-// Improved mouse input handling for lists.
-// Improved labels display.
-// Factorized the code of slots and some other gui components...
-
 // FIXME - test : destroy a block while another player is in the gui of the block.
 
 /**
@@ -179,7 +163,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 	
 	public static final String MOD_ID = "seigneur_necron_stargate_mod";
 	public static final String MOD_NAME = "SeigneurNecron's Stargate Mod";
-	public static final String VERSION = "[1.6.4] v3.2.1 [core v1.1.1]";
+	public static final String VERSION = "[1.6.4] v3.2.1 [core 1.1.1]";
 	
 	public static final String CHANEL_TILE_ENTITY = "SNSM_TileEntity";
 	public static final String CHANEL_COMMANDS = "SNSM_Commands";

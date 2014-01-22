@@ -1,0 +1,8 @@
+#Wed Jan 22 21:58:17 CET 2014
+version=3.2.1
+mcpReobfFolder=C\:\\Users\\Seigneur Necron\\Jeux\\PC\\Minecraft\\MCP\\mcp\\reobf\\minecraft
+mcpFolderPath=C\:\\Users\\Seigneur Necron\\Jeux\\PC\\Minecraft\\MCP
+svnFolder=C\:\\Users\\Seigneur Necron\\Jeux\\PC\\Minecraft\\MinecraftModing\\SVN
+dropboxFolderPath=C\:\\Users\\Seigneur Necron\\Dropbox\\Minecraft\\MineCraftModing\\[1.6.4]\\InstallationFiles
+minecraftFolderPath=C\:\\Users\\Seigneur Necron\\AppData\\Roaming\\.minecraft
+svnFolderPath=C\:\\Users\\Seigneur Necron\\Jeux\\PC\\Minecraft\\MinecraftModing\\SVN
