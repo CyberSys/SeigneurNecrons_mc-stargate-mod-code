@@ -1,5 +1,11 @@
 package scripts;
 
+import java.io.File;
+
+import org.apache.commons.io.FileUtils;
+
+import scripts.tools.FileTools;
+
 /**
  * @author Seigneur Necron
  */
@@ -11,20 +17,15 @@ public class CopyAllZipsToDropBox extends ReleaseScript {
 		super(args);
 	}
 	
-	// Main :
-	
-	@SuppressWarnings("unused")
-	public static void main(String[] args) {
-		new CopyAllZipsToDropBox(args);
-	}
-	
 	// Methods :
 	
 	@Override
 	protected void run(String[] args) throws Exception {
 		this.task = "copying resource packs to DropBox";
 		
-		// FIXME - Ressource packs.
+		File dropboxResourcePacksFolder = new File(this.dropboxFolder, RESOURCE_PACKS);
+		FileTools.deleteFolderContent(dropboxResourcePacksFolder);
+		FileUtils.copyDirectory(this.releaseResourcePacksFolder, dropboxResourcePacksFolder);
 		
 		this.logger.info("Resource packs copied to DropBox.");
 		
@@ -32,17 +33,11 @@ public class CopyAllZipsToDropBox extends ReleaseScript {
 		
 		this.task = "copying mods to DropBox";
 		
-		// FIXME - Mods.
+		File dropboxModsFolder = new File(this.dropboxFolder, MODS);
+		FileTools.deleteFolderContent(dropboxModsFolder);
+		FileUtils.copyDirectory(this.releaseModsFolder, dropboxModsFolder);
 		
 		this.logger.info("Mods copied to DropBox.");
-		
-		// ----------------------------------------------------------------
-		
-		this.task = "copying src zip to DropBox";
-		
-		// FIXME - Src zip.
-		
-		this.logger.info("Src zip copied to DropBox.");
 	}
 	
 }

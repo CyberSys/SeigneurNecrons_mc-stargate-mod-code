@@ -2,6 +2,7 @@ package scripts;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -15,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import scripts.tools.CustomLogger;
+import scripts.tools.FileTools;
 
 /**
  * @author Seigneur Necron
@@ -39,17 +41,21 @@ public abstract class ReleaseScript {
 	public static final String TMP_FOLDER = "tmp";
 	public static final String CONFIG_FILE = "config.txt";
 	
-	public static final String MAIN_PACKAGE = SLASH + "seigneurnecron";
-	public static final String MOD_PACKAGE = MAIN_PACKAGE + SLASH + "minecraftmods";
-	public static final String[] MODS_PACKAGES = {"core", "stargate", "dropableglass", "customsigns"};
-	public static final String[] MODS_CLASSES = {"SeigneurNecronMod", "StargateMod", "DropableGlassMod", "CustomSignsMod"};
-	public static final String[] MODS_NAMES = {"SeigneurNecronModCore", "SeigneurNecronStargateMod", "SeigneurNecronDropableGlassMod", "SeigneurNecronCustomSignsMod"};
-	
 	public static final String TAGS_FOLDER = "tags";
 	public static final String RELEASE_MODS_FOLDER = "mods";
 	public static final String RELEASE_RESOURCE_PACKS_FOLDER = "resourcepacks";
 	public static final String RELEASE_SRC_FOLDER = "src";
-	public static final String MCP_REOBF_MINECRAFT_FOLDER = "mcp" + SLASH + "reobf" + SLASH + "minecraft";
+	
+	public static final String NECRON_CRAFT_64 = "NecronCraft64";
+	public static final String SEIGNEUR_NECRON_MODS_TEXTURES_64 = "SeigneurNecronModsTextures64";
+	public static final String VERSION = "_v";
+	public static final String ZIP = ".zip";
+	public static final String JAVA = ".java";
+	
+	public static final String ASSETS = "assets";
+	public static final String MINECRAFT = "minecraft";
+	public static final String MODS = "mods";
+	public static final String RESOURCE_PACKS = "resourcepacks";
 	
 	// Configuration fields :
 	
@@ -62,6 +68,9 @@ public abstract class ReleaseScript {
 	@Config("C:\\Users\\Seigneur Necron\\Jeux\\PC\\Minecraft\\MCP")
 	public String mcpFolderPath = "";
 	
+	@Config("C:\\Users\\Seigneur Necron\\Dropbox\\Minecraft\\MineCraftModing\\[1.6.4]\\InstallationFiles")
+	public String dropboxFolderPath = "";
+	
 	@Config("C:\\Users\\Seigneur Necron\\AppData\\Roaming\\.minecraft")
 	public String minecraftFolderPath = "";
 	
@@ -71,9 +80,12 @@ public abstract class ReleaseScript {
 	protected String task;
 	
 	protected File svnFolder;
-	protected File mcpReobfFolder;
+	protected File mcpFolder;
+	protected File dropboxFolder;
 	protected File minecraftFolder;
+	
 	protected File tmpFolder;
+	
 	protected File releaseFolder;
 	protected File releaseModsFolder;
 	protected File releaseResourcePacksFolder;
@@ -119,10 +131,6 @@ public abstract class ReleaseScript {
 				}
 			}
 			
-			this.svnFolder = new File(this.svnFolderPath);
-			this.mcpReobfFolder = new File(this.mcpFolderPath + SLASH + MCP_REOBF_MINECRAFT_FOLDER);
-			this.minecraftFolder = new File(this.minecraftFolderPath);
-			
 			this.logger.info("Configuration loaded.");
 			
 			// ----------------------------------------------------------------
@@ -137,30 +145,39 @@ public abstract class ReleaseScript {
 			
 			// ----------------------------------------------------------------
 			
+			this.task = "checking required folders";
+			
+			this.svnFolder = new File(this.svnFolderPath);
+			this.mcpFolder = new File(this.mcpFolderPath);
+			this.dropboxFolder = new File(this.dropboxFolderPath);
+			this.minecraftFolder = new File(this.minecraftFolderPath);
+			
+			if(!(this.svnFolder.exists() && this.mcpFolder.exists() && this.minecraftFolder.exists())) {
+				throw new FileNotFoundException("The files specified in the config file don't exist.");
+			}
+			
+			this.logger.info("Required folder checked.");
+			
+			// ----------------------------------------------------------------
+			
 			this.task = "creating tmp folder";
 			
 			this.tmpFolder = new File(TMP_FOLDER);
 			this.tmpFolder.mkdirs();
+			FileTools.deleteFolderContent(this.tmpFolder);
 			
 			this.logger.info("Tmp folder created.");
 			
 			// ----------------------------------------------------------------
 			
-			this.task = "creating release folders.";
+			this.task = "initializing folder variables";
 			
-			this.releaseFolder = new File(this.svnFolderPath + SLASH + TAGS_FOLDER + SLASH + this.version);
-			this.releaseFolder.mkdirs();
-			
+			this.releaseFolder = new File(this.svnFolder, TAGS_FOLDER + SLASH + this.version);
 			this.releaseModsFolder = new File(this.releaseFolder, RELEASE_MODS_FOLDER);
-			this.releaseModsFolder.mkdir();
-			
 			this.releaseResourcePacksFolder = new File(this.releaseFolder, RELEASE_RESOURCE_PACKS_FOLDER);
-			this.releaseResourcePacksFolder.mkdir();
-			
 			this.releaseSrcFolder = new File(this.releaseFolder, RELEASE_SRC_FOLDER);
-			this.releaseSrcFolder.mkdir();
 			
-			this.logger.info("Release folders created.");
+			this.logger.info("Folder variables initialized.");
 			
 			// ----------------------------------------------------------------
 			
