@@ -17,7 +17,7 @@ public class Main {
 			new GenerateResourcePacks(args);
 		}
 		
-		if(argList.contains("--generateModsAndSrc")) {
+		if(argList.contains("--generateModsAndSrcZips")) {
 			new GenerateModsAndSrcZip(args);
 		}
 		

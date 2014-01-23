@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.ZipEntry;
@@ -19,6 +20,18 @@ import org.apache.commons.io.IOUtils;
  * @author Seigneur Necron
  */
 public class FileTools {
+	
+	// Logger :
+	
+	protected static final Logger logger = CustomLogger.getInstance();
+	
+	// Constructors :
+	
+	private FileTools() {
+		// This is an utility class. It don't have to be instanciated.
+	}
+	
+	// Methods :
 	
 	/**
 	 * Finds the strings matching a regexp in a file.
@@ -61,6 +74,41 @@ public class FileTools {
 	}
 	
 	/**
+	 * Copies a file to a new location preserving the file date. <br />
+	 * Calls FileUtils.copyFile(srcFile, destFile) and log the action.
+	 * @param srcFile  an existing file to copy, must not be {@code null}
+	 * @param destFile  the new file, must not be {@code null}
+	 * @throws IOException 
+	 */
+	public static void copyFile(File srcFile, File destFile) throws IOException {
+		FileUtils.copyFile(srcFile, destFile);
+		logger.info("-> file copied to : " + destFile.getAbsolutePath());
+	}
+	
+	/**
+	 * Copies a whole directory to a new location preserving the file dates. <br />
+	 * Calls FileUtils.copyDirectory(srcDir, destDir) and log the action.
+	 * @param srcDir  an existing directory to copy, must not be {@code null}
+	 * @param destDir  the new directory, must not be {@code null}
+	 * @throws IOException
+	 */
+	public static void copyDirectory(File srcDir, File destDir) throws IOException {
+		FileUtils.copyDirectory(srcDir, destDir);
+		logger.info("-> directory copied to : " + destDir.getAbsolutePath());
+	}
+	
+	/**
+	 * Deletes a directory recursively. <br />
+	 * Calls FileUtils.deleteDirectory(directory) and log the action.
+	 * @param directory  directory to delete
+	 * @throws IOException in case deletion is unsuccessful
+	 */
+	public static void deleteDirectory(File directory) throws IOException {
+		FileUtils.deleteDirectory(directory);
+		logger.info("-> directory deleted : " + directory.getAbsolutePath());
+	}
+	
+	/**
 	 * Deletes all the content of the specified folder.
 	 * @param directory - the folder to delete.
 	 * @throws IOException 
@@ -71,6 +119,8 @@ public class FileTools {
 			for(File file : directory.listFiles()) {
 				FileUtils.forceDelete(file);
 			}
+			
+			logger.info("-> deleted content of directory : " + directory.getAbsolutePath());
 		}
 		else {
 			throw new IOException("The file " + directory.getAbsolutePath() + " is not a directory.");
@@ -104,6 +154,8 @@ public class FileTools {
 				}
 			}
 		}
+		
+		logger.info("-> output : " + zipFile.getAbsolutePath());
 	}
 	
 	/**
