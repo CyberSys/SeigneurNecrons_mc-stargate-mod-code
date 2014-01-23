@@ -150,6 +150,7 @@ import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
 
 // FIXME - test : destroy a block while another player is in the gui of the block.
+// FIXME - missing textures (16px and 64px).
 
 /**
  * SeigneurNecron's Stargate Mod main class.

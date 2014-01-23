@@ -1,9 +1,5 @@
 package scripts;
 
-import java.io.File;
-
-import org.apache.commons.io.FileUtils;
-
 import scripts.tools.FileTools;
 
 /**
@@ -23,9 +19,8 @@ public class CopyAllZipsToMinecraft extends ReleaseScript {
 	protected void run(String[] args) throws Exception {
 		this.task = "copying resource packs to Minecraft";
 		
-		File minecraftResourcePacksFolder = new File(this.minecraftFolder, RESOURCE_PACKS);
-		FileTools.deleteFolderContent(minecraftResourcePacksFolder);
-		FileUtils.copyDirectory(this.releaseResourcePacksFolder, minecraftResourcePacksFolder);
+		FileTools.deleteFolderContent(this.minecraftResourcePacksFolder);
+		FileTools.copyDirectory(this.releaseResourcePacksFolder, this.minecraftResourcePacksFolder);
 		
 		this.logger.info("Resource packs copied to Minecraft.");
 		
@@ -33,9 +28,8 @@ public class CopyAllZipsToMinecraft extends ReleaseScript {
 		
 		this.task = "copying mods to Minecraft";
 		
-		File minecraftModsFolder = new File(this.minecraftFolder, MODS);
-		FileTools.deleteFolderContent(minecraftModsFolder);
-		FileUtils.copyDirectory(this.releaseModsFolder, minecraftModsFolder);
+		FileTools.deleteFolderContent(this.minecraftModsFolder);
+		FileTools.copyDirectory(this.releaseModsFolder, this.minecraftModsFolder);
 		
 		this.logger.info("Mods copied to Minecraft.");
 	}

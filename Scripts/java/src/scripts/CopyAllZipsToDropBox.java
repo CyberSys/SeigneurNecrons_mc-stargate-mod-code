@@ -1,9 +1,5 @@
 package scripts;
 
-import java.io.File;
-
-import org.apache.commons.io.FileUtils;
-
 import scripts.tools.FileTools;
 
 /**
@@ -23,9 +19,8 @@ public class CopyAllZipsToDropBox extends ReleaseScript {
 	protected void run(String[] args) throws Exception {
 		this.task = "copying resource packs to DropBox";
 		
-		File dropboxResourcePacksFolder = new File(this.dropboxFolder, RESOURCE_PACKS);
-		FileTools.deleteFolderContent(dropboxResourcePacksFolder);
-		FileUtils.copyDirectory(this.releaseResourcePacksFolder, dropboxResourcePacksFolder);
+		FileTools.deleteFolderContent(this.dropboxResourcePacksFolder);
+		FileTools.copyDirectory(this.releaseResourcePacksFolder, this.dropboxResourcePacksFolder);
 		
 		this.logger.info("Resource packs copied to DropBox.");
 		
@@ -33,9 +28,8 @@ public class CopyAllZipsToDropBox extends ReleaseScript {
 		
 		this.task = "copying mods to DropBox";
 		
-		File dropboxModsFolder = new File(this.dropboxFolder, MODS);
-		FileTools.deleteFolderContent(dropboxModsFolder);
-		FileUtils.copyDirectory(this.releaseModsFolder, dropboxModsFolder);
+		FileTools.deleteFolderContent(this.dropboxModsFolder);
+		FileTools.copyDirectory(this.releaseModsFolder, this.dropboxModsFolder);
 		
 		this.logger.info("Mods copied to DropBox.");
 	}

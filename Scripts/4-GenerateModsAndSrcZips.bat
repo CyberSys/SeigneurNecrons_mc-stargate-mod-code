@@ -1,4 +1,4 @@
 echo off
 cls
-java -jar "java\ReleaseScripts.jar" --generateModsAndSrc
+java -jar "java\ReleaseScripts.jar" --generateModsAndSrcZips
 pause
