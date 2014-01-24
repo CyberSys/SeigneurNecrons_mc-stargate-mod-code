@@ -5,13 +5,13 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
+
+import net.lingala.zip4j.core.ZipFile;
+import net.lingala.zip4j.exception.ZipException;
+import net.lingala.zip4j.model.ZipParameters;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -128,64 +128,50 @@ public class FileTools {
 	}
 	
 	/**
-	 * Zips the specified folder into the specified zip file.
+	 * Zips the content of the specified folder into the specified zip file.
 	 * @param sourceFolderPath - the folder to zip.
 	 * @param zipFile - the output zip file.
-	 * @throws IOException 
-	 * @throws FileNotFoundException 
+	 * @throws ZipException 
 	 */
-	public static void createZip(File sourceFolder, File zipFile) throws FileNotFoundException, IOException {
-		sourceFolder = sourceFolder.getAbsoluteFile();
-		String sourceFolderPath = sourceFolder.getAbsolutePath();
+	public static void zipFolderContent(File sourceFolder, File zipFile) throws ZipException {
+		ZipFile zip = new ZipFile(zipFile);
+		ZipParameters params = new ZipParameters();
 		
-		List<String> fileList = generateFileList(sourceFolderPath, sourceFolder);
-		byte[] buffer = new byte[1024];
-		
-		try(FileOutputStream fileOuput = new FileOutputStream(zipFile); ZipOutputStream zipOutput = new ZipOutputStream(fileOuput)) {
-			for(String file : fileList) {
-				ZipEntry zipEntry = new ZipEntry(file);
-				zipOutput.putNextEntry(zipEntry);
-				
-				try(FileInputStream in = new FileInputStream(sourceFolderPath + File.separator + file)) {
-					int len;
-					while((len = in.read(buffer)) > 0) {
-						zipOutput.write(buffer, 0, len);
-					}
+		if(sourceFolder.isDirectory()) {
+			for(File file : sourceFolder.listFiles()) {
+				if(file.isDirectory()) {
+					zip.addFolder(file, params);
+				}
+				else {
+					zip.addFile(file, params);
 				}
 			}
 		}
+		else {
+			throw new ZipException("The file " + sourceFolder.getAbsolutePath() + " is not a directory.");
+		}
 		
-		logger.info("-> output : " + zipFile.getAbsolutePath());
+		logger.info("-> output zip : " + zipFile.getAbsolutePath());
 	}
 	
 	/**
-	 * Returns the list of all files contained in a directory (recursive).
-	 * @param sourceFolder - the folder to zip.
-	 * @param node - current file or directory.
-	 * @return the list of all files contained in a directory.
+	 * Zips the specified folder into the specified zip file.
+	 * @param sourceFolderPath - the folder to zip.
+	 * @param zipFile - the output zip file.
+	 * @throws ZipException 
 	 */
-	private static List<String> generateFileList(String sourceFolder, File node) {
-		List<String> fileList = new LinkedList<String>();
+	public static void zipFolder(File sourceFolder, File zipFile) throws ZipException {
+		ZipFile zip = new ZipFile(zipFile);
+		ZipParameters params = new ZipParameters();
 		
-		if(node.isFile()) {
-			fileList.add(generateZipEntry(sourceFolder, node.getAbsolutePath()));
+		if(sourceFolder.isDirectory()) {
+			zip.addFolder(sourceFolder, params);
 		}
-		else if(node.isDirectory()) {
-			for(File subNod : node.listFiles()) {
-				fileList.addAll(generateFileList(sourceFolder, subNod));
-			}
+		else {
+			throw new ZipException("The file " + sourceFolder.getAbsolutePath() + " is not a directory.");
 		}
 		
-		return fileList;
+		logger.info("-> output zip : " + zipFile.getAbsolutePath());
 	}
 	
-	/**
-	 * Formats the file path for zip.
-	 * @param sourceFolder - the folder to zip.
-	 * @param file - the file path.
-	 * @return The formatted file path.
-	 */
-	private static String generateZipEntry(String sourceFolder, String file) {
-		return file.substring(sourceFolder.length() + 1, file.length());
-	}
 }
