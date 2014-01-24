@@ -62,7 +62,7 @@ public class GenerateModsAndSrcZip extends ReleaseScript {
 		FileTools.copyDirectory(this.svnMainPackage, this.tmpMainPackage);
 		FileTools.copyDirectory(this.svnModsAssetsFolder, this.tmpAssetsFolder);
 		
-		FileTools.createZip(this.tmpFolder, this.srcZip);
+		FileTools.zipFolderContent(this.tmpFolder, this.srcZip);
 		
 		this.logger.info("Src zip created.");
 		
@@ -95,7 +95,7 @@ public class GenerateModsAndSrcZip extends ReleaseScript {
 				FileTools.replaceFirstInFile(mcmod_info, "INSERT_VERSION_HERE", completeVersion);
 				
 				File modZip = new File(this.releaseModsFolder, minecraftVersion + MODS_NAMES[i] + "_" + modVersion + dependenciesVersion + ZIP);
-				FileTools.createZip(this.tmpFolder, modZip);
+				FileTools.zipFolderContent(this.tmpFolder, modZip);
 			}
 			else {
 				throw new IOException("Can't find the version of the mod in the file : " + modMainFile.getAbsolutePath());
