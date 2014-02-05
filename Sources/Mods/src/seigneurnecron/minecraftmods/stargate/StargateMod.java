@@ -61,18 +61,20 @@ import seigneurnecron.minecraftmods.stargate.block.BlockShield;
 import seigneurnecron.minecraftmods.stargate.block.BlockStargateControl;
 import seigneurnecron.minecraftmods.stargate.block.BlockVortex;
 import seigneurnecron.minecraftmods.stargate.block.material.VortexMaterial;
-import seigneurnecron.minecraftmods.stargate.entity.EntityCustomExplosiveFireBall;
-import seigneurnecron.minecraftmods.stargate.entity.EntityCustomFireBall;
-import seigneurnecron.minecraftmods.stargate.entity.EntityNapalm;
-import seigneurnecron.minecraftmods.stargate.entity.EntityNuke;
 import seigneurnecron.minecraftmods.stargate.entity.damagesource.CustomDamageSource;
-import seigneurnecron.minecraftmods.stargate.entity.dispenserbehavior.DispenserBehaviorCustomExplosiveFireBall;
-import seigneurnecron.minecraftmods.stargate.entity.dispenserbehavior.DispenserBehaviorCustomFireBall;
+import seigneurnecron.minecraftmods.stargate.entity.dispenserbehavior.DispenserBehaviorFireballBasic;
+import seigneurnecron.minecraftmods.stargate.entity.dispenserbehavior.DispenserBehaviorFireballExplosive;
+import seigneurnecron.minecraftmods.stargate.entity.fireball.EntityFireballBasic;
+import seigneurnecron.minecraftmods.stargate.entity.fireball.EntityFireballExplosive;
+import seigneurnecron.minecraftmods.stargate.entity.fireball.EntityFireballNapalm;
+import seigneurnecron.minecraftmods.stargate.entity.fireball.EntityFireballNuke;
 import seigneurnecron.minecraftmods.stargate.event.StargateEventHandler;
 import seigneurnecron.minecraftmods.stargate.gui.GuiConsoleBase;
 import seigneurnecron.minecraftmods.stargate.gui.GuiCrystalFactory;
+import seigneurnecron.minecraftmods.stargate.gui.GuiDefaultConsole;
 import seigneurnecron.minecraftmods.stargate.gui.GuiDetector;
 import seigneurnecron.minecraftmods.stargate.gui.GuiDhd;
+import seigneurnecron.minecraftmods.stargate.gui.GuiFireballFactory;
 import seigneurnecron.minecraftmods.stargate.gui.GuiMobGenerator;
 import seigneurnecron.minecraftmods.stargate.gui.GuiScreenConsolePanel;
 import seigneurnecron.minecraftmods.stargate.gui.GuiShieldConsole;
@@ -85,22 +87,29 @@ import seigneurnecron.minecraftmods.stargate.gui.GuiTeleporter;
 import seigneurnecron.minecraftmods.stargate.gui.components.DhdPanel;
 import seigneurnecron.minecraftmods.stargate.inventory.InventoryConsoleBase;
 import seigneurnecron.minecraftmods.stargate.inventory.InventoryCrystalFactory;
+import seigneurnecron.minecraftmods.stargate.inventory.InventoryFireballFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.InventoryMobGenerator;
 import seigneurnecron.minecraftmods.stargate.inventory.InventorySoulCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.InventoryStargateFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.InventoryStuffLevelUpTable;
 import seigneurnecron.minecraftmods.stargate.item.ItemCrystal;
-import seigneurnecron.minecraftmods.stargate.item.ItemCustomExplosiveFireBall;
-import seigneurnecron.minecraftmods.stargate.item.ItemCustomFireBall;
 import seigneurnecron.minecraftmods.stargate.item.ItemShieldRemote;
 import seigneurnecron.minecraftmods.stargate.item.ItemSoul;
 import seigneurnecron.minecraftmods.stargate.item.ItemSoulCrystal;
 import seigneurnecron.minecraftmods.stargate.item.ItemSoulCrystalFull;
 import seigneurnecron.minecraftmods.stargate.item.ItemStargate;
-import seigneurnecron.minecraftmods.stargate.item.staff.ItemExplosiveFireStaff;
-import seigneurnecron.minecraftmods.stargate.item.staff.ItemFireStaff;
-import seigneurnecron.minecraftmods.stargate.item.staff.ItemNapalmStaff;
-import seigneurnecron.minecraftmods.stargate.item.staff.ItemNukeStaff;
+import seigneurnecron.minecraftmods.stargate.item.fireball.ItemFireballBasic;
+import seigneurnecron.minecraftmods.stargate.item.fireball.ItemFireballBoosted;
+import seigneurnecron.minecraftmods.stargate.item.fireball.ItemFireballExplosive;
+import seigneurnecron.minecraftmods.stargate.item.fireball.ItemFireballExplosiveStable;
+import seigneurnecron.minecraftmods.stargate.item.fireball.ItemFireballNapalm;
+import seigneurnecron.minecraftmods.stargate.item.fireball.ItemFireballNuke;
+import seigneurnecron.minecraftmods.stargate.item.staff.ItemFireStaffBasic;
+import seigneurnecron.minecraftmods.stargate.item.staff.ItemFireStaffBoosted;
+import seigneurnecron.minecraftmods.stargate.item.staff.ItemFireStaffExplosive;
+import seigneurnecron.minecraftmods.stargate.item.staff.ItemFireStaffExplosiveStable;
+import seigneurnecron.minecraftmods.stargate.item.staff.ItemFireStaffNapalm;
+import seigneurnecron.minecraftmods.stargate.item.staff.ItemFireStaffNuke;
 import seigneurnecron.minecraftmods.stargate.item.stuff.ItemNaquadahAxe;
 import seigneurnecron.minecraftmods.stargate.item.stuff.ItemNaquadahBoots;
 import seigneurnecron.minecraftmods.stargate.item.stuff.ItemNaquadahBow;
@@ -127,6 +136,7 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateContro
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargatePart;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.Console;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleDefault;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleFireballFactory;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleSoulCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStargateDhd;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStargateFactory;
@@ -148,9 +158,6 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.network.NetworkMod.SidedPacketHandler;
-
-// FIXME - test : destroy a block while another player is in the gui of the block.
-// FIXME - missing textures (16px and 64px).
 
 /**
  * SeigneurNecron's Stargate Mod main class.
@@ -268,17 +275,26 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 	public static Item item_naquadahLighter;
 	public static Item item_naquadahShears;
 	public static Item item_naquadahFishingRod;
-	public static Item item_fireStaff;
-	public static Item item_explosiveFireStaff;
-	public static Item item_nukeStaff;
-	public static Item item_napalmStaff;
-	public static Item item_customFireBall;
-	public static Item item_customExplosiveFireBall;
+	
+	public static ItemFireStaffBasic item_fireStaffBasic;
+	public static ItemFireStaffBasic item_fireStaffBoosted;
+	public static ItemFireStaffBasic item_fireStaffExplosive;
+	public static ItemFireStaffBasic item_fireStaffExplosiveStable;
+	public static ItemFireStaffBasic item_fireStaffNuke;
+	public static ItemFireStaffBasic item_fireStaffNapalm;
+	
+	public static ItemFireballBasic item_fireBallBasic;
+	public static ItemFireballBasic item_fireBallBoosted;
+	public static ItemFireballBasic item_fireBallExplosive;
+	public static ItemFireballBasic item_fireBallExplosiveStable;
+	public static ItemFireballBasic item_fireBallNuke;
+	public static ItemFireballBasic item_fireBallNapalm;
 	
 	public static ItemCrystal item_crystal;
 	public static ItemCrystal item_crystalConsole;
 	public static ItemCrystal item_crystalStargate;
 	public static ItemCrystal item_crystalStargateInterface;
+	public static ItemCrystal item_crystalStargateBlueprint;
 	public static ItemCrystal item_crystalDhd;
 	public static ItemCrystal item_crystalShield;
 	public static ItemCrystal item_crystalTeleporter;
@@ -286,6 +302,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 	public static ItemCrystal item_crystalEnchantment;
 	public static ItemCrystal item_crystalStuffData;
 	public static ItemCrystal item_crystalSoulData;
+	public static ItemCrystal item_crystalFireballData;
 	public static ItemSoulCrystal item_crystalSoulEmpty;
 	
 	public static ItemSoulCrystalFull item_crystalSoulChicken;
@@ -348,7 +365,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 	
 	public static final String itemName_naquadahHelmet = "item_naquadahHelmet";
 	public static final String itemName_naquadahPlate = "item_naquadahPlate";
-	public static final String itemName_naquadahLeggings = "item_naquadahLegs";
+	public static final String itemName_naquadahLeggings = "item_naquadahLeggings";
 	public static final String itemName_naquadahBoots = "item_naquadahBoots";
 	
 	public static final String itemName_naquadahPickaxe = "item_naquadahPickaxe";
@@ -360,17 +377,26 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 	public static final String itemName_naquadahLighter = "item_naquadahLighter";
 	public static final String itemName_naquadahShears = "item_naquadahShears";
 	public static final String itemName_naquadahFishingRod = "item_naquadahFishingRod";
-	public static final String itemName_fireStaff = "item_fireStaff";
-	public static final String itemName_nukeStaff = "item_nukeStaff";
-	public static final String itemName_napalmStaff = "item_napalmStaff";
-	public static final String itemName_explosiveFireStaff = "item_explosiveFireStaff";
-	public static final String itemName_customFireBall = "item_customFireBall";
-	public static final String itemName_customExplosiveFireBall = "item_customExplosiveFireBall";
+	
+	public static final String itemName_fireStaffBasic = "item_fireStaffBasic";
+	public static final String itemName_fireStaffBoosted = "item_fireStaffBoosted";
+	public static final String itemName_fireStaffExplosive = "item_fireStaffExplosive";
+	public static final String itemName_fireStaffExplosiveStable = "item_fireStaffExplosiveStable";
+	public static final String itemName_fireStaffNuke = "item_fireStaffNuke";
+	public static final String itemName_fireStaffNapalm = "item_fireStaffNapalm";
+	
+	public static final String itemName_fireBallBasic = "item_fireballBasic";
+	public static final String itemName_fireBallBoosted = "item_fireballBoosted";
+	public static final String itemName_fireBallExplosive = "item_fireballExplosive";
+	public static final String itemName_fireBallExplosiveStable = "item_fireballExplosiveStable";
+	public static final String itemName_fireBallNuke = "item_fireballNuke";
+	public static final String itemName_fireBallNapalm = "item_fireballNapalm";
 	
 	public static final String itemName_crystal = "item_crystal";
 	public static final String itemName_crystalConsole = "item_crystalConsole";
 	public static final String itemName_crystalStargate = "item_crystalStargate";
 	public static final String itemName_crystalStargateInterface = "item_crystalStargateInterface";
+	public static final String itemName_crystalStargateBlueprint = "item_crystalStargateBlueprint";
 	public static final String itemName_crystalDhd = "item_crystalDhd";
 	public static final String itemName_crystalShield = "item_crystalShield";
 	public static final String itemName_crystalTeleporter = "item_crystalTeleporter";
@@ -378,6 +404,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 	public static final String itemName_crystalEnchantment = "item_crystalEnchantment";
 	public static final String itemName_crystalStuffData = "item_crystalStuffData";
 	public static final String itemName_crystalSoulData = "item_crystalSoulData";
+	public static final String itemName_crystalFireballData = "item_crystalFireballData";
 	public static final String itemName_crystalSoulEmpty = "item_crystalSoulEmpty";
 	
 	public static final String itemName_crystalSoul = "item_crystalSoul";
@@ -391,6 +418,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 	public static final String CONSOLE_STARGATE_SHIELD = "StargateShield";
 	public static final String CONSOLE_STUFF_LEVEL_UP_TABLE = "StuffLevelUpTable";
 	public static final String CONSOLE_SOUL_CRYSTAL_FACTORY = "SoulCrystalFactory";
+	public static final String CONSOLE_FIREBALL_FACTORY = "FireballFactory";
 	
 	// Initialization :
 	
@@ -504,17 +532,26 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		item_naquadahLighter = new ItemNaquadahLighter(itemName_naquadahLighter);
 		item_naquadahShears = new ItemNaquadahShears(itemName_naquadahShears);
 		item_naquadahFishingRod = new ItemNaquadahFishingRod(itemName_naquadahFishingRod);
-		item_fireStaff = new ItemFireStaff(itemName_fireStaff);
-		item_explosiveFireStaff = new ItemExplosiveFireStaff(itemName_explosiveFireStaff);
-		item_nukeStaff = new ItemNukeStaff(itemName_nukeStaff);
-		item_napalmStaff = new ItemNapalmStaff(itemName_napalmStaff);
-		item_customFireBall = new ItemCustomFireBall(itemName_customFireBall);
-		item_customExplosiveFireBall = new ItemCustomExplosiveFireBall(itemName_customExplosiveFireBall);
+		
+		item_fireStaffBasic = new ItemFireStaffBasic(itemName_fireStaffBasic);
+		item_fireStaffBoosted = new ItemFireStaffBoosted(itemName_fireStaffBoosted);
+		item_fireStaffExplosive = new ItemFireStaffExplosive(itemName_fireStaffExplosive);
+		item_fireStaffExplosiveStable = new ItemFireStaffExplosiveStable(itemName_fireStaffExplosiveStable);
+		item_fireStaffNuke = new ItemFireStaffNuke(itemName_fireStaffNuke);
+		item_fireStaffNapalm = new ItemFireStaffNapalm(itemName_fireStaffNapalm);
+		
+		item_fireBallBasic = new ItemFireballBasic(itemName_fireBallBasic);
+		item_fireBallBoosted = new ItemFireballBoosted(itemName_fireBallBoosted);
+		item_fireBallExplosive = new ItemFireballExplosive(itemName_fireBallExplosive);
+		item_fireBallExplosiveStable = new ItemFireballExplosiveStable(itemName_fireBallExplosiveStable);
+		item_fireBallNuke = new ItemFireballNuke(itemName_fireBallNuke);
+		item_fireBallNapalm = new ItemFireballNapalm(itemName_fireBallNapalm);
 		
 		item_crystal = new ItemCrystal(itemName_crystal, "Cr");
 		item_crystalConsole = new ItemCrystal(itemName_crystalConsole, "Co");
 		item_crystalStargate = new ItemCrystal(itemName_crystalStargate, "SGC");
 		item_crystalStargateInterface = new ItemCrystal(itemName_crystalStargateInterface, "SGI");
+		item_crystalStargateBlueprint = new ItemCrystal(itemName_crystalStargateBlueprint, "SGB");
 		item_crystalDhd = new ItemCrystal(itemName_crystalDhd, "DHD");
 		item_crystalShield = new ItemCrystal(itemName_crystalShield, "Sh");
 		item_crystalTeleporter = new ItemCrystal(itemName_crystalTeleporter, "Te");
@@ -522,6 +559,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		item_crystalEnchantment = new ItemCrystal(itemName_crystalEnchantment, "En");
 		item_crystalStuffData = new ItemCrystal(itemName_crystalStuffData, "DSt");
 		item_crystalSoulData = new ItemCrystal(itemName_crystalSoulData, "DSo");
+		item_crystalFireballData = new ItemCrystal(itemName_crystalFireballData, "DFi");
 		item_crystalSoulEmpty = new ItemSoulCrystal(itemName_crystalSoulEmpty, "SE");
 		
 		final int D1 = ItemSoulCrystalFull.DEFAULT_SPAWN_COUNT;
@@ -538,7 +576,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		item_crystalSoulWolf = new ItemSoulCrystalFull(EntityWolf.class, D1, D2, 100, D4);
 		item_crystalSoulIronGolem = new ItemSoulCrystalFull(EntityIronGolem.class, 2, 4, 100, D4);
 		item_crystalSoulSnowman = new ItemSoulCrystalFull(EntitySnowman.class, 2, 6, 100, D4);
-		item_crystalSoulBlaze = new ItemSoulCrystalFull(EntityBlaze.class, D1, D2, 100, D4);
+		item_crystalSoulBlaze = new ItemSoulCrystalFull(EntityBlaze.class, D1, D2, 75, D4);
 		item_crystalSoulCreeper = new ItemSoulCrystalFull(EntityCreeper.class);
 		item_crystalSoulEnderman = new ItemSoulCrystalFull(EntityEnderman.class, 2, 4, D3, D4);
 		item_crystalSoulSilverfish = new ItemSoulCrystalFull(EntitySilverfish.class, D1, D2, 50, 1);
@@ -549,8 +587,8 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		item_crystalSoulPigZombie = new ItemSoulCrystalFull(EntityPigZombie.class);
 		item_crystalSoulSquid = new ItemSoulCrystalFull(EntitySquid.class);
 		item_crystalSoulGhast = new ItemSoulCrystalFull(EntityGhast.class, 1, 2, 100, 1);
-		item_crystalSoulSlime = new ItemSoulCrystalFull(EntitySlime.class);
-		item_crystalSoulMagmaCube = new ItemSoulCrystalFull(EntityMagmaCube.class, D1, D2, 100, D4);
+		item_crystalSoulSlime = new ItemSoulCrystalFull(EntitySlime.class, D1, D2, D3, 0.3);
+		item_crystalSoulMagmaCube = new ItemSoulCrystalFull(EntityMagmaCube.class, D1, D2, 75, D4);
 		item_crystalSoulBat = new ItemSoulCrystalFull(EntityBat.class, 6, 12, 100, D4);
 		item_crystalSoulVillager = new ItemSoulCrystalFull(EntityVillager.class, 1, D2, 50, 1);
 		item_crystalSoulHorse = new ItemSoulCrystalFull(EntityHorse.class, 2, D2, 50, 1);
@@ -567,7 +605,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		Console.registerConsole(crystals, ConsoleTeleporter.class, CONSOLE_TELEPORTER);
 		
 		crystals = HashMultiset.create();
-		crystals.add(item_crystalStargateInterface);
+		crystals.add(item_crystalStargateBlueprint);
 		Console.registerConsole(crystals, ConsoleStargateFactory.class, CONSOLE_STARGATE_FACTORY);
 		
 		crystals = HashMultiset.create();
@@ -589,10 +627,19 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		crystals.add(item_crystalSoulData);
 		crystals.add(item_crystalEnchantment);
 		Console.registerConsole(crystals, ConsoleSoulCrystalFactory.class, CONSOLE_SOUL_CRYSTAL_FACTORY);
+		
+		crystals = HashMultiset.create();
+		crystals.add(item_crystalFireballData);
+		crystals.add(item_crystalEnchantment);
+		Console.registerConsole(crystals, ConsoleFireballFactory.class, CONSOLE_FIREBALL_FACTORY);
 	}
 	
 	protected void registerCrystal(ItemCrystal crystal) {
 		ItemCrystal.registerCraftableCrystal(crystal);
+	}
+	
+	protected void registerFireball(ItemFireballBasic fireball) {
+		ItemFireballBasic.registerCraftableFireball(fireball);
 	}
 	
 	protected void registerRecipes() {
@@ -603,7 +650,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		this.addSmelting(new ItemStack(item_naquadahIngot), item_naquadahOre.itemID);
 		this.addRecipe(new ItemStack(block_naquadahBlock), new Object[] {"NNN", "NNN", "NNN", 'N', item_naquadahIngot});
 		this.addShapelessRecipe(new ItemStack(Block.redstoneLampIdle), new Object[] {block_selfPoweredRedstoneLight});
-		this.addShapelessRecipe(new ItemStack(Item.fireballCharge), new Object[] {item_customExplosiveFireBall});
+		this.addShapelessRecipe(new ItemStack(Item.fireballCharge), new Object[] {item_fireBallExplosive});
 		this.registerCrystal(item_crystal);
 		
 		if(this.getConfig().canCraftNaquadahAlloy) {
@@ -620,6 +667,10 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 				if(this.getConfig().canCraftStargateShield) {
 					this.addShapelessRecipe(new ItemStack(item_shieldRemote), new Object[] {item_crystalStargateInterface, item_touchScreen, Item.ingotIron, Item.redstone});
 					this.registerCrystal(item_crystalShield);
+				}
+				
+				if(this.getConfig().canCraftFastStargate) {
+					this.registerCrystal(item_crystalStargateBlueprint);
 				}
 				
 				canCraftConsole = true;
@@ -654,6 +705,67 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 				canCraftConsole = true;
 			}
 			
+			if(this.getConfig().canCraftFireballBasic) {
+				this.registerFireball(item_fireBallBasic);
+				
+				if(this.getConfig().canCraftToolsAndArmors && this.getConfig().canCraftFireStaffBasic) {
+					this.addShapelessRecipe(new ItemStack(item_fireStaffBasic), new Object[] {item_fireBallBasic, item_naquadahLighter, item_crystalEnchantment, block_naquadahBlock, Block.blockDiamond, Block.blockGold, Block.blockIron});
+					canCraftEnchantmentCrystal = true;
+				}
+			}
+			
+			if(this.getConfig().canCraftFireballBoosted) {
+				this.registerFireball(item_fireBallBoosted);
+				
+				if(this.getConfig().canCraftToolsAndArmors && this.getConfig().canCraftFireStaffBoosted) {
+					this.addShapelessRecipe(new ItemStack(item_fireStaffBoosted), new Object[] {item_fireBallBoosted, item_naquadahLighter, item_crystalEnchantment, block_naquadahBlock, Block.blockDiamond, Block.blockGold, Block.blockIron});
+					canCraftEnchantmentCrystal = true;
+				}
+			}
+			
+			if(this.getConfig().canCraftFireballExplosive) {
+				this.registerFireball(item_fireBallExplosive);
+				
+				if(this.getConfig().canCraftToolsAndArmors && this.getConfig().canCraftFireStaffExplosive) {
+					this.addShapelessRecipe(new ItemStack(item_fireStaffExplosive), new Object[] {item_fireBallExplosive, item_naquadahLighter, item_crystalEnchantment, block_naquadahBlock, Block.blockDiamond, Block.blockGold, Block.blockIron});
+					canCraftEnchantmentCrystal = true;
+				}
+			}
+			
+			if(this.getConfig().canCraftFireballExplosiveStable) {
+				this.registerFireball(item_fireBallExplosiveStable);
+				
+				if(this.getConfig().canCraftToolsAndArmors && this.getConfig().canCraftFireStaffExplosiveStable) {
+					this.addShapelessRecipe(new ItemStack(item_fireStaffExplosiveStable), new Object[] {item_fireBallExplosiveStable, item_naquadahLighter, item_crystalEnchantment, block_naquadahBlock, Block.blockDiamond, Block.blockGold, Block.blockIron});
+					canCraftEnchantmentCrystal = true;
+				}
+			}
+			
+			if(this.getConfig().canCraftFireballNuke) {
+				this.registerFireball(item_fireBallNuke);
+				
+				if(this.getConfig().canCraftToolsAndArmors && this.getConfig().canCraftFireStaffNuke) {
+					this.addShapelessRecipe(new ItemStack(item_fireStaffNuke), new Object[] {item_fireBallNuke, item_naquadahLighter, item_crystalEnchantment, block_naquadahBlock, Block.blockDiamond, Block.blockGold, Block.blockIron});
+					canCraftEnchantmentCrystal = true;
+				}
+			}
+			
+			if(this.getConfig().canCraftFireballNapalm) {
+				this.registerFireball(item_fireBallNapalm);
+				
+				if(this.getConfig().canCraftToolsAndArmors && this.getConfig().canCraftFireStaffNapalm) {
+					this.addShapelessRecipe(new ItemStack(item_fireStaffNapalm), new Object[] {item_fireBallNapalm, item_naquadahLighter, item_crystalEnchantment, block_naquadahBlock, Block.blockDiamond, Block.blockGold, Block.blockIron});
+					canCraftEnchantmentCrystal = true;
+				}
+			}
+			
+			if(ItemFireballBasic.getCraftableFireballs().size() > 1) {
+				this.registerCrystal(item_crystalFireballData);
+				
+				canCraftEnchantmentCrystal = true;
+				canCraftConsole = true;
+			}
+			
 			if(canCraftConsole) {
 				this.addShapelessRecipe(new ItemStack(item_touchScreen), new Object[] {Block.thinGlass, Item.redstone});
 				this.addShapelessRecipe(new ItemStack(block_consolePanel), new Object[] {block_naquadahAlloy, item_touchScreen});
@@ -682,44 +794,22 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 			this.addRecipe(new ItemStack(item_naquadahLighter), new Object[] {"N_", "_F", 'N', item_naquadahIngot, 'F', Item.flint});
 			this.addRecipe(new ItemStack(item_naquadahShears), new Object[] {"_N", "N_", 'N', item_naquadahIngot});
 			this.addRecipe(new ItemStack(item_naquadahFishingRod), new Object[] {"__N", "_NS", "N_S", 'N', item_naquadahIngot, 'S', Item.silk});
-			
-			if(this.getConfig().canCraftFireBalls && this.getConfig().canCraftFireStaff) {
-				this.addShapelessRecipe(new ItemStack(item_fireStaff), new Object[] {item_naquadahLighter, item_crystalEnchantment, item_customFireBall});
-				
-				if(this.getConfig().canCraftExplosiveFireBalls && this.getConfig().canCraftExplosiveFireStaff) {
-					this.addShapelessRecipe(new ItemStack(item_explosiveFireStaff), new Object[] {item_naquadahLighter, item_crystalEnchantment, item_customExplosiveFireBall});
-				}
-				
-				canCraftEnchantmentCrystal = true;
-			}
-		}
-		
-		if(this.getConfig().canCraftFireBalls) {
-			this.addShapelessRecipe(new ItemStack(item_customFireBall), new Object[] {Item.fireballCharge});
-			
-			if(this.getConfig().canCraftExplosiveFireBalls) {
-				this.addShapelessRecipe(new ItemStack(item_customExplosiveFireBall), new Object[] {item_customFireBall});
-			}
-			else {
-				this.addShapelessRecipe(new ItemStack(Item.fireballCharge), new Object[] {item_customFireBall});
-			}
 		}
 		
 		if(canCraftEnchantmentCrystal) {
 			this.registerCrystal(item_crystalEnchantment);
-			
 			canCraftCrystal = true;
 		}
 		
 		if(canCraftCrystal) {
 			this.addShapelessRecipe(new ItemStack(item_crystal), new Object[] {Item.diamond, Item.redstone});
-			this.addShapelessRecipe(new ItemStack(block_crystalFactory), new Object[] {block_naquadahAlloy, item_crystal});
+			this.addShapelessRecipe(new ItemStack(block_crystalFactory), new Object[] {block_naquadahAlloy, item_crystal, item_touchScreen});
 		}
 	}
 	
 	protected void registerDispenserBehaviors() {
-		this.registerDispenserBehavior(item_customFireBall, new DispenserBehaviorCustomFireBall());
-		this.registerDispenserBehavior(item_customExplosiveFireBall, new DispenserBehaviorCustomExplosiveFireBall());
+		this.registerDispenserBehavior(item_fireBallBasic, new DispenserBehaviorFireballBasic());
+		this.registerDispenserBehavior(item_fireBallExplosive, new DispenserBehaviorFireballExplosive());
 	}
 	
 	protected void registerTileEntities() {
@@ -734,10 +824,10 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 	
 	protected void registerEntities() {
 		this.registerEntitiy(EntityCustomFishHook.class, "customFishHook", 0, 250, 5, true);
-		this.registerEntitiy(EntityCustomFireBall.class, "customFireBall", 1, 250, 5, true);
-		this.registerEntitiy(EntityCustomExplosiveFireBall.class, "customExplosiveFireBall", 2, 250, 5, true);
-		this.registerEntitiy(EntityNuke.class, "nuke", 3, 250, 5, true);
-		this.registerEntitiy(EntityNapalm.class, "napalm", 4, 250, 5, true);
+		this.registerEntitiy(EntityFireballBasic.class, "customFireBall", 1, 250, 5, true);
+		this.registerEntitiy(EntityFireballExplosive.class, "customExplosiveFireBall", 2, 250, 5, true);
+		this.registerEntitiy(EntityFireballNuke.class, "nuke", 3, 250, 5, true);
+		this.registerEntitiy(EntityFireballNapalm.class, "napalm", 4, 250, 5, true);
 	}
 	
 	protected void registerEventHandlers() {
@@ -782,7 +872,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		this.addName(block_naquadahAlloy, "Naquadah alloy", "Alliage de naquadah");
 		this.addName(block_chevronOff, "Chevron", "Chevron");
 		this.addName(block_chevronOn, "Chevron (Active)", "Chevron (Active)");
-		this.addName(block_stargateControl, "Stargate control unit", "Unite de controle de porte des eloiles");
+		this.addName(block_stargateControl, "Stargate control unit", "Unite de controle de porte des etoiles");
 		this.addName(block_vortex, "Vortex", "Vortex");
 		this.addName(block_shield, "Shield", "Bouclier");
 		this.addName(block_shieldedVortex, "Shielded vortex", "Vortex avec bouclier");
@@ -819,17 +909,26 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		this.addName(item_naquadahLighter, "Naquadah ligher", "Briquet de naquadah");
 		this.addName(item_naquadahShears, "Naquadah shears", "Cisailles de naquadah");
 		this.addName(item_naquadahFishingRod, "Naquadah fishing rod", "Canne a peche de naquadah");
-		this.addName(item_fireStaff, "Fire staff", "Baguette de feu");
-		this.addName(item_explosiveFireStaff, "Explosive fire staff", "Baguette de feu explosive");
-		this.addName(item_nukeStaff, "Nuke staff - wtf!?", "Baguette nucleaire - wtf!?");
-		this.addName(item_napalmStaff, "Napalm staff - wtf!?", "Baguette napalm - wtf!?");
-		this.addName(item_customFireBall, "Fireball v2 - stargate compatible", "Boule de feu v2 - stargate compatible");
-		this.addName(item_customExplosiveFireBall, "Fireball v3 - explosive", "Boule de feu v3 - explosive");
+		
+		this.addName(item_fireStaffBasic, "Fire staff", "Baguette de feu");
+		this.addName(item_fireStaffBoosted, "Boosted fire staff", "Baguette de feu boostee");
+		this.addName(item_fireStaffExplosive, "Explosive fire staff", "Baguette de feu explosive");
+		this.addName(item_fireStaffExplosiveStable, "Stable explosive fire staff", "Baguette de feu explosive stable");
+		this.addName(item_fireStaffNuke, "Nuke staff", "Baguette nucleaire");
+		this.addName(item_fireStaffNapalm, "Napalm staff", "Baguette napalm");
+		
+		this.addName(item_fireBallBasic, "Basic fireball", "Boule de feu basique");
+		this.addName(item_fireBallBoosted, "Boosted fireball", "Boule de feu boostee");
+		this.addName(item_fireBallExplosive, "Explosive fireball", "Boule de feu explosive");
+		this.addName(item_fireBallExplosiveStable, "Stable explosive fireball", "Boule de feu explosive stable");
+		this.addName(item_fireBallNuke, "Nuke fireball", "Boule de feu nucleaire");
+		this.addName(item_fireBallNapalm, "Napalm fireball", "Boule de feu napalm");
 		
 		this.addName(item_crystal, "Crystal", "Cristal");
 		this.addName(item_crystalConsole, "Console Crystal", "Cristal de console");
 		this.addName(item_crystalStargate, "Stargate control crystal", "Cristal de controle de porte des etoiles");
-		this.addName(item_crystalStargateInterface, "Stargate interface crystal", "Cristal d'interfacage a la porte des etoiles");
+		this.addName(item_crystalStargateInterface, "Stargate interface crystal", "Cristal de connexion a la porte des etoiles");
+		this.addName(item_crystalStargateBlueprint, "Stargate blueprint crystal", "Cristal de construction de porte des etoiles");
 		this.addName(item_crystalDhd, "DHD control crystal", "Cristal de controle de DHD");
 		this.addName(item_crystalShield, "Shield crystal", "Cristal de bouclier");
 		this.addName(item_crystalTeleporter, "Teleporter crystal", "Cristal de teleporteur");
@@ -837,6 +936,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		this.addName(item_crystalEnchantment, "Enchantment crystal", "Cristal d'enchantement");
 		this.addName(item_crystalStuffData, "Data crystal - Stuff", "Cristal de donnees - equipement");
 		this.addName(item_crystalSoulData, "Data crystal - Souls", "Cristal de donnees - ames");
+		this.addName(item_crystalFireballData, "Data crystal - Fireballs", "Cristal de donnees - boules de feu");
 		this.addName(item_crystalSoulEmpty, "Empty soul crystal", "Cristal d'ame vide");
 		
 		this.addName(item_crystalSoulChicken, "Chicken soul crystal", "Cristal d'ame de poulet");
@@ -923,8 +1023,11 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		this.addName(GuiShieldRemote.CODE, "Code", "Code");
 		this.addName(GuiShieldRemote.SEND_CODE, "Send code", "Envoyer le code");
 		
+		this.addName(GuiDefaultConsole.INV_NAME, "Default console", "Console par defaut");
+		this.addName(GuiDefaultConsole.ANY_INVALID_SET, "Any invalid set", "Combinaison invalide");
+		
 		this.addName(InventoryConsoleBase.INV_NAME, "Console crystal slots", "Emplacements de cristaux");
-		this.addName(GuiConsoleBase.INFO, "Insert crystals to configure the console. Basic crystals are crafted with diamonds. You can configure crystals with redstone...", "Inserez des crystaux pour configurer la console. Les crystaux basiques sont fabriques a partir de diamant. Vous pouvez configurer les crystaux avec de la redstone...");
+		this.addName(GuiConsoleBase.INFO, "Insert crystals to configure the console. If you insert no crystal or an invalid crystals combination, the console panel will display the list of valid crystals combinations. Order doesn't matter.", "Inserez des crystaux pour configurer la console. Si vous n'inserez aucun cristal ou si vous inserez une combinaison de cristaux invalide, le paneaux de la console affichera la liste des combinaisons valides. L'odre n'a pas d'importance.");
 		
 		this.addName(InventorySoulCrystalFactory.INV_NAME, "Soul crystal factory", "Table de creation de cristaux d'ame");
 		this.addName(GuiSoulCrystalFactory.CREATE, "Create", "Creer");
@@ -946,8 +1049,13 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		this.addName(GuiCrystalFactory.INSERT_CRYSTAL, "Insert a configurable crystal.", "Inserer un crystal configurable.");
 		this.addName(GuiCrystalFactory.CRYSTAL_READY, "Crystal ready.", "Cristal pret.");
 		
+		this.addName(InventoryFireballFactory.INV_NAME, "Fireball factory", "Usine de boules de feu");
+		this.addName(GuiFireballFactory.TRANFORM, "Transform", "Tansformer");
+		this.addName(GuiFireballFactory.INSERT_FIREBALL, "Insert a fireball.", "Inserer une boule de feu.");
+		this.addName(GuiFireballFactory.FIREBALL_READY, "Fireball ready.", "Boule de feu prete.");
+		
 		this.addName(InventoryStargateFactory.INV_NAME, "Stargate factory", "Usine de porte des etoiles");
-		this.addName(GuiStargateFactory.INFO, "This console allows you to craft a \"Fast stargate\" block which can instantly build a stargate. To craft the block, you need to supply the following materials :\n- " + NB_NAQUADAH_ALLOY_BLOCKS + " naquadah alloy blocks\n- " + NB_CHEVRON + " chevrons\n- 1 stargate control unit\nShift click the materials in your inventory to automatically transfer them in the crafting slots, then click the button. The \"Fast stargate\" block will appear in the last slot.", "Cette console vous permet de creer un bloc \"Fast stargate\" qui peut construire une porte des etoiles instantanement. Pour creer le bloc, vous devez fournir les materiaux suivants :\n- " + NB_NAQUADAH_ALLOY_BLOCKS + " blocs d'alliage de naquadah\n- " + NB_CHEVRON + " chevrons\n- 1 unite de controle de porte des eloiles\nShift-cliquez les materiaux dans votre inventaire pour les envoyer automatiquement dans les bons emplacements, puis cliquez sur le bouton. Le bloc \"Fast stargate\" apparaitra dans le dernier emplacement.");
+		this.addName(GuiStargateFactory.INFO, "This console allows you to craft a \"Fast stargate\" block which can instantly build a stargate. To craft the block, you need to supply the following materials :\n- " + NB_NAQUADAH_ALLOY_BLOCKS + " naquadah alloy blocks\n- " + NB_CHEVRON + " chevrons\n- 1 stargate control unit\nShift click the materials in your inventory to automatically transfer them in the crafting slots, then click the button. The \"Fast stargate\" block will appear in the last slot.", "Cette console vous permet de creer un bloc \"Fast stargate\" qui peut construire une porte des etoiles instantanement. Pour creer le bloc, vous devez fournir les materiaux suivants :\n- " + NB_NAQUADAH_ALLOY_BLOCKS + " blocs d'alliage de naquadah\n- " + NB_CHEVRON + " chevrons\n- 1 unite de controle de porte des etoiles\nShift-cliquez les materiaux dans votre inventaire pour les envoyer automatiquement dans les bons emplacements, puis cliquez sur le bouton. Le bloc \"Fast stargate\" apparaitra dans le dernier emplacement.");
 		this.addName(GuiStargateFactory.CREATE, "Create", "Creer");
 		this.addName(GuiStargateFactory.MATERIALS_MISSING, "Some materials are missing.", "Il manque des materiaux.");
 		this.addName(GuiStargateFactory.MATERIALS_READY, "The materials are ready.", "Les materiaux sont prets.");
@@ -956,13 +1064,15 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		this.addName(item_crystalConsole.getUnlocalizedCrystalInfo(), "This crystal is used to craft the console base. The console allows you to access multiple interfaces depending on the inserted crystals.", "Ce cristal est utilise pour crafter le socle de console. La console vous permet d'acceder a differentes interfaces selon les cristaux qui y sont inseres.");
 		this.addName(item_crystalStargate.getUnlocalizedCrystalInfo(), "This crystal is used to craft the stargate control unit, which is the main block of a stargate.", "Ce cristal est utilise pour crafter l'unite de controle de la porte des etoile, qui est le block principal de la porte.");
 		this.addName(item_crystalStargateInterface.getUnlocalizedCrystalInfo(), "This crystal can be inserted in a console to connect it to a stargate (to create a dhd or a shield console). It is also used to craft the shield remote.", "Ce cristal peut etre insere dans une console pour la connecter a une porte des etoiles (pour creer un dhd ou une console de bouclier). Il est aussi utilise pour crafter la telecommande de bouclier.");
+		this.addName(item_crystalStargateBlueprint.getUnlocalizedCrystalInfo(), "This crystal can be inserted in a console to create a stargate factory.", "Ce cristal peut etre insere dans une console pour creer une usine de porte des etoiles.");
 		this.addName(item_crystalDhd.getUnlocalizedCrystalInfo(), "This crystal can be inserted in a console to create a dhd.", "Ce cristal peut etre insere dans une console pour creer un dhd.");
 		this.addName(item_crystalShield.getUnlocalizedCrystalInfo(), "This crystal can be inserted in a console to create a shield console.", "Ce cristal peut etre insere dans une console pour creer une console de bouclier.");
 		this.addName(item_crystalTeleporter.getUnlocalizedCrystalInfo(), "This crystal can be inserted in a console to create a teleporter.", "Ce cristal peut etre insere dans une console pour creer un teleporteur.");
 		this.addName(item_crystalScanner.getUnlocalizedCrystalInfo(), "This crystal is used to craft a detector, which can detect nearby players.", "Ce cristal est utilise pour crafter le detecteur, qui peut detecter les joueurs a proximite.");
 		this.addName(item_crystalEnchantment.getUnlocalizedCrystalInfo(), "This crystal can be inserted in a console to create a stuff level up table or a soul crystal factory.", "Ce cristal peut etre insere dans une console pour creer une table d'amelioration d'equipement ou une table de creation de cristaux d'ame.");
 		this.addName(item_crystalStuffData.getUnlocalizedCrystalInfo(), "This crystal can be inserted in a console to create a stuff level up table.", "Ce cristal peut etre insere dans une console pour creer une table d'amelioration d'equipement.");
-		this.addName(item_crystalSoulData.getUnlocalizedCrystalInfo(), "This crystal can be inserted in a console to create a soul crystal factory.", "Ce cristal peut etre insere dans une console pour creer une table de creation de cristaux d'ame.");
+		this.addName(item_crystalSoulData.getUnlocalizedCrystalInfo(), "This crystal can be inserted in a console to create a soul crystal factory.", "Ce cristal peut etre insere dans une console pour creer une usine de cristaux d'ame.");
+		this.addName(item_crystalFireballData.getUnlocalizedCrystalInfo(), "This crystal can be inserted in a console to create a fireball factory.", "Ce cristal peut etre insere dans une console pour creer une usine de boules de feu.");
 		this.addName(item_crystalSoulEmpty.getUnlocalizedCrystalInfo(), "This crystal can be filled with mob souls (using the soul crystal factory) and inserted in a mob generator.", "Ce cristal peut etre rempli avec des ames de mobs (en utilisant la table de creation de cristaux d'ame), puis insere dans un generateur de mobs.");
 		
 		this.addName(CONSOLE_NAME_PREFIX + CONSOLE_DEFAULT, "Default console", "Console par defaut");
@@ -971,7 +1081,8 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		this.addName(CONSOLE_NAME_PREFIX + CONSOLE_STARGATE_DHD, "Dhd", "Dhd");
 		this.addName(CONSOLE_NAME_PREFIX + CONSOLE_STARGATE_SHIELD, "Stargate Shield", "Console de bouclier");
 		this.addName(CONSOLE_NAME_PREFIX + CONSOLE_STUFF_LEVEL_UP_TABLE, "Stuff level up table", "Table d'amelioration d'equipement");
-		this.addName(CONSOLE_NAME_PREFIX + CONSOLE_SOUL_CRYSTAL_FACTORY, "Soul crystal factory", "Table de creation de cristaux d'ame");
+		this.addName(CONSOLE_NAME_PREFIX + CONSOLE_SOUL_CRYSTAL_FACTORY, "Soul crystal factory", "Usine de cristaux d'ame");
+		this.addName(CONSOLE_NAME_PREFIX + CONSOLE_FIREBALL_FACTORY, "Fireball factory", "Usine de boules de feu");
 		
 		this.addName(CONSOLE_INFO_PREFIX + CONSOLE_DEFAULT, "This console provides you a list of valid crystal sets", "Cette console vous affiche la liste des combinaisons de cristaux valides.");
 		this.addName(CONSOLE_INFO_PREFIX + CONSOLE_TELEPORTER, "This console allows you to teleport yourself to another teleporter. It also allows you to acces the list of registered teleporters and to add/modify/delete elements in this list.", "Cette console vous permet de vous teleporter vers un autre teleporteur. Elle vous permet egalement de consulter la liste des teleporteurs enregistres, ainsi que d'y ajouter, modifier ou supprimer des elements.");
@@ -980,6 +1091,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		this.addName(CONSOLE_INFO_PREFIX + CONSOLE_STARGATE_SHIELD, "This console allows you to activate/deactivate the shield of a stargate. It also allows you to enable/disable the auto shield mode and to change the code which is used to deactivate the shield from the other side.", "Cette console vous permet d'activer ou de desactiver le bouclier d'une porte des etoiles. Elle vous permet egalement d'activer ou de desactiver le mode bouclier automatique et de changer le code permettant de desactiver le bouclier depuis l'autre cote.");
 		this.addName(CONSOLE_INFO_PREFIX + CONSOLE_STUFF_LEVEL_UP_TABLE, "This console allows you to upgrade you stuff by choosing the enchantments you want to add.", "Cette console vous permet d'ameliorer votre equipement en choisissant les enchantements que vous vouler ajouter.");
 		this.addName(CONSOLE_INFO_PREFIX + CONSOLE_SOUL_CRYSTAL_FACTORY, "This console allows you to spend the souls you have collected to create crystals which can spawn monsters when inserted in a mob generator.", "Cette console vous permet d'utiliser les ames que vous avez recolte pour creer des cristaux pouvant faire aparaitre des monstres s'ils sont inseres dans un generateur de mobs.");
+		this.addName(CONSOLE_INFO_PREFIX + CONSOLE_FIREBALL_FACTORY, "This console allows you to transform fireballs to give them different properties.", "Cette console vous permet de transformer les boules de feu pour leur donner differentes proprietes.");
 		
 		// Damage sources :
 		this.addName("death.attack." + CustomDamageSource.KAWOOSH.getDamageType(), "%1$s tried to swim into the kawoosh.", "%1$s a essaye de nager dans le kawoosh.");

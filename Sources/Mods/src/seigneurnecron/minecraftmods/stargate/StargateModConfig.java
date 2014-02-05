@@ -46,17 +46,41 @@ public class StargateModConfig extends ModConfig<StargateMod> {
 	@Config(comment = "Determines if players can craft naquadah tools and armors.")
 	public boolean canCraftToolsAndArmors = true;
 	
-	@Config(comment = "Determines if players can craft fireballs.")
-	public boolean canCraftFireBalls = true;
+	@Config(comment = "Determines if players can craft basic fireballs. (Requires canCraftNaquadahAlloy = true)")
+	public boolean canCraftFireballBasic = true;
 	
-	@Config(comment = "Determines if players can craft the (cheated) fire staff. (Requires canCraftToolsAndArmors = true)")
-	public boolean canCraftFireStaff = true;
+	@Config(comment = "Determines if players can craft boosted fireballs. (Requires canCraftNaquadahAlloy = true)")
+	public boolean canCraftFireballBoosted = true;
 	
-	@Config(comment = "Determines if players can craft explosive fireballs.")
-	public boolean canCraftExplosiveFireBalls = true;
+	@Config(comment = "Determines if players can craft explosive fireballs. (Requires canCraftNaquadahAlloy = true)")
+	public boolean canCraftFireballExplosive = true;
 	
-	@Config(comment = "Determines if players can craft the (over-cheated) explosive fire staff. (Requires canCraftToolsAndArmors & canCraftFireStaff & canCraftExplosiveFireBalls = true)")
-	public boolean canCraftExplosiveFireStaff = true;
+	@Config(comment = "Determines if players can craft stable explosive fireballs. (Requires canCraftNaquadahAlloy = true)")
+	public boolean canCraftFireballExplosiveStable = true;
+	
+	@Config(comment = "Determines if players can craft nuke fireballs. (Requires canCraftNaquadahAlloy = true)")
+	public boolean canCraftFireballNuke = true;
+	
+	@Config(comment = "Determines if players can craft napalm fireballs. (Requires canCraftNaquadahAlloy = true)")
+	public boolean canCraftFireballNapalm = true;
+	
+	@Config(comment = "Determines if players can craft the basic fire staff. (Requires canCraftNaquadahAlloy & canCraftToolsAndArmors & canCraftFireballBasic = true)")
+	public boolean canCraftFireStaffBasic = true;
+	
+	@Config(comment = "Determines if players can craft the boosted fire staff. (Requires canCraftNaquadahAlloy & canCraftToolsAndArmors & canCraftFireballBoosted = true)")
+	public boolean canCraftFireStaffBoosted = true;
+	
+	@Config(comment = "Determines if players can craft the explosive fire staff. (Requires canCraftNaquadahAlloy & canCraftToolsAndArmors & canCraftFireballExplosive = true)")
+	public boolean canCraftFireStaffExplosive = true;
+	
+	@Config(comment = "Determines if players can craft the stable explosive fire staff. (Requires canCraftNaquadahAlloy & canCraftToolsAndArmors & canCraftFireballExplosiveStable = true)")
+	public boolean canCraftFireStaffExplosiveStable = true;
+	
+	@Config(comment = "Determines if players can craft the nuke staff. (Requires canCraftNaquadahAlloy & canCraftToolsAndArmors & canCraftFireballNuke = true)")
+	public boolean canCraftFireStaffNuke = true;
+	
+	@Config(comment = "Determines if players can craft the napalm staff. (Requires canCraftNaquadahAlloy & canCraftToolsAndArmors & canCraftFireballNapalm = true)")
+	public boolean canCraftFireStaffNapalm = true;
 	
 	@Config(comment = "Determines if explosive fireballs can destroy blocks.")
 	public boolean canExplosiveFireBallsDestroyBlocks = true;

@@ -45,6 +45,8 @@ public class GenerateResourcePacks extends ReleaseScript {
 		
 		FileTools.zipFolderContent(this.tmpFolder, this.necronCraftZip);
 		
+		FileTools.copyFile(new File(this.svnLicencesFolder, TEXTURES_LICENCE), new File(this.tmpFolder, LICENCE));
+		FileTools.copyFile(new File(this.svnLicencesFolder, MISA_LICENCE), new File(this.tmpFolder, MISA_LICENCE));
 		FileTools.copyFile(new File(this.svnNecronCraftFolder, PACK_MCMETA), new File(this.tmpFolder, PACK_MCMETA));
 		FileTools.deleteDirectory(new File(this.tmpFolder, ASSETS + SLASH + MINECRAFT));
 		

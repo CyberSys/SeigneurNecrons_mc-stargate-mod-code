@@ -17,6 +17,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.tileentity.TileEntity;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -255,7 +256,9 @@ public abstract class GuiContainerBasic<T extends ContainerBasic> extends GuiCon
 	 * @return true if the gui is valid, false if it should be closed.
 	 */
 	protected boolean isGuiValid() {
-		return true;
+		// WARNING : This method is is different from the GuiScreenBasic one.
+		TileEntity tileEntity = this.container.inventory.tileEntity;
+		return tileEntity == tileEntity.worldObj.getBlockTileEntity(tileEntity.xCoord, tileEntity.yCoord, tileEntity.zCoord);
 	}
 	
 	/**

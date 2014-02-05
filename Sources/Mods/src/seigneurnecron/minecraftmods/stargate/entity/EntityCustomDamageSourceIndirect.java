@@ -1,5 +1,6 @@
 package seigneurnecron.minecraftmods.stargate.entity;
 
+import seigneurnecron.minecraftmods.stargate.entity.fireball.EntityFireballBasic;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EntityDamageSourceIndirect;
@@ -21,7 +22,7 @@ public class EntityCustomDamageSourceIndirect extends EntityDamageSourceIndirect
 	
 	// Methods :
 	
-	public static DamageSource causeFireballDamage(EntityCustomFireBall entityCustomFireBall, Entity entity) {
+	public static DamageSource causeFireballDamage(EntityFireballBasic entityCustomFireBall, Entity entity) {
 		Entity shootingEntity = (entity == null) ? entityCustomFireBall : entity;
 		return (new EntityCustomDamageSourceIndirect(ON_FIRE, entityCustomFireBall, shootingEntity)).setFireDamage().setProjectile();
 	}

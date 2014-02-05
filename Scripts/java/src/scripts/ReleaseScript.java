@@ -19,6 +19,32 @@ import scripts.tools.CustomLogger;
 import scripts.tools.FileTools;
 
 /**
+ * Copyright (c) 2014, William Philbert (alias Seigneur Necron)<br />
+ * All rights reserved.<br />
+ * <br />
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:<br />
+ * <br />
+ * - Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.<br />
+ * - Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.<br />
+ * - Neither my name or pseudo may be used to endorse or promote products
+ *   derived from this software without specific prior written permission.<br />
+ * - You must give me credit for my work. Don't claim my work (edited or not) as
+ *   completely your own work, or allow others to carry on believing the work is
+ *   yours without correcting them.<br />
+ * - Don't tell people they're free to use your work if it contains the work of
+ *   others. (You don't have the right to grant permission to others unless it's
+ *   all your own work.)<br />
+ * - Don't make money on my work.<br />
+ * <br />
+ * This software is provided "as is" and any express or implied warranties are
+ * disclaimed. In no event shall I be liable for any direct or indirect damages
+ * caused from the use of this software.<br />
+ * All damages caused from the use or misuse of this software fall on the user.
+ * 
  * @author Seigneur Necron
  */
 public abstract class ReleaseScript {
@@ -79,6 +105,11 @@ public abstract class ReleaseScript {
 	protected static final String PACK_MCMETA = "pack.mcmeta";
 	protected static final String NECRON_CRAFT_MCMETA = "necroncraft.mcmeta";
 	
+	protected static final String LICENCES = "Licences";
+	protected static final String LICENCE = "licence.txt";
+	protected static final String TEXTURES_LICENCE = "textures_licence.txt";
+	protected static final String MISA_LICENCE = "Misa_licence.txt";
+	
 	// MCP files :
 	
 	protected static final String MCP_REOBF = "reobf";
@@ -115,6 +146,7 @@ public abstract class ReleaseScript {
 	
 	protected File svnTrunkFolder;
 	protected File svnSourcesFolder;
+	protected File svnLicencesFolder;
 	protected File svnNecronCraftFolder;
 	protected File svnModsFolder;
 	protected File svnModsInfoFolder;
@@ -234,6 +266,7 @@ public abstract class ReleaseScript {
 			
 			this.svnTrunkFolder = new File(this.svnFolder, SVN_TRUNK);
 			this.svnSourcesFolder = new File(this.svnTrunkFolder, SVN_SOURCES);
+			this.svnLicencesFolder = new File(this.svnSourcesFolder, LICENCES);
 			this.svnModsFolder = new File(this.svnSourcesFolder, SVN_MODS);
 			this.svnModsInfoFolder = new File(this.svnModsFolder, INFO);
 			this.svnModsSrcFolder = new File(this.svnModsFolder, SRC);

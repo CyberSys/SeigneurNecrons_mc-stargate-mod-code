@@ -203,9 +203,11 @@ public class GuiStargateControl extends GuiScreenTileEntity<TileEntityStargateCo
 			this.addressBar1.setAddress(this.defaultAddress);
 		}
 		catch(MalformedCoordinatesException argh) {
-			StargateMod.instance.log("The default address for a gate is'nt valid ! This is not normal.", Level.WARNING);
+			StargateMod.instance.log("The default address for a gate is'nt valid ! This is not normal... Are you really really far from the origin, or to high on the Y axis ?", Level.WARNING);
 			StargateMod.instance.log(argh.getMessage(), Level.WARNING);
 		}
+		
+		this.button_custom.enabled = !this.defaultAddress.isEmpty();
 	}
 	
 }

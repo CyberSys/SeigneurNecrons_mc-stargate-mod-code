@@ -255,6 +255,7 @@ public abstract class GuiScreenBasic extends GuiScreen implements ComponentConta
 	 * @return true if the gui is valid, false if it should be closed.
 	 */
 	protected boolean isGuiValid() {
+		// WARNING : This method is different from the GuiContainerBasic one.
 		return true;
 	}
 	

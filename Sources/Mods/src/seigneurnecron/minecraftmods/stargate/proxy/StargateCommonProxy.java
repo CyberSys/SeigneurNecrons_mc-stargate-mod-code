@@ -11,6 +11,7 @@ import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.block.BlockGuiScreen;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerConsoleBase;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerCrystalFactory;
+import seigneurnecron.minecraftmods.stargate.inventory.ContainerFireballFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerMobGenerator;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerSoulCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerStargateFactory;
@@ -20,6 +21,7 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityMobGenerator;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.Console;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleFireballFactory;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleScreen;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleSoulCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStargateFactory;
@@ -81,6 +83,9 @@ public class StargateCommonProxy implements IGuiHandler {
 						}
 						else if(console instanceof ConsoleSoulCrystalFactory) {
 							return new ContainerSoulCrystalFactory(player, ((ConsoleSoulCrystalFactory) console).getInventory());
+						}
+						else if(console instanceof ConsoleFireballFactory) {
+							return new ContainerFireballFactory(player, ((ConsoleFireballFactory) console).getInventory());
 						}
 						else if(console instanceof ConsoleStargateFactory) {
 							return new ContainerStargateFactory(player, ((ConsoleStargateFactory) console).getInventory());
