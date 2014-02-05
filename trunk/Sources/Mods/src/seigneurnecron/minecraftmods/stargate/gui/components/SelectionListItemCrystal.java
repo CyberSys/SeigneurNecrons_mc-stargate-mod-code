@@ -8,6 +8,9 @@ import seigneurnecron.minecraftmods.core.gui.ListProviderSelectTwoLines;
 import seigneurnecron.minecraftmods.core.gui.SelectionListInventory;
 import seigneurnecron.minecraftmods.stargate.item.ItemCrystal;
 
+/**
+ * @author Seigneur Necron
+ */
 public class SelectionListItemCrystal extends SelectionListInventory<ItemCrystal> {
 	
 	// Constructors :

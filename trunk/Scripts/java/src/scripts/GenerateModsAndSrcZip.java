@@ -59,6 +59,7 @@ public class GenerateModsAndSrcZip extends ReleaseScript {
 		this.task = "creating src zip";
 		this.logger.info("Creating src zip... (this might take a moment)");
 		
+		FileTools.copyFile(new File(this.svnLicencesFolder, LICENCE), new File(this.tmpFolder, LICENCE));
 		FileTools.copyDirectory(this.svnMainPackage, this.tmpMainPackage);
 		FileTools.copyDirectory(this.svnModsAssetsFolder, this.tmpAssetsFolder);
 		
@@ -73,6 +74,7 @@ public class GenerateModsAndSrcZip extends ReleaseScript {
 		
 		for(int i = 0; i < MODS_PACKAGES.length; i++) {
 			FileTools.deleteFolderContent(this.tmpFolder);
+			FileTools.copyFile(new File(this.svnLicencesFolder, LICENCE), new File(this.tmpFolder, LICENCE));
 			FileTools.copyDirectory(new File(this.mcpReobfModsPackage, MODS_PACKAGES[i]), new File(this.tmpModsPackage, MODS_PACKAGES[i]));
 			
 			File assetFolder = new File(this.svnModsAssetsFolder, MODS_IDS[i]);

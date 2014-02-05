@@ -1,5 +1,7 @@
 package scripts;
 
+import java.io.File;
+
 import scripts.tools.FileTools;
 
 /**
@@ -28,7 +30,14 @@ public class CopyAllZipsToMinecraft extends ReleaseScript {
 		
 		this.task = "copying mods to Minecraft";
 		
-		FileTools.deleteFolderContent(this.minecraftModsFolder);
+		File[] installedMods = this.minecraftModsFolder.listFiles();
+		
+		for(File file : installedMods) {
+			if(file.isFile() && file.getName().contains("SeigneurNecron") && file.getName().endsWith(ZIP)) {
+				file.delete();
+			}
+		}
+		
 		FileTools.copyDirectory(this.releaseModsFolder, this.minecraftModsFolder);
 		
 		this.logger.info("Mods copied to Minecraft.");

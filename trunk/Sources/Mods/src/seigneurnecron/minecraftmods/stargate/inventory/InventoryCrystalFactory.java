@@ -69,11 +69,11 @@ public class InventoryCrystalFactory extends InventoryOneLine<TileEntityCrystalF
 	
 	/**
 	 * Transform the crystal in the slot in another crystal.
-	 * @param index - the index of the new crystal in the craftable crystals list.
+	 * @param index - the index of the new crystal in the craftable crystal list.
 	 * @return true if the crystal was succesfully transformed, false if the input crystal isn't valid.
 	 */
 	public boolean reconfigureCrystal(int index) {
-		if(this.isCrystalValid()) {
+		if(this.isCrystalValid() && index >= 0 && index < ItemCrystal.getCraftableCristals().size()) {
 			ItemCrystal newCrystal = ItemCrystal.getCraftableCristals().get(index);
 			ItemCrystal oldCrystal = (ItemCrystal) this.crystal.getItem();
 			

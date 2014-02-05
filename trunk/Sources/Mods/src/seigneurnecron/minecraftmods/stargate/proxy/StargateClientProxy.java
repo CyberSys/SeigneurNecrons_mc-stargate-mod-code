@@ -10,12 +10,15 @@ import net.minecraftforge.common.MinecraftForge;
 import seigneurnecron.minecraftmods.core.font.CustomFontRenderer;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.block.BlockGuiScreen;
-import seigneurnecron.minecraftmods.stargate.entity.EntityCustomExplosiveFireBall;
-import seigneurnecron.minecraftmods.stargate.entity.EntityCustomFireBall;
-import seigneurnecron.minecraftmods.stargate.entity.EntityNapalm;
-import seigneurnecron.minecraftmods.stargate.entity.EntityNuke;
+import seigneurnecron.minecraftmods.stargate.entity.fireball.EntityFireBallBoosted;
+import seigneurnecron.minecraftmods.stargate.entity.fireball.EntityFireballBasic;
+import seigneurnecron.minecraftmods.stargate.entity.fireball.EntityFireballExplosive;
+import seigneurnecron.minecraftmods.stargate.entity.fireball.EntityFireballExplosiveStable;
+import seigneurnecron.minecraftmods.stargate.entity.fireball.EntityFireballNapalm;
+import seigneurnecron.minecraftmods.stargate.entity.fireball.EntityFireballNuke;
 import seigneurnecron.minecraftmods.stargate.gui.GuiConsoleBase;
 import seigneurnecron.minecraftmods.stargate.gui.GuiCrystalFactory;
+import seigneurnecron.minecraftmods.stargate.gui.GuiFireballFactory;
 import seigneurnecron.minecraftmods.stargate.gui.GuiMobGenerator;
 import seigneurnecron.minecraftmods.stargate.gui.GuiShieldRemote;
 import seigneurnecron.minecraftmods.stargate.gui.GuiSoulCrystalFactory;
@@ -23,17 +26,19 @@ import seigneurnecron.minecraftmods.stargate.gui.GuiStargateFactory;
 import seigneurnecron.minecraftmods.stargate.gui.GuiStuffLevelUpTable;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerConsoleBase;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerCrystalFactory;
+import seigneurnecron.minecraftmods.stargate.inventory.ContainerFireballFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerMobGenerator;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerSoulCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerStargateFactory;
 import seigneurnecron.minecraftmods.stargate.inventory.ContainerStuffLevelUpTable;
 import seigneurnecron.minecraftmods.stargate.item.ItemShieldRemote;
-import seigneurnecron.minecraftmods.stargate.render.RenderCustomFireBall;
+import seigneurnecron.minecraftmods.stargate.render.RenderFireball;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityMobGenerator;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.Console;
+import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleFireballFactory;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleScreen;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleSoulCrystalFactory;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStargateFactory;
@@ -82,6 +87,9 @@ public class StargateClientProxy extends StargateCommonProxy {
 						else if(console instanceof ConsoleSoulCrystalFactory) {
 							return new GuiSoulCrystalFactory(new ContainerSoulCrystalFactory(player, ((ConsoleSoulCrystalFactory) console).getInventory()));
 						}
+						else if(console instanceof ConsoleFireballFactory) {
+							return new GuiFireballFactory(new ContainerFireballFactory(player, ((ConsoleFireballFactory) console).getInventory()));
+						}
 						else if(console instanceof ConsoleStargateFactory) {
 							return new GuiStargateFactory(new ContainerStargateFactory(player, ((ConsoleStargateFactory) console).getInventory()));
 						}
@@ -118,10 +126,13 @@ public class StargateClientProxy extends StargateCommonProxy {
 	
 	@Override
 	public void registerRenderers() {
-		RenderingRegistry.registerEntityRenderingHandler(EntityCustomFireBall.class, new RenderCustomFireBall(0.5F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityCustomExplosiveFireBall.class, new RenderCustomFireBall(0.6F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityNuke.class, new RenderCustomFireBall(1.5F));
-		RenderingRegistry.registerEntityRenderingHandler(EntityNapalm.class, new RenderCustomFireBall(1.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireballBasic.class, new RenderFireball(0.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireBallBoosted.class, new RenderFireball(0.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireballExplosive.class, new RenderFireball(0.6F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireballExplosiveStable.class, new RenderFireball(0.6F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireballNuke.class, new RenderFireball(1.5F));
+		RenderingRegistry.registerEntityRenderingHandler(EntityFireballNapalm.class, new RenderFireball(1.5F));
+		
 		this.registerFontRenderer();
 	}
 	

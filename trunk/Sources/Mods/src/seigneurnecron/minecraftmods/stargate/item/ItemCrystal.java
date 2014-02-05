@@ -20,14 +20,14 @@ public class ItemCrystal extends ItemStargate implements Comparable<ItemCrystal>
 	
 	public static final String CRYSTAL_INFO_SUFFIX = ".info";
 	
-	private static final SortedSet<ItemCrystal> craftableCrystalsList = new TreeSet<ItemCrystal>();
+	private static final SortedSet<ItemCrystal> craftableCrystals = new TreeSet<ItemCrystal>();
 	
 	public static List<ItemCrystal> getCraftableCristals() {
-		return Lists.newArrayList(craftableCrystalsList);
+		return Lists.newArrayList(craftableCrystals);
 	}
 	
 	public static void registerCraftableCrystal(ItemCrystal crystal) {
-		craftableCrystalsList.add(crystal);
+		craftableCrystals.add(crystal);
 	}
 	
 	// Fields :
@@ -45,7 +45,7 @@ public class ItemCrystal extends ItemStargate implements Comparable<ItemCrystal>
 	
 	@Override
 	public int compareTo(ItemCrystal other) {
-		return this.getIconString().compareTo(other.getIconString());
+		return this.getStatName().compareTo(other.getStatName());
 	}
 	
 	// Methods :

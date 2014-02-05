@@ -37,7 +37,7 @@ public class SelectionListPowerUp extends SelectionListInventory<PowerUp> {
 	
 	@Override
 	protected String getName(PowerUp element) {
-		return I18n.getString(element.enchant.getName()) + " " + element.level;
+		return I18n.getString(element.enchant.getName()) + " " + element.level + "/" + element.enchant.getMaxLevel();
 	}
 	
 	@Override

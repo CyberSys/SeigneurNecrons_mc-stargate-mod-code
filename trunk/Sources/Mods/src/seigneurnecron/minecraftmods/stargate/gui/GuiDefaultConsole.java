@@ -41,6 +41,7 @@ public class GuiDefaultConsole extends GuiScreenConsolePanel<ConsoleDefault> imp
 	// ####################################################################################################
 	
 	public static final String INV_NAME = "container.defaultConsole";
+	public static final String ANY_INVALID_SET = INV_NAME + ".anyInvalidSet";
 	
 	// ####################################################################################################
 	// Interface fields :
