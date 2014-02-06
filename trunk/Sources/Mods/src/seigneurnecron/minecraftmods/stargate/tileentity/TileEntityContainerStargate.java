@@ -6,6 +6,8 @@ import seigneurnecron.minecraftmods.stargate.StargateMod;
 import seigneurnecron.minecraftmods.stargate.network.packetmapping.StargateTileEntityPacketMapping;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public abstract class TileEntityContainerStargate<T extends InventoryBasic> extends TileEntityContainer<T> {

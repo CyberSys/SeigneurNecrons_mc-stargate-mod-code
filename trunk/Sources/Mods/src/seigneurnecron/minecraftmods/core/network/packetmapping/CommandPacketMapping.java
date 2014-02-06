@@ -16,6 +16,8 @@ import seigneurnecron.minecraftmods.core.network.command.Command;
 import seigneurnecron.minecraftmods.core.tileentity.TileEntityCommand;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class CommandPacketMapping extends PacketMapping<Command> {

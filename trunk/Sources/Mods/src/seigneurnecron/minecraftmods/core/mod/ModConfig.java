@@ -18,6 +18,8 @@ import net.minecraftforge.common.Property;
 import seigneurnecron.minecraftmods.core.SeigneurNecronMod;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * <br />
  * A mod configuration class which already handle all loading and saving operation. <br />
  * You just need to add fields with the correct annotation. <br />
  * Fields can be of type boolean, int, double, String, boolean[], int[], double[] or String[].

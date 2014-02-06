@@ -9,6 +9,8 @@ import seigneurnecron.minecraftmods.stargate.proxy.StargateCommonProxy;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.SoulCount;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public final class PlayerSoulCountData extends StargatePlayerDataList<SoulCount> {

@@ -8,6 +8,8 @@ import seigneurnecron.minecraftmods.stargate.tools.address.GateAddress;
 import seigneurnecron.minecraftmods.stargate.tools.enums.Dimension;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class AddressBarGateCreation extends AddressBar {

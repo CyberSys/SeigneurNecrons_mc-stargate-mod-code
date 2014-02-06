@@ -46,6 +46,8 @@ import seigneurnecron.minecraftmods.stargate.tools.worlddata.StargateChunkLoader
 import seigneurnecron.minecraftmods.stargate.tools.worlddata.WorldStargateData;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class TileEntityStargateControl extends TileEntityStargate {

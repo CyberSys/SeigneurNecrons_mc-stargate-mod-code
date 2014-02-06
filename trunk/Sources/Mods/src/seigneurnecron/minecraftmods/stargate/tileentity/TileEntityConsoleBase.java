@@ -10,6 +10,11 @@ import seigneurnecron.minecraftmods.stargate.inventory.InventoryConsoleBase;
 import seigneurnecron.minecraftmods.stargate.item.ItemCrystal;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.Console;
 
+/**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
+ * @author Seigneur Necron
+ */
 public class TileEntityConsoleBase extends TileEntityContainerStargate<InventoryConsoleBase> {
 	
 	// NBTTags names :

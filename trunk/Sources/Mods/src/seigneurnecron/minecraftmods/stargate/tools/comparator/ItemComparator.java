@@ -5,6 +5,8 @@ import java.util.Comparator;
 import net.minecraft.item.Item;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class ItemComparator implements Comparator<Item> {

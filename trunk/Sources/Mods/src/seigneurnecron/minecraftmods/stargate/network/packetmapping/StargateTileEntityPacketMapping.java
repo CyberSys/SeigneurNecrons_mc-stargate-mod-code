@@ -12,6 +12,8 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateContro
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargatePart;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class StargateTileEntityPacketMapping extends TileEntityPacketMapping<TileEntityBasic> {

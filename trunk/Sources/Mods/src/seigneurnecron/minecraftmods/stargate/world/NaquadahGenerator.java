@@ -9,6 +9,8 @@ import seigneurnecron.minecraftmods.stargate.StargateMod;
 import cpw.mods.fml.common.IWorldGenerator;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class NaquadahGenerator implements IWorldGenerator {

@@ -3,6 +3,8 @@ package seigneurnecron.minecraftmods.core.inventory;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public abstract class ContainerOneLine<T extends InventoryOneLine<?>> extends ContainerBasic<T> {

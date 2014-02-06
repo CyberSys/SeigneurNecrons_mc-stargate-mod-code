@@ -8,6 +8,8 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateContro
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStargateFactory;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class InventoryStargateFactory extends InventoryConsolePanel<ConsoleStargateFactory> {

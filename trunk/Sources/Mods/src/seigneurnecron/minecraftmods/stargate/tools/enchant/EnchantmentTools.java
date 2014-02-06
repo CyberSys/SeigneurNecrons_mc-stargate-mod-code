@@ -29,6 +29,8 @@ import seigneurnecron.minecraftmods.stargate.tools.loadable.PowerUp;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.SoulCount;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class EnchantmentTools {

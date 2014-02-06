@@ -17,6 +17,8 @@ import seigneurnecron.minecraftmods.stargate.tools.loadable.ChunkCoordinates;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.StargateCoordinates;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public final class StargateChunkLoader implements LoadingCallback {

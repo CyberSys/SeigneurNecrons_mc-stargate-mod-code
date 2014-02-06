@@ -7,6 +7,8 @@ import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.core.mod.ModBase;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class EntityFireBallBoosted extends EntityFireballBasic {

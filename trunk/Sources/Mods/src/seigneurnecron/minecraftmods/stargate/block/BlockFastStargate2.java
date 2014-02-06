@@ -9,6 +9,8 @@ import seigneurnecron.minecraftmods.stargate.inventory.InventoryConsoleBase;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class BlockFastStargate2 extends BlockFastStargate {

@@ -9,6 +9,8 @@ import seigneurnecron.minecraftmods.core.network.command.Command;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class RemoteCloseCommand implements Command {

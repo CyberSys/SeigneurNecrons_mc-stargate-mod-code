@@ -5,6 +5,8 @@ import net.minecraftforge.event.ForgeSubscribe;
 import seigneurnecron.minecraftmods.core.sound.Sounds;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class StargateSounds extends Sounds {

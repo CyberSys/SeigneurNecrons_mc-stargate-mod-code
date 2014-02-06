@@ -9,6 +9,8 @@ import seigneurnecron.minecraftmods.stargate.proxy.StargateCommonProxy;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public abstract class ConsoleContainer<T extends InventoryBasic> extends Console {

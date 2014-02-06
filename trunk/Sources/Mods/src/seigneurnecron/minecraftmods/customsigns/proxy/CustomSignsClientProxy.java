@@ -5,6 +5,8 @@ import seigneurnecron.minecraftmods.customsigns.render.TileEntitySignCustomRende
 import cpw.mods.fml.client.registry.ClientRegistry;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class CustomSignsClientProxy extends CustomSignsCommonProxy {

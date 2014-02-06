@@ -16,6 +16,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * <br />
  * ########## Class copied from RenderFireball and modified (EntityFireBall => EntityCustomFireBall) ##########
  * @author Seigneur Necron
  */

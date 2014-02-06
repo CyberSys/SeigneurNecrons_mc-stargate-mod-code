@@ -22,6 +22,8 @@ import seigneurnecron.minecraftmods.core.reflection.ReflectionException;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * <br />
  * This class is used to teleport entities at the given coordinates, optionally between dimensions, without creating or searching a portal. <br />
  * It is used to teleport entities without using the vanilla mechanism (hell and end portals). <br />
  * The code calling this class methods must ensure itself that the required stuff (a portal, a teleporter, or whatever you want) is available at the given coordinates.

@@ -11,6 +11,8 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateContro
 import seigneurnecron.minecraftmods.stargate.tools.enums.GateState;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public abstract class ConsoleStargate extends ConsoleScreen {

@@ -17,6 +17,8 @@ import seigneurnecron.minecraftmods.core.mod.ModBase;
 import seigneurnecron.minecraftmods.core.sound.Sound;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public abstract class TileEntityBasic extends TileEntity {

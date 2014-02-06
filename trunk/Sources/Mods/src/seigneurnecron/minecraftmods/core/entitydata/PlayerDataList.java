@@ -12,6 +12,8 @@ import net.minecraft.nbt.NBTTagList;
 import seigneurnecron.minecraftmods.core.loadable.Loadable;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public abstract class PlayerDataList<T extends Loadable> extends PlayerData {

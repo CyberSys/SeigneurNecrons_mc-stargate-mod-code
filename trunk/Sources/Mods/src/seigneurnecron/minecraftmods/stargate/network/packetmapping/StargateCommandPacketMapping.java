@@ -13,6 +13,8 @@ import seigneurnecron.minecraftmods.stargate.network.command.StargateOpenCommand
 import seigneurnecron.minecraftmods.stargate.network.command.TeleportCommand;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class StargateCommandPacketMapping extends CommandPacketMapping {
