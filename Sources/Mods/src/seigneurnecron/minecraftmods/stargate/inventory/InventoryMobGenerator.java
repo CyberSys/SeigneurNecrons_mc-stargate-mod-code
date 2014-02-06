@@ -6,6 +6,8 @@ import seigneurnecron.minecraftmods.stargate.item.ItemSoulCrystalFull;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityMobGenerator;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class InventoryMobGenerator extends InventoryOneLine<TileEntityMobGenerator> {

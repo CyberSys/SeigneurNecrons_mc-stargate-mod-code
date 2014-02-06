@@ -34,6 +34,8 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * <br />
  * A class which can be extended to make a mod main class. A lot of work is already done by that class and the {@link ModConfig} class. <br />
  * You <b>MUST</b> override the <b>preInit</b>, <b>init</b> and <b>postInit</b> methods and add the <b>@EventHandler</b> annotation on them. <br />
  * Take a look at the {@link SeigneurNecronMod} and {@link SeigneurNecronModConfig} classes for an exemple of how to make a basic mod.

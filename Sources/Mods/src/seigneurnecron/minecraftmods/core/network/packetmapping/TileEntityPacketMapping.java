@@ -15,6 +15,8 @@ import seigneurnecron.minecraftmods.core.mod.ModBase;
 import seigneurnecron.minecraftmods.core.tileentity.TileEntityBasic;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class TileEntityPacketMapping<T extends TileEntityBasic> extends PacketMapping<Class<? extends T>> {

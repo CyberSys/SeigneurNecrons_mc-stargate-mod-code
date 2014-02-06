@@ -9,6 +9,8 @@ import net.minecraft.entity.EntityLiving;
 import seigneurnecron.minecraftmods.stargate.StargateMod;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class ItemSoulCrystalFull extends ItemSoulCrystal {

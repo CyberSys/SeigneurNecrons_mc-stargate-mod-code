@@ -7,6 +7,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import seigneurnecron.minecraftmods.core.loadable.Coordinates;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class ChunkCoordinates extends Coordinates<ChunkCoordinates> {

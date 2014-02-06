@@ -29,6 +29,8 @@ import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStuffLeve
 import cpw.mods.fml.common.network.IGuiHandler;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class StargateCommonProxy implements IGuiHandler {

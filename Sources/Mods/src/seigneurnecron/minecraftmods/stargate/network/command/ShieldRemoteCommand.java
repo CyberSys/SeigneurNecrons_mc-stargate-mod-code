@@ -11,6 +11,8 @@ import seigneurnecron.minecraftmods.stargate.tools.loadable.Stargate;
 import seigneurnecron.minecraftmods.stargate.tools.playerdata.PlayerStargateData;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class ShieldRemoteCommand implements Command {

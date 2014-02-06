@@ -21,6 +21,8 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 // ########################################################################################################## //
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * <br />
  * SeigneurNecron's Custom Signs Mod main class.
  * @author Seigneur Necron
  */

@@ -23,6 +23,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * <br />
  * WARNING : A LOT OF CODE IN THIS CLASS IS THE SAME AS THE CODE IN GuiContainerBasic. DON'T FORGET TO CHECK AND DUPLICATE MODIFICATIONS. <br />
  * WARNING : SOME METHODS ARE DIFFERENT. CHECK EACH LINE BEFORE DUPLICATING A MODIFICATION. <br />
  * This code duplication was necessary because factorization would have to be done in GuiScreen, which is a Minecraft class, not a mod class.

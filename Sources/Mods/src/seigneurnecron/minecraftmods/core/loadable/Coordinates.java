@@ -7,6 +7,8 @@ import java.io.IOException;
 import net.minecraft.nbt.NBTTagCompound;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public abstract class Coordinates<T extends Coordinates> implements Loadable<T> {

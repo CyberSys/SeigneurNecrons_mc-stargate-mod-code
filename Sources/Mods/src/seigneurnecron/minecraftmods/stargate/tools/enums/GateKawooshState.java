@@ -3,6 +3,8 @@ package seigneurnecron.minecraftmods.stargate.tools.enums;
 import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateControl;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public enum GateKawooshState {

@@ -4,6 +4,8 @@ import net.minecraftforge.common.Configuration;
 import seigneurnecron.minecraftmods.core.mod.ModConfig;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class DropableGlassModConfig extends ModConfig<DropableGlassMod> {

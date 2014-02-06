@@ -7,6 +7,8 @@ import net.minecraft.world.World;
 import seigneurnecron.minecraftmods.stargate.entity.fireball.EntityFireballExplosiveStable;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class ItemFireStaffExplosiveStable extends ItemFireStaffBasic {

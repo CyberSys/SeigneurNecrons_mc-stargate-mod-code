@@ -7,6 +7,8 @@ import seigneurnecron.minecraftmods.stargate.tools.playerdata.PlayerStargateData
 import seigneurnecron.minecraftmods.stargate.tools.playerdata.PlayerTeleporterData;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class StargatePlayerDataPacketMapping extends PlayerDataPacketMapping {

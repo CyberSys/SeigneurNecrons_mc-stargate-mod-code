@@ -3,6 +3,8 @@ package seigneurnecron.minecraftmods.core.inventory;
 import net.minecraft.tileentity.TileEntity;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public abstract class InventoryOneLine<T extends TileEntity> extends InventoryBasic<T> {

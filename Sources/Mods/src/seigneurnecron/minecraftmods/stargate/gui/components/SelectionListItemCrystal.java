@@ -9,6 +9,8 @@ import seigneurnecron.minecraftmods.core.gui.SelectionListInventory;
 import seigneurnecron.minecraftmods.stargate.item.ItemCrystal;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class SelectionListItemCrystal extends SelectionListInventory<ItemCrystal> {

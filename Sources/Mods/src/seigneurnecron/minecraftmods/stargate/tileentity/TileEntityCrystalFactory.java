@@ -3,6 +3,8 @@ package seigneurnecron.minecraftmods.stargate.tileentity;
 import seigneurnecron.minecraftmods.stargate.inventory.InventoryCrystalFactory;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class TileEntityCrystalFactory extends TileEntityContainerStargate<InventoryCrystalFactory> {

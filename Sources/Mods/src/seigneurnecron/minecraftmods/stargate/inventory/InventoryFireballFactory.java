@@ -7,6 +7,8 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityConsoleBase;
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleFireballFactory;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class InventoryFireballFactory extends InventoryConsolePanel<ConsoleFireballFactory> {

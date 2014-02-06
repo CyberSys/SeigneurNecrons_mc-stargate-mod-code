@@ -15,6 +15,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * <br />
  * ########## Class copied from TileEntitySignRenderer and modified (1 added code part, 1 modified code part, 2 added lines) ########## <br />
  * Can display different textures depending on the text of the sign.
  * @author Seigneur Necron

@@ -5,6 +5,8 @@ import java.util.List;
 import com.google.common.collect.Lists;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class Main {

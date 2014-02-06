@@ -7,6 +7,8 @@ import seigneurnecron.minecraftmods.core.network.packetmapping.PlayerDataPacketM
 import seigneurnecron.minecraftmods.stargate.network.packetmapping.StargatePlayerDataPacketMapping;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public abstract class StargatePlayerDataList<T extends Loadable> extends PlayerDataList<T> {

@@ -5,6 +5,8 @@ import seigneurnecron.minecraftmods.stargate.network.packetmapping.StargatePlaye
 import seigneurnecron.minecraftmods.stargate.network.packetmapping.StargateTileEntityPacketMapping;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class StargateCommonPacketHandler extends PacketHandler {

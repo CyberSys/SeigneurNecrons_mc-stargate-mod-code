@@ -8,6 +8,8 @@ import net.minecraft.network.INetworkManager;
 import net.minecraft.network.packet.Packet250CustomPayload;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * <br />
  * A Bi-directionnal map used to store data to handle packets of a specific chanel.
  * @author Seigneur Necron
  * @param <T> - The type of stored data.

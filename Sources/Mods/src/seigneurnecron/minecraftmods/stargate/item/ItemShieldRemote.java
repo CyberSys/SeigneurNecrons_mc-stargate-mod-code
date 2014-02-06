@@ -11,6 +11,8 @@ import seigneurnecron.minecraftmods.stargate.tileentity.TileEntityStargateContro
 import seigneurnecron.minecraftmods.stargate.tileentity.console.ConsoleStargate;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class ItemShieldRemote extends ItemStargate {

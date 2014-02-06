@@ -10,6 +10,8 @@ import seigneurnecron.minecraftmods.stargate.tools.loadable.BlockCoordinates;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.StargateZoneCoordinates;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public final class GateAddress {

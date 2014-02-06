@@ -15,6 +15,8 @@ import seigneurnecron.minecraftmods.stargate.tools.enchant.EnchantmentTools;
 import seigneurnecron.minecraftmods.stargate.tools.loadable.PowerUp;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * 
  * @author Seigneur Necron
  */
 public class ConsoleStuffLevelUpTable extends ConsoleContainer<InventoryStuffLevelUpTable> {

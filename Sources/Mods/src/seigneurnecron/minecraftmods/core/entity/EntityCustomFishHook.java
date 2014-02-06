@@ -23,6 +23,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
+ * LICENCE : http://sourceforge.net/p/mc-stargate-mod/code/HEAD/tree/trunk/Sources/Licences/licence.txt
+ * <br />
  * This class extends EntityFishHook and allows to create custom fishing rods. <br />
  * The original {@link EntityFishHook} don't allows to create custom fishing rod because of a failed test which destroy the fish hook entity if the fishing rod isn't the original. <br />
  * The whole onUpdate() method including the content of super.onUpdate() had to be rewrited just to change one line... <br />
