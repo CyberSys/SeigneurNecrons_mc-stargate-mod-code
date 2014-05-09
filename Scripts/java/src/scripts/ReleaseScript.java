@@ -55,6 +55,11 @@ public abstract class ReleaseScript {
 	protected static final String TMP_FOLDER = "tmp";
 	protected static final String CONFIG_FILE = "config.txt";
 	
+	// Info files constants :
+	
+	protected static final String INSERT_VERSION_HERE = "INSERT_VERSION_HERE";
+	protected static final String INSERT_MINECRAFT_VERSION_HERE = "INSERT_MINECRAFT_VERSION_HERE";
+	
 	// Common files :
 	
 	protected static final String MINECRAFT = "minecraft";

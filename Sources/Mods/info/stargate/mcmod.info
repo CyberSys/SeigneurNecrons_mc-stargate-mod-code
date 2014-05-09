@@ -6,7 +6,7 @@
 "version": "INSERT_VERSION_HERE",
 "credits": "Thanks to my friends ArkanEx and Loki Sanada",
 "logoFile": "/assets/seigneur_necron_stargate_mod/textures/gui/mod_logo.png",
-"mcversion": "1.6.4",
+"mcversion": "INSERT_MINECRAFT_VERSION_HERE",
 "url": "http://sourceforge.net/p/mc-stargate-mod/wiki/Home/",
 "updateUrl": "",
 "authors": ["Seigneur Necron"],
