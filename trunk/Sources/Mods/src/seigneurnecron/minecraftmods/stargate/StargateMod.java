@@ -173,7 +173,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 	
 	public static final String MOD_ID = "seigneur_necron_stargate_mod";
 	public static final String MOD_NAME = "SeigneurNecron's Stargate Mod";
-	public static final String VERSION = "[1.6.4] v3.2.1 [core 1.1.1]";
+	public static final String VERSION = "[1.6.4] v3.2.2 [core 1.1.1]";
 	
 	public static final String CHANEL_TILE_ENTITY = "SNSM_TileEntity";
 	public static final String CHANEL_COMMANDS = "SNSM_Commands";
@@ -651,6 +651,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 		
 		this.addSmelting(new ItemStack(item_naquadahIngot), item_naquadahOre.itemID);
 		this.addRecipe(new ItemStack(block_naquadahBlock), new Object[] {"NNN", "NNN", "NNN", 'N', item_naquadahIngot});
+		this.addShapelessRecipe(new ItemStack(item_naquadahIngot, 9), new Object[] {block_naquadahBlock});
 		this.addShapelessRecipe(new ItemStack(Block.redstoneLampIdle), new Object[] {block_selfPoweredRedstoneLight});
 		this.addShapelessRecipe(new ItemStack(Item.fireballCharge), new Object[] {item_fireBallExplosive});
 		this.registerCrystal(item_crystal);

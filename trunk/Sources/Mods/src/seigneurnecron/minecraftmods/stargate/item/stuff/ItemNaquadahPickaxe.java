@@ -40,6 +40,12 @@ public class ItemNaquadahPickaxe extends ItemPickaxe {
 	}
 	
 	@Override
+	public boolean canHarvestBlock(Block block) {
+		// Pickaxes can harvest obsidian if "this.toolMaterial.getHarvestLevel() == 3"... why "==" !? why not ">=" !?
+		return block == Block.obsidian || super.canHarvestBlock(block);
+	}
+	
+	@Override
 	public float getStrVsBlock(ItemStack itemStack, Block block) {
 		return block.equals(Block.obsidian) ? 100.0F : super.getStrVsBlock(itemStack, block);
 	}

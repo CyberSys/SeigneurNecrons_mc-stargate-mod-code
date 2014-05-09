@@ -96,7 +96,8 @@ public class GenerateModsAndSrcZip extends ReleaseScript {
 				
 				File mcmod_info = new File(this.tmpFolder, MCMOD_INFO);
 				FileTools.copyFile(new File(this.svnModsInfoFolder, MODS_PACKAGES[i] + SLASH + MCMOD_INFO), mcmod_info);
-				FileTools.replaceFirstInFile(mcmod_info, "INSERT_VERSION_HERE", completeVersion);
+				FileTools.replaceFirstInFile(mcmod_info, INSERT_VERSION_HERE, completeVersion);
+				FileTools.replaceFirstInFile(mcmod_info, INSERT_MINECRAFT_VERSION_HERE, minecraftVersion);
 				
 				File modZip = new File(this.releaseModsFolder, minecraftVersion + MODS_NAMES[i] + "_" + modVersion + dependenciesVersion + ZIP);
 				FileTools.zipFolderContent(this.tmpFolder, modZip);
