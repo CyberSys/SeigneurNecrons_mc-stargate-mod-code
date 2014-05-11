@@ -33,7 +33,7 @@ public class CustomSignsMod extends ModBase<CustomSignsMod, CustomSignsModConfig
 	
 	public static final String MOD_ID = "seigneur_necron_custom_signs_mod";
 	public static final String MOD_NAME = "SeigneurNecron's Custom Signs Mod";
-	public static final String VERSION = "[1.6.4] v1.0.1 [core 1.1.1]";
+	public static final String VERSION = "[1.6.4] v1.0.2 [core 1.1.2]";
 	
 	@Override
 	protected String getModId() {

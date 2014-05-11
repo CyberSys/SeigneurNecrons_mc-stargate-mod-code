@@ -129,7 +129,9 @@ public abstract class PlayerDataList<T extends Loadable> extends PlayerData {
 		for(int i = 0; i < list.tagCount(); i++) {
 			NBTTagCompound tag = (NBTTagCompound) list.tagAt(i);
 			T element = this.getElement(tag);
-			this.dataList.add(element);
+			if(element != null) {
+				this.dataList.add(element);
+			}
 		}
 	}
 	
