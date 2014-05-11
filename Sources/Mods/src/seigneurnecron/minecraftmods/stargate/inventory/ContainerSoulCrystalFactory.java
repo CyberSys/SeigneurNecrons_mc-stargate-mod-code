@@ -46,7 +46,7 @@ public class ContainerSoulCrystalFactory extends ContainerConsolePanel<Inventory
 							this.inventory.setCrystal(new ItemStack(crystal));
 							
 							if(!creativeMode) {
-								soulCount.id -= crystal.neededSouls;
+								soulCount.count -= crystal.neededSouls;
 								playerData.syncProperties();
 							}
 						}

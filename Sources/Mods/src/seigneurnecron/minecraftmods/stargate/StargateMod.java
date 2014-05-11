@@ -173,7 +173,7 @@ public class StargateMod extends ModBase<StargateMod, StargateModConfig> {
 	
 	public static final String MOD_ID = "seigneur_necron_stargate_mod";
 	public static final String MOD_NAME = "SeigneurNecron's Stargate Mod";
-	public static final String VERSION = "[1.6.4] v3.2.2 [core 1.1.1]";
+	public static final String VERSION = "[1.6.4] v3.2.3 [core 1.1.2]";
 	
 	public static final String CHANEL_TILE_ENTITY = "SNSM_TileEntity";
 	public static final String CHANEL_COMMANDS = "SNSM_Commands";

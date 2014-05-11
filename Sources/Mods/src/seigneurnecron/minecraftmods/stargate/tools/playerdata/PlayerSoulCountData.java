@@ -3,6 +3,7 @@ package seigneurnecron.minecraftmods.stargate.tools.playerdata;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import net.minecraft.entity.EntityList;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import seigneurnecron.minecraftmods.stargate.proxy.StargateCommonProxy;
@@ -70,7 +71,13 @@ public final class PlayerSoulCountData extends StargatePlayerDataList<SoulCount>
 	
 	@Override
 	protected SoulCount getElement(NBTTagCompound tag) {
-		return new SoulCount(tag);
+		SoulCount soulCount = new SoulCount(tag);
+		
+		if(EntityList.getStringFromID(soulCount.id) == null) {
+			soulCount = null;
+		}
+		
+		return soulCount;
 	}
 	
 	@Override

@@ -26,7 +26,7 @@ public class DropableGlassMod extends ModBase<DropableGlassMod, DropableGlassMod
 	
 	public static final String MOD_ID = "seigneur_necron_dropable_glass_mod";
 	public static final String MOD_NAME = "SeigneurNecron's Dropable Glass Mod";
-	public static final String VERSION = "[1.6.4] v1.0.1 [core 1.1.1]";
+	public static final String VERSION = "[1.6.4] v1.0.2 [core 1.1.2]";
 	
 	@Override
 	protected String getModId() {
